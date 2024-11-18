@@ -7,8 +7,10 @@ type LoginPayload = {
 
 const login = async (payload: LoginPayload) => {
     try {
-        const response = axiosInstance.post('/login')
-        console.log(response);
+        const response = await axiosInstance.post('/auth/login', {
+            email: payload.email,
+            password: payload.password
+        })
     } catch (error) {
         console.log(error);
 
