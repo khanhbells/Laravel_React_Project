@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
@@ -23,13 +24,11 @@ class AuthController extends Controller
         ];
 
         if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+            return response()->json(['error' => 'Email hoặc mật khẩu không đúng'], Response::HTTP_UNAUTHORIZED);
         }
 
-        $accessTokenCookie = cookie('access_token', $token, auth()->factory()->getTTL() * 1, '/', null, false, true);
-
-
-        return $this->respondWithToken($token)->withCookie($accessTokenCookie);
+        $cookie = Cookie::make('access_token', $token, auth()->factory()->getTTL() * 1);
+        return $this->respondWithToken($token)->withCookie($cookie);
     }
 
     protected function respondWithToken($token)

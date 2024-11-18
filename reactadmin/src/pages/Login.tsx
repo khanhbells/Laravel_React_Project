@@ -1,18 +1,21 @@
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { login } from "../service/AuthService";
 type Inputs = {
     email: string
     password: string
-}
+};
 const Login = () => {
+    const navigate = useNavigate()
     const {
         register,
         handleSubmit,
         watch,
         formState: { errors },
     } = useForm<Inputs>()
-    const loginHandler: SubmitHandler<Inputs> = (payload) => {
-        login(payload)
+    const loginHandler: SubmitHandler<Inputs> = async (payload) => {
+        const logged = await login(payload)
+        logged && navigate('/dashboard')
     };
     return (
         <>
