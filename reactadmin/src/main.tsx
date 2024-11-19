@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { ToastProvider } from './contexts/ToastContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
@@ -21,8 +22,8 @@ const router = createBrowserRouter([
   },
 ]);
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  <ToastProvider>
     <RouterProvider router={router} />
     <ToastContainer />
-  </React.StrictMode>,
+  </ToastProvider>
 )
