@@ -2,6 +2,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { login } from "../service/AuthService";
 import { useToast } from "../contexts/ToastContext";
+import { setToast } from "../redux/slide/toastSlice";
+import { useDispatch, UseDispatch } from "react-redux";
 
 
 type Inputs = {
@@ -9,8 +11,10 @@ type Inputs = {
     password: string
 };
 const Login = () => {
-    const { setMessage } = useToast()
+    // const { setMessage } = useToast()
     const navigate = useNavigate()
+
+    const dispatch = useDispatch()
     const {
         register,
         handleSubmit,
@@ -19,7 +23,9 @@ const Login = () => {
     } = useForm<Inputs>()
     const loginHandler: SubmitHandler<Inputs> = async (payload) => {
         const logged = await login(payload)
-        setMessage('Đăng nhập vào hệ thống thành công', 'success')
+
+        dispatch(setToast({ message: 'Đăng nhập vào hên thống thành công', type: 'success' }))
+        // setMessage('Đăng nhập vào hệ thống thành công', 'success') --> context
         logged && navigate('/dashboard')
     };
     return (

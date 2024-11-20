@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom/client'
 import { ToastProvider } from './contexts/ToastContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import { store } from './redux/store'
+import { Provider } from 'react-redux'
+
 import {
   createBrowserRouter,
   RouterProvider,
@@ -22,8 +26,10 @@ const router = createBrowserRouter([
   },
 ]);
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <ToastProvider>
-    <RouterProvider router={router} />
-    <ToastContainer />
-  </ToastProvider>
+  <Provider store={store}>
+    <ToastProvider>
+      <RouterProvider router={router} />
+      <ToastContainer />
+    </ToastProvider>
+  </Provider>
 )
