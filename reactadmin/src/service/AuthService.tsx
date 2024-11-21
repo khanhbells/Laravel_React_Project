@@ -1,21 +1,25 @@
 import axiosInstance from "../configs/axios";
 import { handleAxiosError } from "../helper/axiosHelper";
+import { User } from "../types/User";
+import { useDispatch } from "react-redux";
+import { setAuthLogin } from "../redux/slide/authSlice";
 
 type LoginPayload = {
     email: string,
     password: string
 }
 
-const login = async (payload: LoginPayload): Promise<boolean> => {
+const login = async (payload: LoginPayload): Promise<User | null> => {
     try {
-        await axiosInstance.post('/auth/login', {
+        const response = await axiosInstance.post('/auth/login', {
             email: payload.email,
             password: payload.password
         })
-        return true;
+        return response.data.user;
+
     } catch (error) {
         handleAxiosError(error)
-        return false
+        return null
     }
 }
 

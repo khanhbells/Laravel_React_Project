@@ -11,7 +11,7 @@ const axiosInstance = axios.create({
 //Cấu hình dữ liệu trả về
 axiosInstance.interceptors.response.use(
     response => {
-        return response.data ? response.data : response
+        return response
     },
     error => {
         // const { response } = error

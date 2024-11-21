@@ -1,9 +1,14 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { login } from "../service/AuthService";
-import { useToast } from "../contexts/ToastContext";
+// import { useToast } from "../contexts/ToastContext";
 import { setToast } from "../redux/slide/toastSlice";
-import { useDispatch, UseDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
+import { Button } from "../components/ui/button";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
+import { setAuthLogin } from "../redux/slide/authSlice";
+
 
 
 type Inputs = {
@@ -11,7 +16,7 @@ type Inputs = {
     password: string
 };
 const Login = () => {
-    // const { setMessage } = useToast()
+    // const { setMessage } = useToast()s
     const navigate = useNavigate()
 
     const dispatch = useDispatch()
@@ -21,16 +26,25 @@ const Login = () => {
         watch,
         formState: { errors },
     } = useForm<Inputs>()
-    const loginHandler: SubmitHandler<Inputs> = async (payload) => {
-        const logged = await login(payload)
 
-        dispatch(setToast({ message: 'Đăng nhập vào hên thống thành công', type: 'success' }))
-        // setMessage('Đăng nhập vào hệ thống thành công', 'success') --> context
-        logged && navigate('/dashboard')
+    const [loading, setLoading] = useState<boolean>(false)
+    const loginHandler: SubmitHandler<Inputs> = async (payload) => {
+        setLoading(true)
+        try {
+            const auth = await login(payload)
+            dispatch(setToast({ message: 'Đăng nhập vào hên thống thành công', type: 'success' }))
+            dispatch(setAuthLogin(auth))
+            // setMessage('Đăng nhập vào hệ thống thành công', 'success')-- > context
+            auth && navigate('/dashboard')
+        } catch (error) {
+        } finally {
+            setLoading(false)
+        }
     };
     return (
         <>
             <div className="min-h-screen pt-24 items-center justify-center bg-gray-100">
+
                 <div className="max-w-screen-md mx-auto">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="p-4">
@@ -71,12 +85,10 @@ const Login = () => {
                                     {errors.password && <span className="text-red-500 text-xs">Bạn phải nhập vào mật khẩu</span>}
                                 </div>
                                 <div className="mb-3">
-                                    <button
-                                        type="submit"
-                                        className="w-full bg-blue-500 text-white hover:bg-blue-700 py-2 rounded-md"
-                                    >
-                                        Đăng nhập
-                                    </button>
+                                    <Button disabled={loading} className="w-full bg-blue-500 text-white hover:bg-blue-700 py-2 rounded-md">
+                                        {loading ? <ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> : null}
+                                        {loading ? 'Đang xử lý' : 'Đăng nhập'}
+                                    </Button>
                                 </div>
                                 <p className="text-xs mb-2 text-gray-700">
                                     <a href="/" className="text-blue-700">Quên mật khẩu</a>
