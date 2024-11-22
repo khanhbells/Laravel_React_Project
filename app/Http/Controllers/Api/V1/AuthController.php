@@ -29,7 +29,17 @@ class AuthController extends Controller
 
         $user = auth()->user();
 
-        $cookie = Cookie::make('access_token', $token, auth()->factory()->getTTL() * 1);
+        $cookie = Cookie::make(
+            'access_token',
+            $token,
+            auth()->factory()->getTTL() * 60 * 24,
+            '/',
+            null,
+            true,
+            true,
+            false,
+            'None'
+        );
         return $this->respondWithToken($token, $user)->withCookie($cookie);
     }
 
@@ -39,7 +49,14 @@ class AuthController extends Controller
             'user' => new UserResource($user),
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 1
+            'expires_in' => auth()->factory()->getTTL() * 5
         ]);
+    }
+
+    public function me(Request $request)
+    {
+        return response()->json(
+            new UserResource(auth()->user())
+        );
     }
 }

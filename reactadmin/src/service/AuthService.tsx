@@ -23,5 +23,19 @@ const login = async (payload: LoginPayload): Promise<User | null> => {
     }
 }
 
+const fetchUser = async (): Promise<User | null> => {
 
-export { login }
+    try {
+        const response = await axiosInstance.get('/auth/me')
+        console.log(response);
+        // return response
+
+    } catch (error) {
+        handleAxiosError(error)
+        return null
+    }
+    return null
+}
+
+
+export { login, fetchUser }
