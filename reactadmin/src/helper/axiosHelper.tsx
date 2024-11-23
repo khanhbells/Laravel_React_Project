@@ -4,12 +4,12 @@ const handleAxiosError = (error: unknown): void => {
 
     if (axios.isAxiosError(error)) {
         if (error.response && error.response.data && error.response.data.error) {
-            toast.error(error.response.data.error)
+            console.log(error.response.data.error)
         } else {
-            toast.error('Network Error')
+            console.log('Network Error')
         }
     } else {
-        toast.error('Đã xảy ra lỗi không được xác định. Hãy thử lại sau')
+        console.log('Đã xảy ra lỗi không được xác định. Hãy thử lại sau')
     }
 
 }

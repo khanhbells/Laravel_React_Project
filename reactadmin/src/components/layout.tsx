@@ -4,7 +4,6 @@ import { clearToast } from "../redux/slide/toastSlice"
 import { RootState } from "../redux/store"
 import { useSelector, useDispatch } from "react-redux"
 import { showToast } from "../helper/myHelper"
-import { fetchUser } from "../service/AuthService";
 
 const Layout: React.FC = () => {
 
@@ -15,9 +14,7 @@ const Layout: React.FC = () => {
         dispatch(clearToast())
     }, [message, type])
 
-    useEffect(() => {
-        fetchUser()
-    }, [])
+
 
     return (
         <>

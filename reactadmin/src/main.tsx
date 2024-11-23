@@ -9,17 +9,22 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import AuthMiddleware from './middleware/authMiddleware';
+import AuthMiddleware from './middleware/AuthMiddleware';
+import NoAuthMiddleware from './middleware/NoAuthMiddleware';
 import Layout from './components/layout';
-import Dashboard from './pages/dashboard';
-import Login from './pages/login';
-import User from './pages/user/user'
+import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
+import User from './pages/user/User'
 import './index.css';
 
 const router = createBrowserRouter([
   {
     path: "/admin",
-    element: <Login />
+    element: (
+      <NoAuthMiddleware>
+        <Login />
+      </NoAuthMiddleware>
+    )
   },
   {
     path: "/",
