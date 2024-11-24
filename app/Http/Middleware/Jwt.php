@@ -27,11 +27,11 @@ class Jwt
             // $user = auth()->userOrFail();
             $user = JWTAuth::parseToken()->authenticate();
         } catch (TokenExpiredException $e) {
-            return response()->json(['message' => 'Token đã hết hạn'], 401);
+            return response()->json(['message' => 'Token đã hết hạn'], Response::HTTP_UNAUTHORIZED);
         } catch (JWTException $e) {
-            return response()->json(['message' => 'Token không hợp lệ'], 401);
+            return response()->json(['message' => 'Token không hợp lệ'], Response::HTTP_UNAUTHORIZED);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Không có token'], 401);
+            return response()->json(['message' => 'Không có token'], Response::HTTP_UNAUTHORIZED);
         }
         return $next($request);
     }

@@ -56,6 +56,8 @@ class AuthController extends Controller
             $user = JWTAuth::parseToken()->authenticate();
 
             $token = auth()->refresh();
+            auth()->invalidate(true);
+
             $refreshTokenData = $this->refreshTokenData($user);
             $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
             $cookie = $this->setTokenAndRefreshTokenCookie($token, $refreshToken);
@@ -64,6 +66,9 @@ class AuthController extends Controller
             return $this->respondWithToken($token, $refreshToken, $user)->withCookie($tokenCookie)->withCookie($refreshCookie);
         } catch (TokenExpiredException $e) {
             if ($request->hasCookie('refresh_token')) {
+                if (!$request->cookie('refresh_token')) {
+                    return response()->json(['message' => 'Token đã hết hạn'], Response::HTTP_UNAUTHORIZED);
+                }
                 $refreshTokenCookie = $request->cookie('refresh_token');
                 $refreshTokenDecode = JWTAuth::getJWTProvider()->decode($refreshTokenCookie);
                 $user = User::find($refreshTokenDecode['user_id']);
@@ -79,11 +84,11 @@ class AuthController extends Controller
 
                 return $this->respondWithToken($token, $refreshToken, $user)->withCookie($tokenCookie)->withCookie($refreshCookie);
             }
-            return response()->json(['message' => 'Token đã hết hạn'], 401);
+            return response()->json(['message' => 'Token đã hết hạn'], Response::HTTP_UNAUTHORIZED);
         } catch (JWTException $e) {
-            return response()->json(['message' => 'Token không hợp lệ'], 401);
+            return response()->json(['message' => 'Token không hợp lệ'], Response::HTTP_UNAUTHORIZED);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Không có token'], 401);
+            return response()->json(['message' => 'Không có token'], Response::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -112,7 +117,7 @@ class AuthController extends Controller
         $cookie = Cookie::make(
             'access_token',
             $token,
-            auth()->factory()->getTTL() * 60 * 24,
+            auth()->factory()->getTTL() * 24, //1ngay
             '/',
             null,
             true,
@@ -124,7 +129,7 @@ class AuthController extends Controller
         $refreshCookie = Cookie::make(
             'refresh_token',
             $refresh_token,
-            config('jwt.refresh_ttl'),
+            config('jwt.refresh_ttl'), //2 tuan
             '/',
             null,
             true,
@@ -144,7 +149,8 @@ class AuthController extends Controller
     {
         return [
             'user_id' => $user->id,
-            'expires_id' => time() + config('jwt.refresh_ttl'),
+            // 'expires_in' => time() + config('jwt.refresh_ttl'),
+            'expires_in' => time() + 1,
             'random' => time() . md5(rand())
         ];
     }
