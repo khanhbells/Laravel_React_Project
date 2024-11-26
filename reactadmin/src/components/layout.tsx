@@ -4,6 +4,9 @@ import { clearToast } from "../redux/slide/toastSlice"
 import { RootState } from "../redux/store"
 import { useSelector, useDispatch } from "react-redux"
 import { showToast } from "../helper/myHelper"
+import Header from "./header"
+import Aside from "./aside"
+import '../assets/scss/Style.scss'
 
 const Layout: React.FC = () => {
 
@@ -18,9 +21,13 @@ const Layout: React.FC = () => {
 
     return (
         <>
-            Đây là trang Layout tổng
-
-            <Outlet />
+            <div className="page">
+                {/* <Header /> */}
+                <Aside />
+                <div className="main-content">
+                    <Outlet />
+                </div>
+            </div>
         </>
     )
 }
