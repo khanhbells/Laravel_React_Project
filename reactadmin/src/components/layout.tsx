@@ -22,7 +22,7 @@ const Layout: React.FC = () => {
     return (
         <>
             <div className="page">
-                {/* <Header /> */}
+                <Header />
                 <Aside />
                 <div className="main-content">
                     <Outlet />

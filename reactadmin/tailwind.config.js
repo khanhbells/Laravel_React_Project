@@ -91,6 +91,8 @@ export default {
 				},
 				'menu-border': 'rgba(255,255,255,0.1)',
 				'menu-active': 'rgba(255,255,255,.05)',
+				'primary': 'rgba(132,90,223,1)',
+				'second': 'rgba(35,183,229,1)'
 			},
 			borderRadius: {
 				lg: "var(--radius)",
@@ -110,6 +112,7 @@ export default {
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
+				"spin-slow": "spin-slow 5s linear infinite",
 			},
 			fontSize: {
 				'10px': '10px',
@@ -117,6 +120,27 @@ export default {
 				'12px': '12px',
 				'13px': '13px',
 				'14px': '14px',
+				'30px': '30px',
+			},
+			padding: {
+				'15px': '15px'
+			},
+			width: {
+				'32px': '32px',
+			},
+			spacing: {
+				'1px': '1px',
+				'2px': '2px',
+				'3px': '3px',
+				'4px': '4px',
+				'5px': '5px',
+				'6px': '6px',
+				'7px': '7px',
+				'8px': '8px',
+				'9px': '9px',
+				'10px': '10px',
+				'15px': '15px',
+				'20px': '20px',
 			}
 		},
 	},

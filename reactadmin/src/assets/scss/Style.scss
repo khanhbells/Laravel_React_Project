@@ -1,4 +1,31 @@
-.main-content {
-    margin-left: 240px;
-    padding: 0 10px;
+body {
+    background: rgb(240, 241, 247, 1) !important;
+
+    button {
+        outline: none !important;
+    }
+
+    .main-content {
+        margin-left: 240px;
+        padding: 0 10px;
+        margin-top: 56px;
+        margin-block-start: 3.5rem;
+    }
+
+    .app-header {
+        padding-left: 240px;
+
+        .header-right-content {
+            .header-link {
+                padding: 1rem 0.65rem;
+
+                .header-link-icon {
+                    width: 17px;
+                    height: 17px;
+                    font-size: 20px;
+                    color: #536485;
+                }
+            }
+        }
+    }
 }

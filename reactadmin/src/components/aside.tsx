@@ -9,17 +9,32 @@ import { Link } from "react-router-dom";
 import "../assets/scss/Accordion.scss"
 import "../assets/scss/Aside.scss"
 import { sidebarItem } from "../constant/sidebar";
-import logo from "../assets/logo.svg"
+import { Logo } from "./logo"
+import { useEffect } from "react";
 
 const Aside = () => {
     const location = useLocation()
-    console.log(location);
+    const segment = location.pathname.split('/')[1]
+
+    const getOpenAccordionValue = () => {
+        for (let groupIndex = 0; groupIndex < sidebarItem.length; groupIndex++) {
+            const group = sidebarItem[groupIndex]
+            for (let itemIndex = 0; itemIndex < group.items.length; itemIndex++) {
+                const item = group.items[itemIndex]
+                if (item.active.includes(segment)) {
+                    return `item-${groupIndex}-${itemIndex}`
+                }
+            }
+        }
+    }
+    const defaultValue = getOpenAccordionValue()
+
 
     return (
-        <aside className="app-aside w-60 bg-[#111c43] h-full fixed">
+        <aside className="app-aside w-60 bg-[#111c43] h-full fixed top-0">
             <div className="main-sidebar-header w-60 p-3.5 fixed z-10 h-14 text-center border-solid border-b border-menu-border">
                 <a href="" className="inline-block">
-                    <img className="" src={logo} alt="" />
+                    <Logo />
                 </a>
             </div>
             <div className="main-sidebar mt-14">
@@ -27,11 +42,13 @@ const Aside = () => {
                     sidebarItem.map((group, index) => (
                         <div key={index}>
                             <div className="menu-category px-6 py-3 text-[#a3aed1] text-10px tracking-wider opacity-50">{group.label}</div>
-                            <Accordion type="single" collapsible className="px-3 sidebar-accordion">
+                            <Accordion type="single" collapsible className="px-3 sidebar-accordion" defaultValue={defaultValue ?? ''}>
                                 {group.items.map((item, itemIndex) => (
                                     <AccordionItem key={itemIndex} value={`item-${index}-${itemIndex}`}>
-                                        <AccordionTrigger className="text-[#a3aed1] rounded-lg bg-[rgba(255,255,255,.05)]">
-                                            <div className="menu-label flex flex-1 items-center text-white">
+                                        <AccordionTrigger
+                                            className={`rounded-lg ${item.active.includes(segment) ? 'text-[#a3aed1] bg-[rgba(255,255,255,.05)]' : ''}`}
+                                        >
+                                            <div className={`menu-label flex flex-1 items-center text-[#a3aed1] ${item.active.includes(segment) ? 'text-white' : ''}`}>
                                                 {item.icon}
                                                 <span>{item.label}</span>
                                             </div>
@@ -82,7 +99,7 @@ const Aside = () => {
                 }
 
             </div>
-        </aside>
+        </aside >
     )
 }
 export default Aside

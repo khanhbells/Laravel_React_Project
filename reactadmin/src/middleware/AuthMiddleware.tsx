@@ -9,7 +9,6 @@ import { useDispatch } from "react-redux"
 type ProtectedRouteProps = PropsWithChildren
 
 const AuthMiddleware = ({ children }: ProtectedRouteProps) => {
-    console.log(children);
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
