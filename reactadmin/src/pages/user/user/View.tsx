@@ -26,6 +26,7 @@ import { MdOutlineLockReset } from "react-icons/md";
 import { pagination } from "../../../service/UserService"
 import { useQuery } from "react-query"
 import { LoadingSpinner } from "../../../components/ui/loading"
+import Paginate from "../../../components/paginate"
 
 
 const User = () => {
@@ -36,6 +37,7 @@ const User = () => {
 
     //REACT QUERY
     const { isLoading, data, isError, error } = useQuery('users', pagination)
+
 
 
     return (
@@ -76,10 +78,10 @@ const User = () => {
                                 ) : isError ? (
                                     <TableRow>
                                         <TableCell colSpan={9} className="text-center text-[12px] text-[#f00000]">
-                                            Có lỗi xảy ra trong quá trình truy xuất dữ liệu.Hãy thử lại sau!
+                                            Có lỗi xảy ra trong quá trình truy xuất dữ liệu.Hãy thử lại sau
                                         </TableCell>
                                     </TableRow>
-                                ) : data && data.map((user: any, index: number) => (
+                                ) : data.users && data.users.map((user: any, index: number) => (
                                     <TableRow key={index}>
                                         <TableCell className="font-medium">
                                             <Checkbox id="checkAll" className="text-white" />
@@ -110,7 +112,7 @@ const User = () => {
                         </Table>
                     </CardContent>
                     <CardFooter>
-                        <p>Card Footer</p>
+                        {!isLoading && data.links.length ? <Paginate links={data?.links} /> : null}
                     </CardFooter>
                 </Card>
             </div >
