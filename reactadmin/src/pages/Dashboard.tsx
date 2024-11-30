@@ -1,13 +1,14 @@
-
+import PageHeading from "../components/heading"
 
 
 const Dashboard = () => {
-
+    const breadcrumb = {
+        title: 'Thống kê chung',
+        route: '/dashboard'
+    }
     return (
         <>
-            <div>
-                Đây là trang Dashboard
-            </div>
+            <PageHeading breadcrumb={breadcrumb} />
         </>
     )
 }

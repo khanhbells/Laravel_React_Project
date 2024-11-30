@@ -25,17 +25,17 @@ export const sidebarItem = [
         label: 'FUNCTION',
         items: [
             {
-                icon: <FaHome className="text-sm mr-2" />,
+                icon: <FaUser className="text-sm mr-2" />,
                 active: ['user'],
                 label: 'Quản Lý Thành Viên',
                 links: [
                     {
                         title: 'Nhóm thành viên',
-                        to: '/user/catalogue'
+                        to: '/user/catalogue/index'
                     },
                     {
                         title: 'Thành viên',
-                        to: '/user'
+                        to: '/user/index'
                     }
                 ]
             }

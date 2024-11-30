@@ -9,13 +9,19 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+
+import {
+  QueryClient,
+  QueryClientProvider,
+} from 'react-query'
 import AuthMiddleware from './middleware/AuthMiddleware';
 import NoAuthMiddleware from './middleware/NoAuthMiddleware';
 import Layout from './components/layout';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
-import User from './pages/user/User'
+import User from './pages/user/user/View'
 import './index.css';
+import { ReactQueryDevtools } from 'react-query/devtools'
 
 const router = createBrowserRouter([
   {
@@ -38,14 +44,19 @@ const router = createBrowserRouter([
         path: "/dashboard", element: <Dashboard />
       },
       {
-        path: "/user", element: <User />
+        path: "/user/index", element: <User />
       }
     ]
   },
 ]);
+
+const queryClient = new QueryClient()
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <RouterProvider router={router} />
-    <ToastContainer />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <ToastContainer />
+      <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
+    </QueryClientProvider>
   </Provider>
 )

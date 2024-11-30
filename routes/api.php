@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,18 @@ Route::group([
 
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
+
+    // User
+    Route::get('users', [UserController::class, 'index']);
+});
+Route::group([
+
+    'prefix' => 'v1'
+
+
+], function ($router) {
+    // User
+    Route::get('users', [UserController::class, 'index']);
 });
 Route::post('v1/auth/refresh', [AuthController::class, 'refresh']);
 Route::post('v1/auth/login', [AuthController::class, 'login']);
