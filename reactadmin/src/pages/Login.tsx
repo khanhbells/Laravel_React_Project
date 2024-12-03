@@ -32,7 +32,7 @@ const Login = () => {
         setLoading(true)
         try {
             const auth = await login(payload)
-            dispatch(setToast({ message: 'Đăng nhập vào hên thống thành công', type: 'success' }))
+            dispatch(setToast({ message: 'Đăng nhập vào hệ thống thành công', type: 'success' }))
             dispatch(setAuthLogin(auth))
             // setMessage('Đăng nhập vào hệ thống thành công', 'success')-- > context
             auth && navigate('/dashboard')

@@ -5,4 +5,5 @@ export type User = {
     image: string | null,
     phone: string | null,
     address: string | null,
+    created_at: string | null
 }

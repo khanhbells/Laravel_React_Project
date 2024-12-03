@@ -34,6 +34,7 @@ Route::group([
 ], function ($router) {
     // User
     Route::get('users', [UserController::class, 'index']);
+    Route::put('users/{id}/status', [UserController::class, 'updateStatusByField']);
 });
 Route::post('v1/auth/refresh', [AuthController::class, 'refresh']);
 Route::post('v1/auth/login', [AuthController::class, 'login']);

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link, useSearchParams, useNavigate } from "react-router-dom"
 import PageHeading from "../../../components/heading"
 import {
     Card,
@@ -23,26 +23,47 @@ import { Button } from "../../../components/ui/button"
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdOutlineLockReset } from "react-icons/md";
-import { pagination } from "../../../service/UserService"
+import { pagination, breadcrumb, model } from "../../../service/UserService"
 import { useQuery } from "react-query"
 import { LoadingSpinner } from "../../../components/ui/loading"
 import Paginate from "../../../components/paginate"
+import { Breadcrumb } from "../../../types/Breadcrumb"
+import useColumnState from "../../../hook/useColumnState"
+
 
 
 const User = () => {
-    const breadcrumb = {
-        title: 'Quản lý thành viên',
-        route: '/user/index'
-    }
+    const breadcrumbData: Breadcrumb = breadcrumb
+    const navigate = useNavigate()
+    const [searchParams, setSearchParams] = useSearchParams()
+    const currentPage = searchParams.get('page') ? parseInt(searchParams.get('page')!) : 1
+    const [page, setPage] = useState<number | null>(currentPage)
 
     //REACT QUERY
-    const { isLoading, data, isError, error } = useQuery('users', pagination)
+    const { isLoading, data, isError, error, refetch } = useQuery(['users', page], () => pagination(page))
 
 
+    /* Column State */
+    const { columnState, handleChecked, setInitialColumnState } = useColumnState()
+    //Pagination
+    const handlePageChange = (page: number | null) => {
+        setPage(page)
+        navigate(`?page=${page}`)
+    }
 
+    useEffect(() => {
+        if (!isLoading && data.users) {
+            setInitialColumnState(data.users, 'publish')
+        }
+    }, [isLoading])
+
+    useEffect(() => {
+        setSearchParams({ page: currentPage.toString() })
+        refetch()
+    }, [page, refetch])
     return (
         <>
-            <PageHeading breadcrumb={breadcrumb} />
+            <PageHeading breadcrumb={breadcrumbData} />
             <div className="container">
                 <Card className="rounded-[5px] mt-[15px] ">
                     <CardHeader className="border-b border-solid border-[#f3f3f3] p-[20px]">
@@ -78,7 +99,7 @@ const User = () => {
                                 ) : isError ? (
                                     <TableRow>
                                         <TableCell colSpan={9} className="text-center text-[12px] text-[#f00000]">
-                                            Có lỗi xảy ra trong quá trình truy xuất dữ liệu.Hãy thử lại sau
+                                            Có lỗi xảy ra trong quá trình truy xuất dữ liệu. Hãy thử lại sau
                                         </TableCell>
                                     </TableRow>
                                 ) : data.users && data.users.map((user: any, index: number) => (
@@ -93,7 +114,7 @@ const User = () => {
                                         <TableCell>{user.address ?? '-'}</TableCell>
                                         <TableCell>-</TableCell>
                                         <TableCell className="text-center">
-                                            <Switch />
+                                            <Switch value={user.id} checked={columnState[user.id]?.publish} onCheckedChange={() => handleChecked(user.id, 'publish', model)} />
                                         </TableCell>
                                         <TableCell className="flex justify-center">
                                             <Button className="flex mr-[5px]">
@@ -112,12 +133,11 @@ const User = () => {
                         </Table>
                     </CardContent>
                     <CardFooter>
-                        {!isLoading && data.links.length ? <Paginate links={data?.links} /> : null}
+                        {!isLoading && data.links.length ? <Paginate links={data?.links} pageChange={handlePageChange} /> : null}
                     </CardFooter>
                 </Card>
             </div >
         </>
     )
 }
-
 export default User

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import {
     Pagination,
     PaginationContent,
-    PaginationEllipsis,
     PaginationItem,
     PaginationLink,
     PaginationNext,
@@ -16,10 +15,11 @@ interface PaginationLink {
     active: boolean
 }
 interface PaginationProps {
-    links: PaginationLink[]
+    links: PaginationLink[],
+    pageChange: (page: number | null) => void
 }
 
-const Paginate: React.FC<PaginationProps> = ({ links }) => {
+const Paginate: React.FC<PaginationProps> = ({ links, pageChange }) => {
 
     const activeLinkIndex = links.findIndex(link => link.active)
 
@@ -29,7 +29,10 @@ const Paginate: React.FC<PaginationProps> = ({ links }) => {
             index !== links.length - 1) && //next link
         (index >= activeLinkIndex - 3 && index <= activeLinkIndex + 3)
     ))
-    console.log(filterLinks);
+
+    const handlePageChange = (page: number) => {
+        pageChange(page);
+    }
 
 
     return (
@@ -38,28 +41,39 @@ const Paginate: React.FC<PaginationProps> = ({ links }) => {
                 <PaginationContent>
                     {activeLinkIndex > 1 && (
                         <PaginationItem>
-                            <PaginationPrevious href="#" />
+                            <PaginationPrevious href="#" onClick={(e: any) => {
+                                e.preventDefault()
+                                handlePageChange(parseInt(links[activeLinkIndex - 1].label))
+                            }}
+                                className="cursor-pointer"
+                            />
                         </PaginationItem>
                     )}
                     {filterLinks.map((link, index) => (
                         <PaginationItem key={index} className={link.active ? 'bg-primary rounded text-white' : null}>
                             {
                                 link.url ? (
-                                    <PaginationLink href="#">{link.label}</PaginationLink>
+                                    <PaginationLink href="#" onClick={(e: any) => {
+                                        e.preventDefault()
+                                        handlePageChange(parseInt(link.label))
+                                    }}>{link.label}</PaginationLink>
                                 ) : null
                             }
-
                         </PaginationItem>
 
                     ))}
                     {
                         activeLinkIndex < links.length - 1 && (
                             <PaginationItem>
-                                <PaginationNext href="#" />
+                                <PaginationNext onClick={(e: any) => {
+                                    e.preventDefault()
+                                    handlePageChange(parseInt(links[activeLinkIndex + 1].label))
+                                }}
+                                    className="cursor-pointer"
+                                />
                             </PaginationItem>
                         )
                     }
-
                 </PaginationContent>
             </Pagination>
         </>
