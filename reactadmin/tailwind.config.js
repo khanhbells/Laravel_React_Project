@@ -91,7 +91,7 @@ export default {
 				},
 				'menu-border': 'rgba(255,255,255,0.1)',
 				'menu-active': 'rgba(255,255,255,.05)',
-				'primary': 'rgba(132,90,223,1)',
+				'primary': 'rgb(17 28 67)',
 				'second': 'rgba(35,183,229,1)'
 			},
 			borderRadius: {
