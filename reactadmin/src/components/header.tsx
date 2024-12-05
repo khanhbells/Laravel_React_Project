@@ -24,7 +24,7 @@ import {
 const Header = () => {
     return (
         <>
-            <header className="app-header h-14 fixed z-100 w-full content-center items-center top-0 bg-white border border-solid border-[#f3f3f3] ">
+            <header className="app-header h-14 fixed z-99999 w-full content-center items-center top-0 bg-white border border-solid border-[#f3f3f3] ">
                 <div className="main-header mx-auto px-15px h-full flex justify-between items-center">
                     <HiBars3CenterLeft className="text-30px cursor-pointer" />
                     <div className="header-right-content flex justify-between items-center">

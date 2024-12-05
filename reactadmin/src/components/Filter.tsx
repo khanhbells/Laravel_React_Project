@@ -13,39 +13,47 @@ import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import { Link } from "react-router-dom";
 import { FiPlus } from "react-icons/fi";
+import { FilterProps } from "@/interfaces/BaseServiceInterface";
 
-const Filter = () => {
+
+const Filter = ({ isAnyChecked }: FilterProps) => {
+
+    console.log(isAnyChecked);
+
     return (
         <>
             <div className="mb-[15px]">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center">
                         <div className="mr-[10px]">
-                            <Select>
-                                <SelectTrigger className="w-[150px]">
-                                    <SelectValue placeholder="Chọn thao tác" />
-                                </SelectTrigger>
-                                <SelectContent >
-                                    <SelectItem className="cursor-pointer flex" value="deleteAll">
-                                        <div className="flex items-center">
-                                            <FaXmark className="mr-[5px]" />
-                                            Xóa
-                                        </div>
-                                    </SelectItem>
-                                    <SelectItem className="cursor-pointer" value="publish|2">
-                                        <div className="flex items-center">
-                                            <IoCheckmarkSharp className="mr-[5px]" />
-                                            Xuất bản
-                                        </div>
-                                    </SelectItem>
-                                    <SelectItem className="cursor-pointer" value="publish|1">
-                                        <div className="flex items-center">
-                                            <AiOutlineStop className="mr-[5px]" />
-                                            Ngừng xuất bản
-                                        </div>
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
+                            {isAnyChecked && (
+                                <Select>
+                                    <SelectTrigger className="w-[150px]">
+                                        <SelectValue placeholder="Chọn thao tác" />
+                                    </SelectTrigger>
+                                    <SelectContent >
+                                        <SelectItem className="cursor-pointer flex" value="deleteAll">
+                                            <div className="flex items-center">
+                                                <FaXmark className="mr-[5px]" />
+                                                Xóa
+                                            </div>
+                                        </SelectItem>
+                                        <SelectItem className="cursor-pointer" value="publish|2">
+                                            <div className="flex items-center">
+                                                <IoCheckmarkSharp className="mr-[5px]" />
+                                                Xuất bản
+                                            </div>
+                                        </SelectItem>
+                                        <SelectItem className="cursor-pointer" value="publish|1">
+                                            <div className="flex items-center">
+                                                <AiOutlineStop className="mr-[5px]" />
+                                                Ngừng xuất bản
+                                            </div>
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            )}
+
                         </div>
                         <div className="mr-[10px]">
                             <Select>

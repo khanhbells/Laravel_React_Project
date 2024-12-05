@@ -21,6 +21,9 @@ import {
 
 import { buttonActions } from "../service/UserService"
 
+//CheckedState
+import useCheckBoxState from "../hook/useCheckBoxState"
+
 // import { pagination, breadcrumb, model } from "../service/UserService"
 // import { useQuery } from "react-query"
 // import { User } from "../types/User"
@@ -30,11 +33,25 @@ interface CustomTableProps {
     isError: boolean,
     model: string,
     tableColumn: Array<{ name: string; render: (item: any) => JSX.Element }>,
+    checkedState: { [key: number]: boolean },
+    checkedAllState: boolean,
+    handleCheckedChange: (id: number) => void
+    handleCheckedAllChange: () => void
 }
 
-const CustomTable = ({ data, isLoading, isError, model, tableColumn }: CustomTableProps) => {
+const CustomTable = ({
+    data,
+    isLoading,
+    isError,
+    model,
+    tableColumn,
+    checkedState,
+    checkedAllState,
+    handleCheckedChange,
+    handleCheckedAllChange }: CustomTableProps) => {
 
     const { columnState, handleChecked, setInitialColumnState } = useColumnState()
+
 
     //Follow theo isLoading và data
     useEffect(() => {
@@ -49,7 +66,14 @@ const CustomTable = ({ data, isLoading, isError, model, tableColumn }: CustomTab
             <TableHeader>
                 <TableRow>
                     <TableHead>
-                        <Checkbox id="checkAll" className="text-white" />
+                        <Checkbox
+                            id="checkAll"
+                            className="text-white"
+                            checked={checkedAllState}
+                            onCheckedChange={() => {
+                                handleCheckedAllChange()
+                            }}
+                        />
                     </TableHead>
                     <TableHead>ID</TableHead>
                     <TableHead>Họ Tên</TableHead>
@@ -77,9 +101,13 @@ const CustomTable = ({ data, isLoading, isError, model, tableColumn }: CustomTab
                         </TableCell>
                     </TableRow>
                 ) : data[model] && data[model].map((row: any, index: number) => (
-                    <TableRow key={index}>
+                    <TableRow key={index} className={checkedState[row.id] ? 'bg-[#ffc]' : ''}>
                         <TableCell className="font-medium">
-                            <Checkbox id="checkAll" className="text-white" />
+                            <Checkbox id="checkAll"
+                                className="text-white"
+                                checked={checkedState[row.id] || false}
+                                onCheckedChange={() => handleCheckedChange(row.id)}
+                            />
                         </TableCell>
                         {tableColumn && tableColumn.map((column, index) => (
                             <TableCell key={index}>{column.render(row)}</TableCell>

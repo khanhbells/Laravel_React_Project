@@ -4,3 +4,7 @@ export interface updateStatusByFieldParam {
     value: string | number | boolean,
     model: string
 }
+
+export interface FilterProps {
+    isAnyChecked: boolean
+}
