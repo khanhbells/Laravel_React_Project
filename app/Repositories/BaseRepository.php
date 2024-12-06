@@ -33,4 +33,9 @@ class BaseRepository
     ) {
         return $this->model->select($column)->with($relation)->findOrFail($modelId);
     }
+
+    public function deleteMultiple($ids = [])
+    {
+        return $this->model->whereIn('id', $ids)->delete();
+    }
 }

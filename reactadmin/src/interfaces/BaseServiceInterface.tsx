@@ -5,6 +5,13 @@ export interface updateStatusByFieldParam {
     model: string
 }
 
-export interface FilterProps {
-    isAnyChecked: boolean
+export interface CheckStateInterface {
+    checkedState: { [id: number]: boolean }
+}
+
+export interface FilterProps extends CheckStateInterface {
+    isAnyChecked: boolean,
+    model: string
+    refetch: any
+
 }

@@ -14,11 +14,22 @@ import { Input } from "../components/ui/input"
 import { Link } from "react-router-dom";
 import { FiPlus } from "react-icons/fi";
 import { FilterProps } from "@/interfaces/BaseServiceInterface";
+import { useEffect } from "react";
+import useFilterAction from "@/hook/useFilterAction";
 
 
-const Filter = ({ isAnyChecked }: FilterProps) => {
+const Filter = ({ isAnyChecked, checkedState, model, refetch }: FilterProps) => {
 
-    console.log(isAnyChecked);
+    const { actionSwitch } = useFilterAction()
+
+    console.log(checkedState);
+
+
+    const handleStatus = (value: string): void => {
+        const [action, selectedValue] = value.split('|')
+        actionSwitch(action, selectedValue, { checkedState }, model, refetch)
+        refetch()
+    }
 
     return (
         <>
@@ -27,7 +38,7 @@ const Filter = ({ isAnyChecked }: FilterProps) => {
                     <div className="flex items-center">
                         <div className="mr-[10px]">
                             {isAnyChecked && (
-                                <Select>
+                                <Select onValueChange={(value) => handleStatus(value)}>
                                     <SelectTrigger className="w-[150px]">
                                         <SelectValue placeholder="Chọn thao tác" />
                                     </SelectTrigger>

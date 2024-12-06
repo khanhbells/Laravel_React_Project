@@ -53,7 +53,12 @@ const User = () => {
                         <CardDescription className="text-xs text-[#f00000]">Hiển thị danh sách thành viên, sử dụng các chức năng bên dưới để lọc theo mong muốn</CardDescription>
                     </CardHeader>
                     <CardContent className="p-[15px]">
-                        <Filter isAnyChecked={somethingChecked} />
+                        <Filter
+                            isAnyChecked={somethingChecked}
+                            checkedState={checkedState}
+                            model={model}
+                            refetch={refetch}
+                        />
                         <CustomTable
                             isLoading={isLoading}
                             data={data}
