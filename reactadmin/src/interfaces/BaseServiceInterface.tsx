@@ -15,3 +15,11 @@ export interface FilterProps extends CheckStateInterface {
     refetch: any
 
 }
+
+export interface CustomAlertDialogProps {
+    isOpen: boolean,
+    title: string,
+    description: string,
+    closeAlertDialog: () => void,
+    confirmAction: () => void
+}

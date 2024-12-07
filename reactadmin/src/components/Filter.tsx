@@ -14,31 +14,60 @@ import { Input } from "../components/ui/input"
 import { Link } from "react-router-dom";
 import { FiPlus } from "react-icons/fi";
 import { FilterProps } from "@/interfaces/BaseServiceInterface";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useFilterAction from "@/hook/useFilterAction";
+import CustomAlertDialog from "@/components/CustomAlertDialog";
+import { useDispatch, useSelector } from "react-redux";
+import { showToast } from "../helper/myHelper"
+import { clearToast } from "../redux/slide/toastSlice"
+
 
 
 const Filter = ({ isAnyChecked, checkedState, model, refetch }: FilterProps) => {
 
+    const dispatch = useDispatch()
+    const [alertDialogOpen, setAlertDialogOpen] = useState<boolean>(false)
+
+    const [actionSelectedValue, setActionSelectedValue] = useState<string>('')
+
     const { actionSwitch } = useFilterAction()
 
-    console.log(checkedState);
-
-
-    const handleStatus = (value: string): void => {
-        const [action, selectedValue] = value.split('|')
-        actionSwitch(action, selectedValue, { checkedState }, model, refetch)
-        refetch()
+    //Open dialog
+    const openAlertDialog = (value: string) => {
+        setAlertDialogOpen(true)
+        setActionSelectedValue(value)
     }
+    const closeAlertDialog = () => {
+        setAlertDialogOpen(false)
+        setActionSelectedValue('')
+    }
+
+    const confirmAction = async (value: string): Promise<void> => {
+        const [action, selectedValue] = value.split('|')
+        const response = await actionSwitch(action, selectedValue, { checkedState }, model, refetch)
+        closeAlertDialog()
+        showToast(response?.message, 'success')
+        dispatch(clearToast())
+    }
+
+
+
 
     return (
         <>
             <div className="mb-[15px]">
+                <CustomAlertDialog
+                    isOpen={alertDialogOpen}
+                    title="Bạn có chắc chắn muốn thực hiện chức năng này?"
+                    description="Hành động này là không thể đảo ngược được! Hãy chắc chắn rằng bạn muốn thực hiện chức năng này"
+                    closeAlertDialog={closeAlertDialog}
+                    confirmAction={() => confirmAction(actionSelectedValue)}
+                />
                 <div className="flex justify-between items-center">
                     <div className="flex items-center">
                         <div className="mr-[10px]">
                             {isAnyChecked && (
-                                <Select onValueChange={(value) => handleStatus(value)}>
+                                <Select onValueChange={(value) => openAlertDialog(value)}>
                                     <SelectTrigger className="w-[150px]">
                                         <SelectValue placeholder="Chọn thao tác" />
                                     </SelectTrigger>

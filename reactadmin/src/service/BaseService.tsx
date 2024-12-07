@@ -19,18 +19,27 @@ const deleteAll = async (ids: string[], model: string, refetch: any) => {
             }
         })
         refetch()
-
-        return
+        return response.data
 
     } catch (error) {
         handleAxiosError(error)
     }
-
-
 }
 
-const updateFieldByParams = () => {
+const updateFieldByParams = async (action: string, ids: string[], model: string, selectedValue: string, refetch: any) => {
+    try {
+        const response = await axios.put('records/update/batch', {
+            ids: ids,
+            model: model,
+            field: action,
+            value: selectedValue
+        })
+        refetch()
+        return response.data
 
+    } catch (error) {
+        handleAxiosError(error)
+    }
 }
 
 export { updateStatusByField, updateFieldByParams, deleteAll }

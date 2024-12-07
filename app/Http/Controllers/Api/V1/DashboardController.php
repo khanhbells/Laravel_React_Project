@@ -23,16 +23,11 @@ class DashboardController extends Controller
                     'error' => 'Danh sách id không hợp lệ'
                 ], Response::HTTP_BAD_REQUEST);
             }
-            // Singular xóa chữ s ở cuối chuỗi
-            // Studly viết hoa chữ cái đầu
-            $singularModel = Str::singular($model);
-            $modelClass = Str::studly($singularModel);
-            $folder = Str::studly(current(explode('_', $singularModel)));
 
-            $repository = "App\Repositories\\{$folder}\\{$modelClass}Repository";
-            $repository = app($repository);
+            //Cau hinh duong dan den class Repository tương ứng
+            $repository = app($this->callRepository($model));
 
-            $deletedCount = $repository->deleteMultiple($ids);
+            $deletedCount = $repository->deleteBatch($ids);
 
             DB::commit();
 
@@ -43,5 +38,53 @@ class DashboardController extends Controller
             DB::rollBack();
             return response()->json(['error' => 'Có vấn đề xảy ra'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function updateBatch(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $ids = $request->input('ids');
+            $model = $request->input('model');
+            $field = $request->input('field');
+            $value = $request->input('value');
+
+            if (!is_array($ids) || count($ids) == 0) {
+                return response()->json([
+                    'error' => 'Danh sách id không hợp lệ'
+                ], Response::HTTP_BAD_REQUEST);
+            }
+
+            $repository = app($this->callRepository($model));
+
+            $whereIn = [
+                'whereInField' => 'id',
+                'whereInValue' => $ids
+            ];
+
+            $payload[$field] = $value;
+
+            $updateCount = $repository->updateBatch($payload, $whereIn);
+            DB::commit();
+
+            return response()->json([
+                'message' => "Đã cập nhật thành công {$updateCount} bản ghi"
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Có vấn đề xảy ra'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private function callRepository($model)
+    {
+        // Singular xóa chữ s ở cuối chuỗi
+        // Studly viết hoa chữ cái đầu
+        $singularModel = Str::singular($model);
+        $modelClass = Str::studly($singularModel);
+        $folder = Str::studly(current(explode('_', $singularModel)));
+
+        $repository = "App\Repositories\\{$folder}\\{$modelClass}Repository";
+        return $repository;
     }
 }
