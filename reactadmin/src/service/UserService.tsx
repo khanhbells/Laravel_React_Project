@@ -5,9 +5,9 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdOutlineLockReset } from "react-icons/md";
 // import { handleAxiosError } from "../helper/axiosHelper";
 
-const pagination = async (page: number | null) => {
+const pagination = async (queryString: string) => {
 
-    const response = await axios.get(`/users?page=${page}`)
+    const response = await axios.get(`/users?${queryString}`)
     return response.data
 }
 

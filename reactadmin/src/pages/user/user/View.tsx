@@ -1,5 +1,5 @@
 import { useSearchParams, useNavigate } from "react-router-dom"
-import PageHeading from "../../../components/heading"
+import PageHeading from "@/components/heading"
 import {
     Card,
     CardContent,
@@ -7,41 +7,26 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "../../../components/ui/card"
+} from "@/components/ui/card"
 import { useEffect, useState } from "react"
-import { pagination, breadcrumb, model } from "../../../service/UserService"
+import { pagination, breadcrumb, model, tableColumn } from "@/service/UserService"
 import { useQuery } from "react-query"
-import Paginate from "../../../components/paginate"
-import { Breadcrumb } from "../../../types/Breadcrumb"
+import Paginate from "@/components/paginate"
+import { Breadcrumb } from "@/types/Breadcrumb"
 
-import CustomTable from "../../../components/customTable"
-import { tableColumn } from "../../../service/UserService"
-import Filter from "../../../components/Filter"
+import CustomTable from "@/components/customTable"
+import Filter from "@/components/Filter"
 
 import useCheckBoxState from "@/hook/useCheckBoxState"
+import useTable from "@/hook/useTable"
+
 const User = () => {
     const breadcrumbData: Breadcrumb = breadcrumb
-    const navigate = useNavigate()
-    const [searchParams, setSearchParams] = useSearchParams()
-    const currentPage = searchParams.get('page') ? parseInt(searchParams.get('page')!) : 1
-    const [page, setPage] = useState<number | null>(currentPage)
     //REACT QUERY
-    const { isLoading, data, isError, refetch } = useQuery(['users', page], () => pagination(page))
-    //Pagination
-    const handlePageChange = (page: number | null) => {
-        setPage(page)
-        navigate(`?page=${page}`)
-    }
+    const { isLoading, data, isError, refetch, handlePageChange, handleQueryString } = useTable({ model, pagination })
     //Checkbox
     const { checkedState, checkedAllState, handleCheckedChange, handleCheckedAllChange, isAnyChecked } = useCheckBoxState(data, model, isLoading)
     const somethingChecked = isAnyChecked()
-
-
-    useEffect(() => {
-        setSearchParams({ page: currentPage.toString() })
-        refetch()
-    }, [page, refetch])
-
 
     return (
         <>
@@ -58,6 +43,7 @@ const User = () => {
                             checkedState={checkedState}
                             model={model}
                             refetch={refetch}
+                            handleQueryString={(filters: any) => handleQueryString(filters)}
                         />
                         <CustomTable
                             isLoading={isLoading}

@@ -11,8 +11,9 @@ export interface CheckStateInterface {
 
 export interface FilterProps extends CheckStateInterface {
     isAnyChecked: boolean,
-    model: string
-    refetch: any
+    model: string,
+    refetch: any,
+    handleQueryString: any
 
 }
 

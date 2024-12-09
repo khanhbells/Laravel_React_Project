@@ -8,7 +8,7 @@ import {
 import { FaXmark } from "react-icons/fa6"
 import { IoCheckmarkSharp } from "react-icons/io5";
 import { AiOutlineStop } from "react-icons/ai";
-import { perpages } from "../constant/general";
+import { perpages, publishs } from "../constant/general";
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import { Link } from "react-router-dom";
@@ -20,15 +20,27 @@ import CustomAlertDialog from "@/components/CustomAlertDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { showToast } from "../helper/myHelper"
 import { clearToast } from "../redux/slide/toastSlice"
+import useDebounce from "@/hook/useDebounce";
 
+interface FilterInterface {
+    perpage: string | number,
+    publish: string | number,
+    parent_id: string | number
+}
 
-
-const Filter = ({ isAnyChecked, checkedState, model, refetch }: FilterProps) => {
+const Filter = ({ isAnyChecked, checkedState, model, refetch, handleQueryString }: FilterProps) => {
 
     const dispatch = useDispatch()
     const [alertDialogOpen, setAlertDialogOpen] = useState<boolean>(false)
 
     const [actionSelectedValue, setActionSelectedValue] = useState<string>('')
+    const [filters, setFilters] = useState<FilterInterface>({
+        perpage: '',
+        publish: 0,
+        parent_id: 0
+    })
+
+    const [keyword, setKeyword] = useState<string>('')
 
     const { actionSwitch } = useFilterAction()
 
@@ -41,7 +53,6 @@ const Filter = ({ isAnyChecked, checkedState, model, refetch }: FilterProps) => 
         setAlertDialogOpen(false)
         setActionSelectedValue('')
     }
-
     const confirmAction = async (value: string): Promise<void> => {
         const [action, selectedValue] = value.split('|')
         const response = await actionSwitch(action, selectedValue, { checkedState }, model, refetch)
@@ -49,6 +60,31 @@ const Filter = ({ isAnyChecked, checkedState, model, refetch }: FilterProps) => 
         showToast(response?.message, 'success')
         dispatch(clearToast())
     }
+
+
+
+    //Delay keyword
+    const { debounce } = useDebounce()
+
+    const debounceInputSearch = debounce((value: string) => {
+        setKeyword(value)
+    }, 300)
+
+    useEffect(() => {
+        handleQueryString({ ...filters, keyword: keyword })
+    }, [keyword])
+
+
+
+
+    //Change filter
+    const handleFilter = (value: string, field: string) => {
+        setFilters(prevFilter => ({ ...prevFilter, [field]: value }))
+
+    }
+    useEffect(() => {
+        handleQueryString({ ...filters, keyword: keyword })
+    }, [filters])
 
 
 
@@ -96,7 +132,7 @@ const Filter = ({ isAnyChecked, checkedState, model, refetch }: FilterProps) => 
 
                         </div>
                         <div className="mr-[10px]">
-                            <Select>
+                            <Select onValueChange={(value) => handleFilter(value, 'perpage')}>
                                 <SelectTrigger className="w-[150px]">
                                     <SelectValue placeholder="Chọn số bản ghi" />
                                 </SelectTrigger>
@@ -111,17 +147,41 @@ const Filter = ({ isAnyChecked, checkedState, model, refetch }: FilterProps) => 
                             </Select>
                         </div>
                         <div className="mr-[10px]">
-                            <Select>
-                                <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="Chọn danh mục cha" />
+                            <Select onValueChange={(value) => handleFilter(value, 'publish')}>
+                                <SelectTrigger className="w-[150px]">
+                                    <SelectValue placeholder="Chọn trạng thái" />
                                 </SelectTrigger>
                                 <SelectContent >
+                                    {publishs && publishs.map((publish, index) => (
+                                        <SelectItem className="cursor-pointer" value={String(publish.id)} key={index}>
+                                            {publish.name}
+                                        </SelectItem>
+                                    ))}
 
                                 </SelectContent>
                             </Select>
                         </div>
+                        <div className="mr-[10px]">
+                            <Select onValueChange={(value) => handleFilter(value, 'parent_id')}>
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Chọn danh mục cha" />
+                                </SelectTrigger>
+                                <SelectContent >
+                                    <SelectItem className="cursor-pointer" value="0">
+                                        Tất cả danh mục
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
                         <div className="mr-10">
-                            <Input type="email" placeholder="Nhập từ khóa tìm kiếm..." className="w-[200px]" />
+                            <Input
+                                type="email"
+                                placeholder="Nhập từ khóa tìm kiếm..."
+                                className="w-[200px]"
+                                onChange={(e) => {
+                                    debounceInputSearch(e.target.value)
+                                }}
+                            />
                         </div>
                     </div>
                     <div>
