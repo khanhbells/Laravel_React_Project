@@ -21,6 +21,8 @@ import {
 
 import { buttonActions } from "../service/UserService"
 
+import { tableColumn } from "../service/UserService"
+
 //CheckedState
 import useCheckBoxState from "../hook/useCheckBoxState"
 
@@ -75,12 +77,9 @@ const CustomTable = ({
                             }}
                         />
                     </TableHead>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Họ Tên</TableHead>
-                    <TableHead>Số điện thoại</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Địa chỉ</TableHead>
-                    <TableHead>Nhóm Thành Viên</TableHead>
+                    {tableColumn && tableColumn.map((column, index) => (
+                        <TableHead key={index}>{column.name}</TableHead>
+                    ))}
                     <TableHead className="text-center">Tình trạng</TableHead>
                     <TableHead className="text-center">Tác vụ</TableHead>
                 </TableRow>
@@ -100,7 +99,7 @@ const CustomTable = ({
                             Có lỗi xảy ra trong quá trình truy xuất dữ liệu. Hãy thử lại sau
                         </TableCell>
                     </TableRow>
-                ) : data[model] && data[model].map((row: any, index: number) => (
+                ) : data[model].length ? (data[model] && data[model].map((row: any, index: number) => (
                     <TableRow key={index} className={checkedState[row.id] ? 'bg-[#ffc]' : ''}>
                         <TableCell className="font-medium">
                             <Checkbox id="checkAll"
@@ -123,7 +122,14 @@ const CustomTable = ({
                             ))}
                         </TableCell>
                     </TableRow>
-                ))}
+                ))
+                ) : (
+                    <TableRow>
+                        <TableCell colSpan={9} className="text-center text-[12px] text-[#f00]">
+                            Không có dữ liệu phù hợp để hiển thị
+                        </TableCell>
+                    </TableRow>
+                )}
             </TableBody>
         </Table>
     )

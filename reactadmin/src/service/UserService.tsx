@@ -14,8 +14,15 @@ const pagination = async (queryString: string) => {
 
 
 const breadcrumb = {
-    title: 'Quản lý thành viên',
-    route: '/user/index'
+
+    index: {
+        title: 'Quản lý thành viên',
+        route: '/user/index'
+    }, create: {
+        title: 'Thêm mới thành viên',
+        route: '/user/create'
+    }
+
 }
 
 const model = 'users'

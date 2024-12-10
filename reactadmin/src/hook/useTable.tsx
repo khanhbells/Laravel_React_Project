@@ -42,7 +42,7 @@ const useTable = ({ model, pagination }: UseTableProps) => {
         if (query) {
             return `page=${currentPage}${query !== '' ? `&${query}` : ''}`
         }
-        return ''
+        return `page=${currentPage}`
 
     })
     const [filters, setFilters] = useState<FilterParam>({})
@@ -55,7 +55,6 @@ const useTable = ({ model, pagination }: UseTableProps) => {
     //Pagination
     const handlePageChange = (page: number | null) => {
         setPage(page)
-        navigate(`?${queryString}`)
     }
 
     const handleQueryString = useCallback((filterParam: FilterParam) => {
@@ -69,15 +68,13 @@ const useTable = ({ model, pagination }: UseTableProps) => {
     useEffect(() => {
         const query = createQueryString(filters)
         const mainQueryString = `page=${page}${query !== '' ? `&${query}` : ''}`
-        if (query) {
-            setQueryString(mainQueryString)
-        }
-    }, [page, filters, refetch])
+        setQueryString(mainQueryString)
+    }, [page, filters])
 
     useEffect(() => {
-        navigate(`?${queryString}`)
+        navigate(`?${queryString}`, { replace: true })
         refetch()
-    }, [queryString])
+    }, [page, queryString])
 
     return {
         isLoading,
@@ -85,7 +82,7 @@ const useTable = ({ model, pagination }: UseTableProps) => {
         isError,
         refetch,
         handlePageChange,
-        handleQueryString
+        handleQueryString,
     }
 
 }

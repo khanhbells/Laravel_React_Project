@@ -21,7 +21,7 @@ import useCheckBoxState from "@/hook/useCheckBoxState"
 import useTable from "@/hook/useTable"
 
 const User = () => {
-    const breadcrumbData: Breadcrumb = breadcrumb
+    const breadcrumbData: Breadcrumb = breadcrumb.index
     //REACT QUERY
     const { isLoading, data, isError, refetch, handlePageChange, handleQueryString } = useTable({ model, pagination })
     //Checkbox

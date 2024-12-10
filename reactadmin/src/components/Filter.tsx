@@ -8,10 +8,10 @@ import {
 import { FaXmark } from "react-icons/fa6"
 import { IoCheckmarkSharp } from "react-icons/io5";
 import { AiOutlineStop } from "react-icons/ai";
-import { perpages, publishs } from "../constant/general";
+import { perpages, publishs, sort } from "../constant/general";
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { FiPlus } from "react-icons/fi";
 import { FilterProps } from "@/interfaces/BaseServiceInterface";
 import { useEffect, useState } from "react";
@@ -23,9 +23,9 @@ import { clearToast } from "../redux/slide/toastSlice"
 import useDebounce from "@/hook/useDebounce";
 
 interface FilterInterface {
-    perpage: string | number,
-    publish: string | number,
-    parent_id: string | number
+    perpage: string | undefined,
+    publish: string | undefined,
+    parent_id: string | undefined
 }
 
 const Filter = ({ isAnyChecked, checkedState, model, refetch, handleQueryString }: FilterProps) => {
@@ -34,13 +34,16 @@ const Filter = ({ isAnyChecked, checkedState, model, refetch, handleQueryString 
     const [alertDialogOpen, setAlertDialogOpen] = useState<boolean>(false)
 
     const [actionSelectedValue, setActionSelectedValue] = useState<string>('')
+    const [searchParams, setSearchParams] = useSearchParams()
     const [filters, setFilters] = useState<FilterInterface>({
-        perpage: '',
-        publish: 0,
-        parent_id: 0
+        perpage: searchParams.get('perpage') || '10',
+        publish: searchParams.get('publish') || undefined,
+        parent_id: searchParams.get('parent_id') || undefined
     })
 
-    const [keyword, setKeyword] = useState<string>('')
+    const [keyword, setKeyword] = useState<string>(searchParams.get('keyword') || '')
+
+
 
     const { actionSwitch } = useFilterAction()
 
@@ -101,8 +104,8 @@ const Filter = ({ isAnyChecked, checkedState, model, refetch, handleQueryString 
                 />
                 <div className="flex justify-between items-center">
                     <div className="flex items-center">
-                        <div className="mr-[10px]">
-                            {isAnyChecked && (
+                        {isAnyChecked && (
+                            <div className="mr-[10px]">
                                 <Select onValueChange={(value) => openAlertDialog(value)}>
                                     <SelectTrigger className="w-[150px]">
                                         <SelectValue placeholder="Chọn thao tác" />
@@ -128,11 +131,10 @@ const Filter = ({ isAnyChecked, checkedState, model, refetch, handleQueryString 
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
-                            )}
-
-                        </div>
+                            </div>
+                        )}
                         <div className="mr-[10px]">
-                            <Select onValueChange={(value) => handleFilter(value, 'perpage')}>
+                            <Select onValueChange={(value) => handleFilter(value, 'perpage')} defaultValue={filters.perpage}>
                                 <SelectTrigger className="w-[150px]">
                                     <SelectValue placeholder="Chọn số bản ghi" />
                                 </SelectTrigger>
@@ -147,7 +149,7 @@ const Filter = ({ isAnyChecked, checkedState, model, refetch, handleQueryString 
                             </Select>
                         </div>
                         <div className="mr-[10px]">
-                            <Select onValueChange={(value) => handleFilter(value, 'publish')}>
+                            <Select onValueChange={(value) => handleFilter(value, 'publish')} defaultValue={filters.publish}>
                                 <SelectTrigger className="w-[150px]">
                                     <SelectValue placeholder="Chọn trạng thái" />
                                 </SelectTrigger>
@@ -157,12 +159,11 @@ const Filter = ({ isAnyChecked, checkedState, model, refetch, handleQueryString 
                                             {publish.name}
                                         </SelectItem>
                                     ))}
-
                                 </SelectContent>
                             </Select>
                         </div>
                         <div className="mr-[10px]">
-                            <Select onValueChange={(value) => handleFilter(value, 'parent_id')}>
+                            <Select onValueChange={(value) => handleFilter(value, 'parent_id')} defaultValue={filters.parent_id}>
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Chọn danh mục cha" />
                                 </SelectTrigger>
@@ -170,6 +171,20 @@ const Filter = ({ isAnyChecked, checkedState, model, refetch, handleQueryString 
                                     <SelectItem className="cursor-pointer" value="0">
                                         Tất cả danh mục
                                     </SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="mr-[10px]">
+                            <Select onValueChange={(value) => handleFilter(value, 'sort')} >
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Sắp xếp theo" />
+                                </SelectTrigger>
+                                <SelectContent >
+                                    {sort && sort.map((item, index) => (
+                                        <SelectItem className="cursor-pointer" value={String(item.value)} key={index}>
+                                            {item.name}
+                                        </SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                         </div>
@@ -181,6 +196,7 @@ const Filter = ({ isAnyChecked, checkedState, model, refetch, handleQueryString 
                                 onChange={(e) => {
                                     debounceInputSearch(e.target.value)
                                 }}
+                                defaultValue={keyword}
                             />
                         </div>
                     </div>

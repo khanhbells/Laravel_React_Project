@@ -22,3 +22,21 @@ export const publishs = [
         name: 'Xuất bản'
     }
 ]
+export const sort = [
+    {
+        value: 'id,desc',
+        name: 'Sắp xếp bản ghi mới - cũ'
+    },
+    {
+        value: 'id,asc',
+        name: 'Sắp xếp bản ghi cũ - mới'
+    },
+    {
+        value: 'name,asc',
+        name: 'Sắp xếp Tên A - Z'
+    },
+    {
+        value: 'name,desc',
+        name: 'Sắp xếp Tên Z - A'
+    },
+]

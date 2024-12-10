@@ -19,7 +19,8 @@ import NoAuthMiddleware from './middleware/NoAuthMiddleware';
 import Layout from './components/layout';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
-import User from './pages/user/user/View'
+import UserIndex from './pages/user/user/View'
+import UserStore from './pages/user/user/Store';
 import './index.css';
 import { ReactQueryDevtools } from 'react-query/devtools'
 
@@ -44,8 +45,12 @@ const router = createBrowserRouter([
         path: "/dashboard", element: <Dashboard />
       },
       {
-        path: "/user/index", element: <User />
-      }
+        path: "/user/index", element: <UserIndex />
+      },
+      {
+        path: "/user/create", element: <UserStore />
+      },
+
     ]
   },
 ]);
