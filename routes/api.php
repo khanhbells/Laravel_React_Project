@@ -36,6 +36,9 @@ Route::group([
 
     Route::delete('records/delete/batch', [DashboardController::class, 'deleteBatch']);
     Route::put('records/update/batch', [DashboardController::class, 'updateBatch']);
+
+    // Location
+    Route::get('location', [DashboardController::class, 'location']);
 });
 
 Route::post('v1/auth/refresh', [AuthController::class, 'refresh']);

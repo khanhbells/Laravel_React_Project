@@ -7,7 +7,8 @@ import { create, validation } from "@/service/UserService";
 //Custom Select
 import CustomSelectBox from "@/components/CustomSelectBox"
 import { useRef, useState } from "react";
-//Store
+//Location
+import useLocationState from "@/hook/useLocationState";
 
 type Inputs = {
     name: string,
@@ -26,9 +27,14 @@ const UserStore = () => {
         watch,
         formState: { errors },
     } = useForm<Inputs>()
+
     const [loading, setLoading] = useState<boolean>(false)
     const password = useRef({})
     password.current = watch('password', '')
+
+    //Provinces
+    const { provinces } = useLocationState()
+
 
     const onSubmitHanler: SubmitHandler<Inputs> = async (payload) => {
         try {
@@ -75,7 +81,7 @@ const UserStore = () => {
     ]
 
     return (
-        <form onSubmit={handleSubmit(create)}>
+        <form onSubmit={handleSubmit(onSubmitHanler)}>
             <div className="grid gap-4 py-4">
                 {validationRules && validationRules.map((item, index) => (
                     <CustomInput
@@ -102,11 +108,13 @@ const UserStore = () => {
                         {...item}
                     />
                 ))}
-                {/* <CustomInput
+                <CustomInput
                     label="Địa chỉ"
-                    id="address"
+                    name="address"
                     type="text"
-                /> */}
+                    register={register}
+                    errors={errors}
+                />
             </div>
             <div className="text-right">
                 <LoadingButton

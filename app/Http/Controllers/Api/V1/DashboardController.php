@@ -87,4 +87,14 @@ class DashboardController extends Controller
         $repository = "App\Repositories\\{$folder}\\{$modelClass}Repository";
         return $repository;
     }
+    public function location()
+    {
+        try {
+            return 1;
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
 }

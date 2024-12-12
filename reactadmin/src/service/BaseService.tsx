@@ -42,4 +42,14 @@ const updateFieldByParams = async (action: string, ids: string[], model: string,
     }
 }
 
-export { updateStatusByField, updateFieldByParams, deleteAll }
+const getLocationData = async (locationType: string, parentId = null) => {
+    const response = await axios.get(`/location?locationType=${locationType}${parentId ? `&parent_id=${parentId}` : ''}`)
+    return response.data
+}
+
+export {
+    updateStatusByField,
+    updateFieldByParams,
+    deleteAll,
+    getLocationData
+}
