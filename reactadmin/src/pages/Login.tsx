@@ -8,13 +8,13 @@ import { Button } from "../components/ui/button";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { setAuthLogin } from "../redux/slide/authSlice";
-
-
+import LoadingButton from "@/components/LoadingButton";
 
 type Inputs = {
     email: string
     password: string
 };
+
 const Login = () => {
     // const { setMessage } = useToast()s
     const navigate = useNavigate()
@@ -85,10 +85,7 @@ const Login = () => {
                                     {errors.password && <span className="text-red-500 text-xs">Bạn phải nhập vào mật khẩu</span>}
                                 </div>
                                 <div className="mb-3">
-                                    <Button disabled={loading} className="w-full bg-blue-500 text-white hover:bg-blue-700 py-2 rounded-md">
-                                        {loading ? <ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> : null}
-                                        {loading ? 'Đang xử lý' : 'Đăng nhập'}
-                                    </Button>
+
                                 </div>
                                 <p className="text-xs mb-2 text-gray-700">
                                     <a href="/" className="text-blue-700">Quên mật khẩu</a>
@@ -96,6 +93,9 @@ const Login = () => {
                                 <div className="description text-xs text-gray-700">
                                     Chào mừng bạn đến với hệ thống bất động sản version 1.0 của Khanh Bells
                                 </div>
+                                <LoadingButton
+                                    loading={loading} text='Đăng nhập'
+                                />
                             </form>
                         </div>
                     </div>

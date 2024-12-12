@@ -28,7 +28,7 @@ interface FilterInterface {
     parent_id: string | undefined
 }
 
-const Filter = ({ isAnyChecked, checkedState, model, refetch, handleQueryString }: FilterProps) => {
+const Filter = ({ isAnyChecked, checkedState, model, refetch, handleQueryString, openSheet }: FilterProps) => {
 
     const dispatch = useDispatch()
     const [alertDialogOpen, setAlertDialogOpen] = useState<boolean>(false)
@@ -201,8 +201,11 @@ const Filter = ({ isAnyChecked, checkedState, model, refetch, handleQueryString 
                         </div>
                     </div>
                     <div>
-                        <Button className="p-0 bg-primary">
+                        {/* <Button className="p-0 bg-primary" onClick={() => openSheet()}>
                             <Link to="/user/create" className="text-white px-[15px] flex justify-between items-center"><FiPlus className="mr-[5px]" /> Thêm mới thành viên</Link>
+                        </Button> */}
+                        <Button className="p-0 bg-primary text-white px-[15px] flex justify-between items-center text-[12px]" onClick={openSheet}>
+                            <FiPlus className="mr-[5px]" /> Thêm mới thành viên
                         </Button>
                     </div>
                 </div>

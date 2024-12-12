@@ -14,7 +14,7 @@ export interface FilterProps extends CheckStateInterface {
     model: string,
     refetch: any,
     handleQueryString: any
-
+    openSheet: () => void
 }
 
 export interface CustomAlertDialogProps {

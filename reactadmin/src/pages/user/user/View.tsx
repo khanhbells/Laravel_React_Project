@@ -8,6 +8,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+
 import { useEffect, useState } from "react"
 import { pagination, breadcrumb, model, tableColumn } from "@/service/UserService"
 import { useQuery } from "react-query"
@@ -20,6 +21,11 @@ import Filter from "@/components/Filter"
 import useCheckBoxState from "@/hook/useCheckBoxState"
 import useTable from "@/hook/useTable"
 
+//Sheet Create
+import useSheet from "@/hook/useSheet"
+import CustomSheet from "@/components/CustomSheet"
+import UserStore from "./Store"
+
 const User = () => {
     const breadcrumbData: Breadcrumb = breadcrumb.index
     //REACT QUERY
@@ -27,6 +33,7 @@ const User = () => {
     //Checkbox
     const { checkedState, checkedAllState, handleCheckedChange, handleCheckedAllChange, isAnyChecked } = useCheckBoxState(data, model, isLoading)
     const somethingChecked = isAnyChecked()
+    const { isSheetOpen, openSheet, closeSheet } = useSheet()
 
     return (
         <>
@@ -44,6 +51,7 @@ const User = () => {
                             model={model}
                             refetch={refetch}
                             handleQueryString={(filters: any) => handleQueryString(filters)}
+                            openSheet={openSheet}
                         />
                         <CustomTable
                             isLoading={isLoading}
@@ -61,6 +69,15 @@ const User = () => {
                         {!isLoading && data[model] && data.links ? <Paginate links={data?.links} pageChange={handlePageChange} /> : null}
                     </CardFooter>
                 </Card>
+                <CustomSheet
+                    description={breadcrumb.create.description}
+                    title={breadcrumb.create.title}
+                    isSheetOpen={isSheetOpen}
+                    closeSheet={closeSheet}
+                    className="w-[400px] sm:w-[500px]"
+                >
+                    <UserStore />
+                </CustomSheet>
             </div >
         </>
     )
