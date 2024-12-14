@@ -1,15 +1,35 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useQuery } from "react-query"
 import { getLocationData } from "@/service/BaseService"
 const useLocationState = () => {
-    const { isLoading, data: provinces, isError, refetch } = useQuery(['provinces'], () => getLocationData('provinces'))
 
-    const getProvinces = async () => {
+    const [provinceId, setProvinceId] = useState<string | undefined>('')
+    const [districtId, setDistrictId] = useState<string | undefined>('')
 
-    }
+    const { isLoading: isProvinceLoading, data: provinces, isError: isProvinceError } = useQuery(['provinces'], () => getLocationData('provinces', undefined))
+    const { isLoading: isDistrictLoading, data: districts, isError: isDistrictError } = useQuery(
+        ['districts', provinceId], () => getLocationData('districts', provinceId),
+        {
+            enabled: !!provinceId
+        }
+    )
+    const { isLoading: isWardLoading, data: wards, isError: isWardError } = useQuery(
+        ['wards', districtId], () => getLocationData('wards', districtId),
+        {
+            enabled: !!districtId
+        }
+    )
+
+    // const { isLoading }
+
     return {
         provinces: provinces || [],
-        getProvinces
+        districts: districts || [],
+        wards: wards || [],
+        isDistrictLoading,
+        isWardLoading,
+        setProvinceId,
+        setDistrictId,
     }
 }
 

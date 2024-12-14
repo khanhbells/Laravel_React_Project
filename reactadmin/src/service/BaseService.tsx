@@ -42,8 +42,8 @@ const updateFieldByParams = async (action: string, ids: string[], model: string,
     }
 }
 
-const getLocationData = async (locationType: string, parentId = null) => {
-    const response = await axios.get(`/location?locationType=${locationType}${parentId ? `&parent_id=${parentId}` : ''}`)
+const getLocationData = async (locationType: string, parentId: string | undefined) => {
+    const response = await axios.get(`/location?locationType=${locationType}${parentId !== undefined ? `&parent_id=${parentId}` : ''}`)
     return response.data
 }
 

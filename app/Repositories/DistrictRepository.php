@@ -13,4 +13,8 @@ class DistrictRepository extends BaseRepository
     ) {
         $this->model = $model;
     }
+
+    // public function findDistrictByParentId(){
+    //     return $this->model->where()
+    // }
 }

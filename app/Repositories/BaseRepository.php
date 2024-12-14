@@ -48,4 +48,14 @@ class BaseRepository
     {
         return $this->model->whereIn($whereIn['whereInField'], $whereIn['whereInValue'])->update($payload);
     }
+
+    public function all($select = ['*'])
+    {
+        return $this->model->all($select);
+    }
+
+    public function findByParentId($parentId, $field, $select)
+    {
+        return $this->model->where($field, '=', $parentId)->get($select);
+    }
 }

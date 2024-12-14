@@ -32,8 +32,8 @@ const UserStore = () => {
     const password = useRef({})
     password.current = watch('password', '')
 
-    //Provinces
-    const { provinces } = useLocationState()
+    //Location
+    const { provinces, districts, wards, setProvinceId, setDistrictId, isDistrictLoading, isWardLoading } = useLocationState()
 
 
     const onSubmitHanler: SubmitHandler<Inputs> = async (payload) => {
@@ -60,23 +60,22 @@ const UserStore = () => {
         {
             title: 'Thành phố',
             placeholder: 'Chọn thành phố',
-            options: [
-                { value: '1', label: 'Thái Nguyên' }
-            ]
+            options: provinces.data,
+            onChange: (value: string | undefined) => setProvinceId(value)
         },
         {
             title: 'Quận/Huyện',
             placeholder: 'Chọn Quận/Huyện',
-            options: [
-                { value: '1', label: 'Thái Nguyên' }
-            ]
+            options: districts.data,
+            onChange: (value: string | undefined) => setDistrictId(value),
+            isLoading: isDistrictLoading
+
         },
         {
             title: 'Phường Xã',
             placeholder: 'Chọn Phường Xã',
-            options: [
-                { value: '1', label: 'Phường Đồng Quang' }
-            ]
+            options: wards.data,
+            isLoading: isWardLoading
         },
     ]
 
@@ -96,18 +95,19 @@ const UserStore = () => {
                     id="image"
                     type="file"
                 /> */}
-                <div className="text-center">
-                    <Avatar className="w-[100px] h-[100px] inline-block">
-                        <AvatarImage src="https://github.com/shadcn.png" />
-                        <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                </div>
                 {selectBox && selectBox.map((item, index) => (
                     <CustomSelectBox
                         key={index}
                         {...item}
                     />
                 ))}
+                <div className="text-center">
+                    <Avatar className="w-[100px] h-[100px] inline-block">
+                        <AvatarImage src="https://github.com/shadcn.png" />
+                        <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                </div>
+
                 <CustomInput
                     label="Địa chỉ"
                     name="address"

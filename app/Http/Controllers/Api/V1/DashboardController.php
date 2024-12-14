@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\LocationResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,6 +11,7 @@ use Illuminate\Support\Str;
 
 class DashboardController extends Controller
 {
+
     public function __construct() {}
 
     public function deleteBatch(Request $request)
@@ -76,7 +78,7 @@ class DashboardController extends Controller
         }
     }
 
-    private function callRepository($model)
+    private function callRepository($model, $isFolder = true)
     {
         // Singular xóa chữ s ở cuối chuỗi
         // Studly viết hoa chữ cái đầu
@@ -84,13 +86,41 @@ class DashboardController extends Controller
         $modelClass = Str::studly($singularModel);
         $folder = Str::studly(current(explode('_', $singularModel)));
 
-        $repository = "App\Repositories\\{$folder}\\{$modelClass}Repository";
+        $repository = $isFolder ? "App\Repositories\\{$folder}\\{$modelClass}Repository"
+            : "App\Repositories\\{$modelClass}Repository";
         return $repository;
     }
-    public function location()
+    public function location(Request $request)
     {
         try {
-            return 1;
+            $type = $request->input('locationType');
+            $parentId = $request->input('parent_id');
+            if (empty($type)) {
+                return response()->json([
+                    'message' => 'Không đủ thông tin của loại vị trí muốn lấy.'
+                ], 400);
+            }
+            $foreignColumn = [
+                'provinces' => '',
+                'districts' => 'province',
+                'wards' => 'district'
+            ];
+            $locationMapping = [
+                'provinces' => 'provinces',
+                'districts' => 'districts',
+                'wards' => 'wards',
+            ];
+            $isFolder = false;
+            $repository = app($this->callRepository($type, $isFolder));
+            $data = empty($parentId) ? $repository->all(['code', 'name']) : $repository->findByParentId($parentId, (($foreignColumn[$type] !== '') ? $foreignColumn[$type] . '_code' : ''), ['code', 'name']);
+
+
+
+            $locationName = $locationMapping[$type];
+
+            return response()->json([
+                'data' => LocationResource::collection($data)
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage()
