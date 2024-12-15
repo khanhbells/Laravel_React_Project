@@ -4,16 +4,19 @@ namespace App\Services\User;
 
 use App\Services\BaseService;
 use App\Repositories\User\UserRepository;
-
-
+use Illuminate\Support\Facades\DB;
+use App\Classes\FileUploader;
 
 class UserService extends BaseService
 {
     protected $userRepository;
+    protected $fileUploader;
     public function __construct(
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        FileUploader $fileUploader
     ) {
         $this->userRepository = $userRepository;
+        $this->fileUploader = $fileUploader;
     }
 
     public function paginate($request)
@@ -39,5 +42,23 @@ class UserService extends BaseService
             'select' => ['*'],
             'orderBy' => $request->input('sort') ? explode(',', $request->input('sort')) : ['id', 'desc'],
         ];
+    }
+
+    public function create($request, $user)
+    {
+        DB::beginTransaction();
+        try {
+            $payload = $request->except(['re_password', 'image']);
+            $payload['image'] = $this->fileUploader->upload($request, $user);
+
+            // DB::commit();
+            return $payload;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return [
+                'code' => 'ERROR',
+                'message' => $e->getMessage()
+            ];
+        }
     }
 }

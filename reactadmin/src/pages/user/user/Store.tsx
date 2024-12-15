@@ -6,18 +6,15 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { create, validation } from "@/service/UserService";
 //Custom Select
 import CustomSelectBox from "@/components/CustomSelectBox"
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 //Location
 import useLocationState from "@/hook/useLocationState";
+import useUpload from "@/hook/useUpload";
+import useFormSubmit from "@/hook/useFormSubmit";
+//type
+import { PayloadInput } from "@/types/User";
 
-type Inputs = {
-    name: string,
-    email: string,
-    phone: string,
-    password: string,
-    re_password: string,
-    birthday: string
-};
+
 
 const UserStore = () => {
 
@@ -26,25 +23,20 @@ const UserStore = () => {
         handleSubmit,
         watch,
         formState: { errors },
-    } = useForm<Inputs>()
+        control
+    } = useForm<PayloadInput>()
 
-    const [loading, setLoading] = useState<boolean>(false)
     const password = useRef({})
     password.current = watch('password', '')
 
     //Location
     const { provinces, districts, wards, setProvinceId, setDistrictId, isDistrictLoading, isWardLoading } = useLocationState()
+    const { images, handleImageChange } = useUpload(false)
 
 
-    const onSubmitHanler: SubmitHandler<Inputs> = async (payload) => {
-        try {
-            await create(payload)
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false)
-        }
-    }
+    const { onSubmitHanler, loading } = useFormSubmit(create)
+
+
 
     const validationRules = validation(password)
 
@@ -55,29 +47,52 @@ const UserStore = () => {
             options: [
                 { value: '1', label: 'Admin' }
             ],
-            defaultValue: { value: '1', label: 'Admin' }
+            // defaultValue: { value: '1', label: 'Admin' },
+            rules: {
+                required: true
+            },
+            name: 'user_catalogue_id',
+            control: control,
+            errors
         },
         {
             title: 'Thành phố',
             placeholder: 'Chọn thành phố',
             options: provinces.data,
-            onChange: (value: string | undefined) => setProvinceId(value)
+            onSelectChange: (value: string | undefined) => setProvinceId(value),
+            rules: {},
+            name: 'province_id',
+            control: control,
+            errors
         },
         {
             title: 'Quận/Huyện',
             placeholder: 'Chọn Quận/Huyện',
             options: districts.data,
-            onChange: (value: string | undefined) => setDistrictId(value),
-            isLoading: isDistrictLoading
-
+            onSelectChange: (value: string | undefined) => setDistrictId(value),
+            isLoading: isDistrictLoading,
+            rules: {},
+            name: 'district_id',
+            control: control,
+            errors
         },
         {
             title: 'Phường Xã',
             placeholder: 'Chọn Phường Xã',
             options: wards.data,
-            isLoading: isWardLoading
+            isLoading: isWardLoading,
+            rules: {},
+            name: 'ward_id',
+            control: control,
+            errors
+
         },
     ]
+
+    useEffect(() => {
+        console.log(images);
+
+    }, [images])
 
     return (
         <form onSubmit={handleSubmit(onSubmitHanler)}>
@@ -90,23 +105,13 @@ const UserStore = () => {
                         {...item}
                     />
                 ))}
-                {/* <CustomInput
-                    label="Ảnh đại diện"
-                    id="image"
-                    type="file"
-                /> */}
                 {selectBox && selectBox.map((item, index) => (
                     <CustomSelectBox
                         key={index}
                         {...item}
+                        register={register}
                     />
                 ))}
-                <div className="text-center">
-                    <Avatar className="w-[100px] h-[100px] inline-block">
-                        <AvatarImage src="https://github.com/shadcn.png" />
-                        <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                </div>
 
                 <CustomInput
                     label="Địa chỉ"
@@ -115,6 +120,24 @@ const UserStore = () => {
                     register={register}
                     errors={errors}
                 />
+                <input
+                    type="file"
+                    accept="image/"
+                    id="upload-image"
+                    className="hidden"
+                    {...register('image', {
+                        onChange: handleImageChange
+                    })}
+                />
+                <div className="text-center">
+                    <label htmlFor="upload-image">
+                        <Avatar className="w-[100px] h-[100px] inline-block cursor-pointer shadow-md border">
+                            <AvatarImage src={images.length > 0 ? images[0].preview : 'https://github.com/shadcn.png'} />
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                    </label>
+                </div>
+
             </div>
             <div className="text-right">
                 <LoadingButton

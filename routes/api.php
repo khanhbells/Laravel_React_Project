@@ -26,12 +26,13 @@ Route::group([
     Route::get('me', [AuthController::class, 'me']);
 });
 Route::group([
-
+    'middleware' => 'jwt',
     'prefix' => 'v1'
 
 ], function ($router) {
     // User
     Route::get('users', [UserController::class, 'index']);
+    Route::post('users', [UserController::class, 'create']);
     Route::put('users/{id}/status', [UserController::class, 'updateStatusByField']);
 
     Route::delete('records/delete/batch', [DashboardController::class, 'deleteBatch']);
