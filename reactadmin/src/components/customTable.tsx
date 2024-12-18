@@ -19,9 +19,9 @@ import {
     TableRow,
 } from "../components/ui/table"
 
-import { buttonActions } from "../service/UserService"
+import { buttonActions } from "@/settings/user"
 
-import { tableColumn } from "../service/UserService"
+import { tableColumn } from "@/settings/user"
 
 //CheckedState
 import useCheckBoxState from "../hook/useCheckBoxState"

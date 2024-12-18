@@ -23,6 +23,11 @@ class BaseRepository
             ->paginate($params['perpage']);
     }
 
+    public function create($payload = [])
+    {
+        return $this->model->create($payload);
+    }
+
     public function update($id, $payload)
     {
         $model = $this->findById($id);

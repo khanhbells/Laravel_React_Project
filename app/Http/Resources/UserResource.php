@@ -21,7 +21,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'phone' => $this->phone,
             'address' => $this->address,
-            'image' => $this->image,
+            'image' => getImages($this->image),
             'created_at' => Carbon::parse($this->created_at)->format('d/m/Y H:i'),
             'publish' => $this->publish
         ];

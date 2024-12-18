@@ -33,8 +33,8 @@ Route::group([
     // User
     Route::get('users', [UserController::class, 'index']);
     Route::post('users', [UserController::class, 'create']);
+    Route::post('check-email', [UserController::class, 'create']);
     Route::put('users/{id}/status', [UserController::class, 'updateStatusByField']);
-
     Route::delete('records/delete/batch', [DashboardController::class, 'deleteBatch']);
     Route::put('records/update/batch', [DashboardController::class, 'updateBatch']);
 

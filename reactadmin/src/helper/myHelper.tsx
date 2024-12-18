@@ -43,5 +43,15 @@ export const showToast = (
                 break;
         }
     }
+
+
+}
+
+export function getInitialName(string: string) {
+    //split tach chuoi thanh mang
+    const words = string.trim().split(/\s+/)
+
+    const initial = words.map(word => word.charAt(0).toUpperCase()).join('')
+    return initial
 }
 

@@ -16,10 +16,17 @@ interface CusomSheetProps {
     isSheetOpen: boolean,
     closeSheet: () => void,
     children: any,
-    className: string | undefined
+    className: string | undefined,
 }
 
-const CustomSheet = ({ children, isSheetOpen, closeSheet, title, className, description }: CusomSheetProps) => {
+const CustomSheet = ({
+    children,
+    isSheetOpen,
+    closeSheet,
+    title,
+    className,
+    description,
+}: CusomSheetProps) => {
 
     return (
         <>
@@ -33,7 +40,6 @@ const CustomSheet = ({ children, isSheetOpen, closeSheet, title, className, desc
                     </SheetHeader>
                     {children}
                 </SheetContent>
-
             </Sheet>
         </>
     )

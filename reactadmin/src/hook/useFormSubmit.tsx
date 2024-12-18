@@ -1,20 +1,21 @@
-import { useState } from "react"
 import { SubmitHandler, FieldValues } from "react-hook-form"
-import { useMutation, UseMutationResult } from "react-query"
+import { useMutation } from "react-query"
+import { showToast } from "@/helper/myHelper"
 
 type SubmitFunction<T extends FieldValues> = (data: T) => Promise<void>
 
-const useFormSubmit = <T extends FieldValues,>(submitFn: SubmitFunction<T>) => {
-    const [loading, setLoading] = useState<boolean>(false)
+const useFormSubmit = <T extends FieldValues,>(submitFn: SubmitFunction<T>, refetch: any, closeSheet: () => void) => {
+
     const mutation = useMutation<void, Error, T>({
         mutationFn: submitFn,
         onSuccess: () => {
-            console.log('Khởi tạo dữ liệu thành công');
-
+            closeSheet()
+            showToast('Khởi tạo dữ liệu thành công', 'success');
+            refetch()
         },
-        onError: (error) => {
+        onError: (error: any) => {
             console.error('Lỗi: ', error);
-
+            showToast(error.response.data.message, 'error');
         }
     })
     const onSubmitHanler: SubmitHandler<T> = async (payload) => {

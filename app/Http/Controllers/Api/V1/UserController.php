@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
@@ -10,7 +11,7 @@ use App\Repositories\User\UserRepository;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UpdateByFieldRequest;
 use App\Http\Controllers\Api\V1\AuthController;
-
+use App\Http\Requests\User\StoreUserRequest;
 
 class UserController extends Controller
 {
@@ -37,18 +38,19 @@ class UserController extends Controller
             'last_page' => $users->lastPage(),
         ], Response::HTTP_OK);
     }
-    public function create(Request $request)
+    public function create(StoreUserRequest $request)
     {
-        $user = auth()->user();
-        $a = $this->userService->create($request, $user);
-        return $a;
-        if ($this->userService->create($request)) {
+        $auth = auth()->user();
+
+        $data = $this->userService->create($request, $auth);
+        if ($data['code'] == Status::SUCCESS) {
             return response()->json([
-                'message' => 'Thêm mới bản ghi thành công'
+                'message' => 'Thêm mới bản ghi thành công',
+                'user' => new UserResource($data['user'])
             ], Response::HTTP_OK);
         }
         return response()->json([
-            'message' => 'Có vấn đề xảy ra. Hãy thử lại sau'
+            'message' => $data['message']
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 

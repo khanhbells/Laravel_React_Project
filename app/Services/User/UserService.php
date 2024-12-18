@@ -6,6 +6,9 @@ use App\Services\BaseService;
 use App\Repositories\User\UserRepository;
 use Illuminate\Support\Facades\DB;
 use App\Classes\FileUploader;
+use App\Enums\Status;
+use Illuminate\Support\Facades\Hash;
+
 
 class UserService extends BaseService
 {
@@ -13,10 +16,8 @@ class UserService extends BaseService
     protected $fileUploader;
     public function __construct(
         UserRepository $userRepository,
-        FileUploader $fileUploader
     ) {
         $this->userRepository = $userRepository;
-        $this->fileUploader = $fileUploader;
     }
 
     public function paginate($request)
@@ -44,21 +45,42 @@ class UserService extends BaseService
         ];
     }
 
-    public function create($request, $user)
+    public function create($request, $auth)
     {
         DB::beginTransaction();
         try {
-            $payload = $request->except(['re_password', 'image']);
-            $payload['image'] = $this->fileUploader->upload($request, $user);
+            $payload = $this->request($request, $auth);
+            $user = $this->userRepository->create($payload);
 
-            // DB::commit();
-            return $payload;
+            DB::commit();
+            return [
+                'user' => $user,
+                'code' => Status::SUCCESS
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
             return [
-                'code' => 'ERROR',
+                'code' => Status::ERROR,
                 'message' => $e->getMessage()
             ];
         }
+    }
+
+    private function request($request, $auth)
+    {
+        $payload = $request->except(['re_password', 'image']);
+
+
+        $customFolder = ['avatar'];
+        if ($request->file('image')) {
+            $imageType = 'image';
+            $this->fileUploader = new FileUploader($auth->email);
+            $payload['image'] = $this->fileUploader->uploadFile($request->file('image'), $imageType, $customFolder);
+        }
+        if ($request->input('password') && !empty($request->input('password'))) {
+            $payload['password'] = Hash::make($payload['password']);
+        }
+        $payload['publish'] = 1;
+        return $payload;
     }
 }

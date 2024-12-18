@@ -1,22 +1,27 @@
+//CORE REACT
+import { useEffect, useRef } from "react";
+//COMPONENT
 import CustomInput from "@/components/CustomInput"
-import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import LoadingButton from "@/components/LoadingButton"
-import { useForm, SubmitHandler } from "react-hook-form";
-import { create, validation } from "@/service/UserService";
-//Custom Select
 import CustomSelectBox from "@/components/CustomSelectBox"
-import { useEffect, useRef, useState } from "react";
-//Location
+//HOOK
+import { useForm } from "react-hook-form";
 import useLocationState from "@/hook/useLocationState";
 import useUpload from "@/hook/useUpload";
 import useFormSubmit from "@/hook/useFormSubmit";
-//type
+//SETTING
+import { validation } from "@/validations/user/StoreUserValidation";
 import { PayloadInput } from "@/types/User";
+//SERVICE
+import { create } from "@/service/UserService";
 
+interface UserStoreProps {
+    refetch: any;
+    closeSheet: () => void
+}
 
-
-const UserStore = () => {
+const UserStore = ({ refetch, closeSheet }: UserStoreProps) => {
 
     const {
         register,
@@ -28,16 +33,10 @@ const UserStore = () => {
 
     const password = useRef({})
     password.current = watch('password', '')
-
     //Location
     const { provinces, districts, wards, setProvinceId, setDistrictId, isDistrictLoading, isWardLoading } = useLocationState()
     const { images, handleImageChange } = useUpload(false)
-
-
-    const { onSubmitHanler, loading } = useFormSubmit(create)
-
-
-
+    const { onSubmitHanler, loading } = useFormSubmit(create, refetch, closeSheet)
     const validationRules = validation(password)
 
     const selectBox = [
@@ -49,7 +48,7 @@ const UserStore = () => {
             ],
             // defaultValue: { value: '1', label: 'Admin' },
             rules: {
-                required: true
+                // required: true
             },
             name: 'user_catalogue_id',
             control: control,
@@ -89,10 +88,10 @@ const UserStore = () => {
         },
     ]
 
-    useEffect(() => {
-        console.log(images);
+    // useEffect(() => {
+    //     console.log(images);
 
-    }, [images])
+    // }, [images])
 
     return (
         <form onSubmit={handleSubmit(onSubmitHanler)}>
@@ -141,7 +140,7 @@ const UserStore = () => {
             </div>
             <div className="text-right">
                 <LoadingButton
-                    loading={false}
+                    loading={loading}
                     text="Lưu thông tin"
                 />
             </div>

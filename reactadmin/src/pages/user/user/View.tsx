@@ -1,5 +1,14 @@
-import { useSearchParams, useNavigate } from "react-router-dom"
+//Create User
+import UserStore from "./Store"
+//pagination
+import { pagination } from "@/service/UserService"
+import Paginate from "@/components/paginate"
+//breadcrumb
 import PageHeading from "@/components/heading"
+import { Breadcrumb } from "@/types/Breadcrumb"
+//table
+import CustomTable from "@/components/customTable"
+import useTable from "@/hook/useTable"
 import {
     Card,
     CardContent,
@@ -8,23 +17,15 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-
-import { useEffect, useState } from "react"
-import { pagination, breadcrumb, model, tableColumn } from "@/service/UserService"
-import { useQuery } from "react-query"
-import Paginate from "@/components/paginate"
-import { Breadcrumb } from "@/types/Breadcrumb"
-
-import CustomTable from "@/components/customTable"
+//filter
 import Filter from "@/components/Filter"
-
+//Checkbox
 import useCheckBoxState from "@/hook/useCheckBoxState"
-import useTable from "@/hook/useTable"
-
 //Sheet Create
 import useSheet from "@/hook/useSheet"
 import CustomSheet from "@/components/CustomSheet"
-import UserStore from "./Store"
+//settings
+import { breadcrumb, model, tableColumn } from "@/settings/user"
 
 const User = () => {
     const breadcrumbData: Breadcrumb = breadcrumb.index
@@ -76,7 +77,10 @@ const User = () => {
                     closeSheet={closeSheet}
                     className="w-[400px] sm:w-[500px]"
                 >
-                    <UserStore />
+                    <UserStore
+                        refetch={refetch}
+                        closeSheet={closeSheet}
+                    />
                 </CustomSheet>
             </div >
         </>
