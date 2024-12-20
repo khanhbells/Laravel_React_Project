@@ -5,7 +5,11 @@ export type User = {
     image: string | null,
     phone: string | null,
     address: string | null,
-    created_at: string | null
+    created_at: string | null,
+    user_catalogue_id: string,
+    province_id: string | null,
+    district_id: string | null,
+    ward_id: string | null
 }
 export type PayloadInput = {
     name: string,

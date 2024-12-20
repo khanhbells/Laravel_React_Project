@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UpdateByFieldRequest;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Requests\User\StoreUserRequest;
+use NunoMaduro\Collision\Adapters\Phpunit\State;
 
 class UserController extends Controller
 {
@@ -52,6 +53,20 @@ class UserController extends Controller
         return response()->json([
             'message' => $data['message']
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function show(Request $request, $id)
+    {
+        if (empty($id) || $id < 0) {
+            return response()->json([
+                'message' => 'Mã ID không hợp lệ',
+                'code' => Status::ERROR
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        $user = $this->userRepository->findById($id);
+
+        return response()->json(new UserResource($user));
     }
 
     public function updateStatusByField(UpdateByFieldRequest $request, $id)

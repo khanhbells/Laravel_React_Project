@@ -8,10 +8,11 @@ interface CustomInputProps {
     register: any,
     rules?: object,
     errors: any,
-    onChange?: any,
+    // onChange?: any,
+    defaultValue?: string | null | undefined
 }
 
-const CustomInput = ({ label, type, register, name, rules, errors, onChange }: CustomInputProps) => {
+const CustomInput = ({ label, type, register, name, rules, errors, defaultValue }: CustomInputProps) => {
     return (
         <>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -24,7 +25,7 @@ const CustomInput = ({ label, type, register, name, rules, errors, onChange }: C
                     id={name}
                     className="col-span-3"
                     {...register(name, rules)}
-                    onChange={() => onChange}
+                    defaultValue={defaultValue || ''}
                 />
             </div>
             <div className="error-line text-right mt-[-10px]">

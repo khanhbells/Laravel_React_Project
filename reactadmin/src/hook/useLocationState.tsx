@@ -26,6 +26,7 @@ const useLocationState = () => {
         provinces: provinces || [],
         districts: districts || [],
         wards: wards || [],
+        isProvinceLoading,
         isDistrictLoading,
         isWardLoading,
         setProvinceId,

@@ -64,6 +64,7 @@ const User = () => {
                             checkedAllState={checkedAllState}
                             handleCheckedChange={handleCheckedChange}
                             handleCheckedAllChange={handleCheckedAllChange}
+                            openSheet={openSheet}
                         />
                     </CardContent>
                     <CardFooter>
@@ -71,15 +72,17 @@ const User = () => {
                     </CardFooter>
                 </Card>
                 <CustomSheet
+                    title={isSheetOpen.action === 'update' ? breadcrumb.update.title : breadcrumb.create.title}
                     description={breadcrumb.create.description}
-                    title={breadcrumb.create.title}
-                    isSheetOpen={isSheetOpen}
+                    isSheetOpen={isSheetOpen.open}
                     closeSheet={closeSheet}
                     className="w-[400px] sm:w-[500px]"
                 >
                     <UserStore
                         refetch={refetch}
                         closeSheet={closeSheet}
+                        userId={isSheetOpen.id}
+                        action={isSheetOpen.action}
                     />
                 </CustomSheet>
             </div >

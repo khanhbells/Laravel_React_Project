@@ -32,6 +32,7 @@ Route::group([
 ], function ($router) {
     // User
     Route::get('users', [UserController::class, 'index']);
+    Route::get('users/{id}', [UserController::class, 'show']);
     Route::post('users', [UserController::class, 'create']);
     Route::post('check-email', [UserController::class, 'create']);
     Route::put('users/{id}/status', [UserController::class, 'updateStatusByField']);

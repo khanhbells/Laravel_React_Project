@@ -1,14 +1,6 @@
-import axios from "../configs/axios";
-import { User } from "../types/User";
-import { FaRegEdit } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { MdOutlineLockReset } from "react-icons/md";
-// import { handleAxiosError } from "../helper/axiosHelper";
-import { PayloadInput } from "@/types/User";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import axios from "@/configs/axios";
+import { PayloadInput, User } from "@/types/User";
 
-//Myhepler
-import { getInitialName } from "@/helper/myHelper";
 
 const pagination = async (queryString: string) => {
     const response = await axios.get(`/users?${queryString}`)
@@ -35,9 +27,15 @@ const create = async (payload: PayloadInput) => {
         }
     })
 
-
 }
+
+const getUserById = async (userId: string | null): Promise<User> => {
+    const response = await axios.get(`users/${userId}`)
+    return response.data
+}
+
 export {
     pagination,
     create,
+    getUserById
 }

@@ -204,7 +204,7 @@ const Filter = ({ isAnyChecked, checkedState, model, refetch, handleQueryString,
                         {/* <Button className="p-0 bg-primary" onClick={() => openSheet()}>
                             <Link to="/user/create" className="text-white px-[15px] flex justify-between items-center"><FiPlus className="mr-[5px]" /> Thêm mới thành viên</Link>
                         </Button> */}
-                        <Button className="p-0 bg-primary text-white px-[15px] flex justify-between items-center text-[12px]" onClick={openSheet}>
+                        <Button className="p-0 bg-primary text-white px-[15px] flex justify-between items-center text-[12px]" onClick={() => openSheet({ open: true, action: '', id: null })}>
                             <FiPlus className="mr-[5px]" /> Thêm mới thành viên
                         </Button>
                     </div>

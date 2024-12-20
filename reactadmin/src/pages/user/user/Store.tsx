@@ -1,5 +1,6 @@
 //CORE REACT
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { useQuery } from "react-query";
 //COMPONENT
 import CustomInput from "@/components/CustomInput"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -10,18 +11,22 @@ import { useForm } from "react-hook-form";
 import useLocationState from "@/hook/useLocationState";
 import useUpload from "@/hook/useUpload";
 import useFormSubmit from "@/hook/useFormSubmit";
+import useSelectBox from "@/hook/useSelectbox";
 //SETTING
 import { validation } from "@/validations/user/StoreUserValidation";
-import { PayloadInput } from "@/types/User";
+import { PayloadInput, User } from "@/types/User";
+import { Option } from "@/components/CustomSelectBox";
 //SERVICE
-import { create } from "@/service/UserService";
+import { create, getUserById } from "@/service/UserService";
 
 interface UserStoreProps {
     refetch: any;
-    closeSheet: () => void
+    closeSheet: () => void,
+    userId: string | null,
+    action: string
 }
 
-const UserStore = ({ refetch, closeSheet }: UserStoreProps) => {
+const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
 
     const {
         register,
@@ -34,31 +39,52 @@ const UserStore = ({ refetch, closeSheet }: UserStoreProps) => {
     const password = useRef({})
     password.current = watch('password', '')
     //Location
-    const { provinces, districts, wards, setProvinceId, setDistrictId, isDistrictLoading, isWardLoading } = useLocationState()
+    const { provinces, districts, wards, setProvinceId, setDistrictId, isProvinceLoading, isDistrictLoading, isWardLoading } = useLocationState()
     const { images, handleImageChange } = useUpload(false)
     const { onSubmitHanler, loading } = useFormSubmit(create, refetch, closeSheet)
-    const validationRules = validation(password)
 
-    const selectBox = [
+    const { data, isLoading, isError } = useQuery<User>(['user', userId],
+        () => getUserById(userId),
+        {
+            enabled: action === 'update' && !!userId,
+        }
+    )
+    const [validationRules, setValidationRules] = useState(() => validation(action, password, undefined))
+
+    //follow data seen update
+    useEffect(() => {
+        if (!isLoading && data && action === 'update') {
+            setValidationRules(validation(action, null, data))
+        }
+    }, [data])
+
+    const [userCatalogues, setUserCatalogues] = useState([
+        { value: '1', label: 'Admin' }
+    ])
+
+    const [defaultSelectValue, setDefaultSelectValue] = useState<Option | null>(null)
+
+    const { selectBox, updateSelectBoxValue, updateSelectBoxOptions } = useSelectBox([
         {
             title: 'Loại thành viên',
             placeholder: 'Chọn loại thành viên',
-            options: [
-                { value: '1', label: 'Admin' }
-            ],
-            // defaultValue: { value: '1', label: 'Admin' },
+            options: userCatalogues,
+            value: defaultSelectValue,
             rules: {
                 // required: true
             },
             name: 'user_catalogue_id',
             control: control,
-            errors
+            errors: errors
         },
         {
             title: 'Thành phố',
             placeholder: 'Chọn thành phố',
-            options: provinces.data,
-            onSelectChange: (value: string | undefined) => setProvinceId(value),
+            options: [],
+            value: defaultSelectValue,
+            onSelectChange: (value: string | undefined) => {
+                setProvinceId(value)
+            },
             rules: {},
             name: 'province_id',
             control: control,
@@ -67,7 +93,8 @@ const UserStore = ({ refetch, closeSheet }: UserStoreProps) => {
         {
             title: 'Quận/Huyện',
             placeholder: 'Chọn Quận/Huyện',
-            options: districts.data,
+            options: [],
+            value: defaultSelectValue,
             onSelectChange: (value: string | undefined) => setDistrictId(value),
             isLoading: isDistrictLoading,
             rules: {},
@@ -78,7 +105,8 @@ const UserStore = ({ refetch, closeSheet }: UserStoreProps) => {
         {
             title: 'Phường Xã',
             placeholder: 'Chọn Phường Xã',
-            options: wards.data,
+            options: [],
+            value: defaultSelectValue,
             isLoading: isWardLoading,
             rules: {},
             name: 'ward_id',
@@ -86,12 +114,47 @@ const UserStore = ({ refetch, closeSheet }: UserStoreProps) => {
             errors
 
         },
-    ]
+    ])
 
-    // useEffect(() => {
-    //     console.log(images);
+    //Follow Select Value
+    useEffect(() => {
+        if (!isLoading && data && action === 'update') {
+            updateSelectBoxValue('user_catalogue_id', userCatalogues, String(data?.user_catalogue_id))
+        }
+        if (!isProvinceLoading && provinces.data) {
+            updateSelectBoxValue('province_id', provinces.data, String(data?.province_id))
+        }
+        if (!isDistrictLoading && districts.data) {
+            updateSelectBoxValue('district_id', districts.data, String(data?.district_id))
 
-    // }, [images])
+        }
+        if (!isWardLoading && wards.data) {
+            updateSelectBoxValue('ward_id', wards.data, String(data?.ward_id))
+
+        }
+    }, [isLoading, data, isProvinceLoading, provinces, isDistrictLoading, districts, isWardLoading, wards])
+
+
+    // Follow province
+    useEffect(() => {
+        if (!isProvinceLoading && provinces.data) {
+            updateSelectBoxOptions('province_id', provinces.data)
+        }
+    }, [provinces, isProvinceLoading])
+
+    //Follow districts
+    useEffect(() => {
+        if (!isDistrictLoading && districts.data) {
+            updateSelectBoxOptions('district_id', districts.data)
+        }
+    }, [isDistrictLoading, districts])
+
+    //Follow ward
+    useEffect(() => {
+        if (!isWardLoading && wards.data) {
+            updateSelectBoxOptions('ward_id', wards.data)
+        }
+    }, [isWardLoading, wards])
 
     return (
         <form onSubmit={handleSubmit(onSubmitHanler)}>
@@ -118,6 +181,7 @@ const UserStore = ({ refetch, closeSheet }: UserStoreProps) => {
                     type="text"
                     register={register}
                     errors={errors}
+                    defaultValue={data && data.address}
                 />
                 <input
                     type="file"
@@ -131,12 +195,13 @@ const UserStore = ({ refetch, closeSheet }: UserStoreProps) => {
                 <div className="text-center">
                     <label htmlFor="upload-image">
                         <Avatar className="w-[100px] h-[100px] inline-block cursor-pointer shadow-md border">
-                            <AvatarImage src={images.length > 0 ? images[0].preview : 'https://github.com/shadcn.png'} />
-                            <AvatarFallback>CN</AvatarFallback>
+                            {(data && data.image && action === 'update')
+                                ? <AvatarImage src={data.image} />
+                                : <AvatarImage src={images.length > 0 ? images[0].preview : 'https://github.com/shadcn.png'} />
+                            }
                         </Avatar>
                     </label>
                 </div>
-
             </div>
             <div className="text-right">
                 <LoadingButton

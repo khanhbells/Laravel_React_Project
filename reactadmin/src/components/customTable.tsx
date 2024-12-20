@@ -26,20 +26,7 @@ import { tableColumn } from "@/settings/user"
 //CheckedState
 import useCheckBoxState from "../hook/useCheckBoxState"
 
-// import { pagination, breadcrumb, model } from "../service/UserService"
-// import { useQuery } from "react-query"
-// import { User } from "../types/User"
-interface CustomTableProps {
-    data: any,
-    isLoading: boolean,
-    isError: boolean,
-    model: string,
-    tableColumn: Array<{ name: string; render: (item: any) => JSX.Element }>,
-    checkedState: { [key: number]: boolean },
-    checkedAllState: boolean,
-    handleCheckedChange: (id: number) => void
-    handleCheckedAllChange: () => void
-}
+import { CustomTableProps } from "@/interfaces/BaseServiceInterface"
 
 const CustomTable = ({
     data,
@@ -50,7 +37,9 @@ const CustomTable = ({
     checkedState,
     checkedAllState,
     handleCheckedChange,
-    handleCheckedAllChange }: CustomTableProps) => {
+    handleCheckedAllChange,
+    openSheet
+}: CustomTableProps) => {
 
     const { columnState, handleChecked, setInitialColumnState } = useColumnState()
 
@@ -116,8 +105,8 @@ const CustomTable = ({
                         </TableCell>
                         <TableCell className="flex justify-center">
                             {buttonActions && buttonActions.map((action, index) => (
-                                <Button key={index} className={`${action.className} p-0`}>
-                                    <Link className="block p-[15px]" to={`${action.path}/${row.id}`}>{action.icon}</Link>
+                                <Button key={index} className={`${action.className} p-[15px]`} onClick={action.onClick ? () => action.onClick(row.id, openSheet) : undefined} >
+                                    {action.icon}
                                 </Button>
                             ))}
                         </TableCell>
