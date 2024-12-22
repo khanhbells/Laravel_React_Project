@@ -2,16 +2,25 @@ import { SubmitHandler, FieldValues } from "react-hook-form"
 import { useMutation } from "react-query"
 import { showToast } from "@/helper/myHelper"
 
-type SubmitFunction<T extends FieldValues> = (data: T) => Promise<void>
+type SubmitFunction<T extends FieldValues> = (
+    data: T,
+    updateParams: { action: string, id: string | null }
+) => Promise<void>
 
-const useFormSubmit = <T extends FieldValues,>(submitFn: SubmitFunction<T>, refetch: any, closeSheet: () => void) => {
+const useFormSubmit = <T extends FieldValues, U extends Record<string, any>>(
+    submitFn: SubmitFunction<T>,
+    refetch: any,
+    closeSheet: () => void,
+    updateParams: { action: string, id: string | null }
+) => {
 
     const mutation = useMutation<void, Error, T>({
-        mutationFn: submitFn,
-        onSuccess: () => {
-            closeSheet()
-            showToast('Khởi tạo dữ liệu thành công', 'success');
-            refetch()
+        mutationFn: (payload) => submitFn(payload, updateParams),
+        onSuccess: (response) => {
+            // console.log(response);
+            // closeSheet()
+            // showToast('Cập nhật dữ liệu thành công', 'success');
+            // refetch()
         },
         onError: (error: any) => {
             console.error('Lỗi: ', error);
@@ -19,6 +28,7 @@ const useFormSubmit = <T extends FieldValues,>(submitFn: SubmitFunction<T>, refe
         }
     })
     const onSubmitHanler: SubmitHandler<T> = async (payload) => {
+
         mutation.mutate(payload)
     }
     return {

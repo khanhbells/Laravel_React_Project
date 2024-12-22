@@ -32,6 +32,7 @@ class BaseRepository
     {
         $model = $this->findById($id);
         $model->fill($payload);
+
         $model->save();
         return $model;
     }

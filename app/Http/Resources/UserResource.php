@@ -28,6 +28,7 @@ class UserResource extends JsonResource
             'province_id' => $this->province_id,
             'district_id' => $this->district_id,
             'ward_id' => $this->ward_id,
+            'birthday' => Carbon::parse($this->birthday)->format('Y-m-d'),
         ];
     }
 }

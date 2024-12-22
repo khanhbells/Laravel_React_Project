@@ -9,7 +9,8 @@ export type User = {
     user_catalogue_id: string,
     province_id: string | null,
     district_id: string | null,
-    ward_id: string | null
+    ward_id: string | null,
+    birthday: string | null,
 }
 export type PayloadInput = {
     name: string,
@@ -22,5 +23,6 @@ export type PayloadInput = {
     province_id: string,
     district_id: string,
     ward_id: string,
-    image: File
+    image: FileList | string | null,
+    address: string
 };

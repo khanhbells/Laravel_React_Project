@@ -1,5 +1,5 @@
 //CORE REACT
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { useQuery } from "react-query";
 //COMPONENT
 import CustomInput from "@/components/CustomInput"
@@ -16,8 +16,11 @@ import useSelectBox from "@/hook/useSelectbox";
 import { validation } from "@/validations/user/StoreUserValidation";
 import { PayloadInput, User } from "@/types/User";
 import { Option } from "@/components/CustomSelectBox";
+import { keys } from "ts-transformer-keys";
 //SERVICE
-import { create, getUserById } from "@/service/UserService";
+import { save, getUserById } from "@/service/UserService";
+//INTERFACES
+import { SelectBoxItem } from "@/interfaces/BaseServiceInterface";
 
 interface UserStoreProps {
     refetch: any;
@@ -33,7 +36,8 @@ const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
         handleSubmit,
         watch,
         formState: { errors },
-        control
+        control,
+        setValue
     } = useForm<PayloadInput>()
 
     const password = useRef({})
@@ -41,7 +45,7 @@ const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
     //Location
     const { provinces, districts, wards, setProvinceId, setDistrictId, isProvinceLoading, isDistrictLoading, isWardLoading } = useLocationState()
     const { images, handleImageChange } = useUpload(false)
-    const { onSubmitHanler, loading } = useFormSubmit(create, refetch, closeSheet)
+    const { onSubmitHanler, loading } = useFormSubmit(save, refetch, closeSheet, { action: action, id: userId })
 
     const { data, isLoading, isError } = useQuery<User>(['user', userId],
         () => getUserById(userId),
@@ -55,6 +59,18 @@ const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
     useEffect(() => {
         if (!isLoading && data && action === 'update') {
             setValidationRules(validation(action, null, data))
+            Object.keys(data).forEach((key) => {
+                const value = data[key as keyof User]
+
+                if (typeof value === 'string' || value === null) {
+                    setValue(key as keyof PayloadInput, value)
+                } else {
+                    setValue(key as keyof PayloadInput, String(value))
+                }
+
+
+            })
+
         }
     }, [data])
 
@@ -64,7 +80,7 @@ const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
 
     const [defaultSelectValue, setDefaultSelectValue] = useState<Option | null>(null)
 
-    const { selectBox, updateSelectBoxValue, updateSelectBoxOptions } = useSelectBox([
+    const initialSelectBoxs = useMemo<SelectBoxItem[]>(() => [
         {
             title: 'Loại thành viên',
             placeholder: 'Chọn loại thành viên',
@@ -114,47 +130,48 @@ const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
             errors
 
         },
-    ])
+    ], [userCatalogues, defaultSelectValue, setProvinceId, setProvinceId, setDistrictId])
 
-    //Follow Select Value
+    const { selectBox, updateSelectBoxValue, updateSelectBoxOptions } = useSelectBox(initialSelectBoxs)
+
+
+    //follow update value and option
     useEffect(() => {
-        if (!isLoading && data && action === 'update') {
+        if (data) {
             updateSelectBoxValue('user_catalogue_id', userCatalogues, String(data?.user_catalogue_id))
         }
-        if (!isProvinceLoading && provinces.data) {
-            updateSelectBoxValue('province_id', provinces.data, String(data?.province_id))
-        }
-        if (!isDistrictLoading && districts.data) {
-            updateSelectBoxValue('district_id', districts.data, String(data?.district_id))
+    }, [userCatalogues, data, updateSelectBoxValue, updateSelectBoxOptions])
 
-        }
-        if (!isWardLoading && wards.data) {
-            updateSelectBoxValue('ward_id', wards.data, String(data?.ward_id))
-
-        }
-    }, [isLoading, data, isProvinceLoading, provinces, isDistrictLoading, districts, isWardLoading, wards])
-
-
-    // Follow province
     useEffect(() => {
-        if (!isProvinceLoading && provinces.data) {
+
+        if (provinces.data && provinces.data.length) {
             updateSelectBoxOptions('province_id', provinces.data)
+            if (data) {
+                updateSelectBoxValue('province_id', provinces.data, String(data?.province_id))
+            }
         }
-    }, [provinces, isProvinceLoading])
 
-    //Follow districts
+    }, [provinces.data, data, updateSelectBoxValue, updateSelectBoxOptions])
+
     useEffect(() => {
-        if (!isDistrictLoading && districts.data) {
+
+        if (districts.data && districts.data.length) {
             updateSelectBoxOptions('district_id', districts.data)
+            if (data) {
+                updateSelectBoxValue('district_id', districts.data, String(data?.district_id))
+            }
         }
-    }, [isDistrictLoading, districts])
 
-    //Follow ward
+    }, [districts.data, data, updateSelectBoxValue, updateSelectBoxOptions])
+
     useEffect(() => {
-        if (!isWardLoading && wards.data) {
+        if (wards.data && wards.data.length) {
             updateSelectBoxOptions('ward_id', wards.data)
+            if (data) {
+                updateSelectBoxValue('ward_id', wards.data, String(data?.ward_id))
+            }
         }
-    }, [isWardLoading, wards])
+    }, [wards.data, data, updateSelectBoxValue, updateSelectBoxOptions])
 
     return (
         <form onSubmit={handleSubmit(onSubmitHanler)}>
@@ -181,7 +198,7 @@ const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
                     type="text"
                     register={register}
                     errors={errors}
-                    defaultValue={data && data.address}
+                    value={data && data.address}
                 />
                 <input
                     type="file"

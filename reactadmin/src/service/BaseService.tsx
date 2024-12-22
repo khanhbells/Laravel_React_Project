@@ -47,9 +47,49 @@ const getLocationData = async (locationType: string, parentId: string | undefine
     return response.data
 }
 
+export interface PayloadInput<T> {
+    [key: string]: T
+}
+
+const baseSave = async<T,>(apiUrl: string, payload: PayloadInput<T>, updateParams: { action: string, id: string | null }) => {
+    const formData = new FormData()
+    const keys = Object.keys(payload) as Array<keyof PayloadInput<T>>
+    let hasFile = false
+
+    keys.forEach((key) => {
+        const value = payload[key]
+        if (value instanceof FileList && value.length > 0) {
+            for (let i = 0; i < value.length; i++) {
+                formData.append(`${key}[]`, value[i])
+            }
+            hasFile = true
+        } else if (value instanceof File) {
+            formData.append(key as string, value)
+            hasFile = true
+        } else {
+            formData.append(key as string, String(value))
+        }
+    })
+
+    if (updateParams.action === 'update' && updateParams.id) {
+        formData.append('_method', 'PUT')
+        apiUrl = `${apiUrl}/${updateParams.id}`
+    }
+
+    const headers: HeadersInit = {}
+
+    if (hasFile) {
+        headers['Content-Type'] = 'multipart/form-data'
+    }
+
+    const response = await axios.post(apiUrl, formData, headers)
+
+}
+
 export {
     updateStatusByField,
     updateFieldByParams,
     deleteAll,
-    getLocationData
+    getLocationData,
+    baseSave
 }

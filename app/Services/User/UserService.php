@@ -50,6 +50,8 @@ class UserService extends BaseService
         DB::beginTransaction();
         try {
             $payload = $this->request($request, $auth);
+
+
             $user = $this->userRepository->create($payload);
 
             DB::commit();
@@ -66,16 +68,39 @@ class UserService extends BaseService
         }
     }
 
+    public function update($request, $id, $auth)
+    {
+        DB::beginTransaction();
+        try {
+            $payload = $this->request($request, $auth);
+
+            $user = $this->userRepository->update($id, $payload);
+            // dd($user);
+            DB::commit();
+            return [
+                'user' => $user,
+                'code' => Status::SUCCESS
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return [
+                'code' => Status::ERROR,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
     private function request($request, $auth)
     {
-        $payload = $request->except(['re_password', 'image']);
 
-
+        $payload = $request->except(['re_password', '_method', 'created_at']);
         $customFolder = ['avatar'];
         if ($request->file('image')) {
             $imageType = 'image';
             $this->fileUploader = new FileUploader($auth->email);
             $payload['image'] = $this->fileUploader->uploadFile($request->file('image'), $imageType, $customFolder);
+        } else {
+            $payload['image'] = str_replace(config('app.url') . 'storage', 'public', $payload['image']);
         }
         if ($request->input('password') && !empty($request->input('password'))) {
             $payload['password'] = Hash::make($payload['password']);

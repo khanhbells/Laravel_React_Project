@@ -14,7 +14,7 @@ export const validation = (action: string, password: any, data?: User | undefine
             rules: {
                 required: 'Bạn chưa nhập vào Họ tên'
             },
-            defaultValue: data && data.name
+            value: data && data.name
         },
         {
             label: "Email *",
@@ -27,7 +27,7 @@ export const validation = (action: string, password: any, data?: User | undefine
                     message: "Email nhập vào không đúng định dạng"
                 },
             },
-            defaultValue: data && data.email
+            value: data && data.email
 
         },
         {
@@ -37,13 +37,13 @@ export const validation = (action: string, password: any, data?: User | undefine
             rules: {
                 required: 'Bạn chưa nhập vào điện thoại'
             },
-            defaultValue: data && data.phone
+            value: data && data.phone
         },
         {
             label: "Ngày sinh",
             name: "birthday",
             type: "date",
-            // defaultValue: data && data.birthday
+            value: data && data.birthday
         },
     ]
 
@@ -55,6 +55,7 @@ export const validation = (action: string, password: any, data?: User | undefine
             rules: {
                 required: 'Bạn chưa nhập vào mật khẩu'
             },
+            value: ''
         },
         {
             label: "Nhập lại mk (*)",
@@ -63,7 +64,8 @@ export const validation = (action: string, password: any, data?: User | undefine
             rules: {
                 required: 'Bạn chưa nhập lại mật khẩu',
                 validate: (value: any) => value === password.current || 'Mật khẩu không khớp'
-            }
+            },
+            value: ''
         }
     ]
 

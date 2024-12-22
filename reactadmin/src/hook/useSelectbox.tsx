@@ -17,7 +17,7 @@ const useSelectBox = (initialSelectBoxs: SelectBoxItem[]) => {
     }, [])
 
     //update select option
-    const updateSelectBoxOptions = useCallback((name: string, newOptions: Option[] | []) => {
+    const updateSelectBoxOptions = useCallback((name: string, newOptions: Option[]) => {
         setSelectBox(prevSelectBox =>
             prevSelectBox.map(item =>
                 item.name === name

@@ -55,6 +55,20 @@ class UserController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
+    public function update(Request $request, $id)
+    {
+
+        $auth = auth()->user();
+        $data = $this->userService->update($request, $id, $auth);
+
+        if ($data['code'] == Status::SUCCESS) {
+            return response()->json([
+                'message' => 'Cập nhật bản ghi thành công',
+                'user' => new UserResource($data['user'])
+            ], Response::HTTP_OK);
+        }
+    }
+
     public function show(Request $request, $id)
     {
         if (empty($id) || $id < 0) {
