@@ -21,10 +21,10 @@ import {
 
 import { buttonActions } from "@/settings/user"
 
-import { tableColumn } from "@/settings/user"
+// import { tableColumn } from "@/settings/user"
 
-//CheckedState
-import useCheckBoxState from "../hook/useCheckBoxState"
+// //CheckedState
+// import useCheckBoxState from "../hook/useCheckBoxState"
 
 import { CustomTableProps } from "@/interfaces/BaseServiceInterface"
 
@@ -42,6 +42,8 @@ const CustomTable = ({
 }: CustomTableProps) => {
 
     const { columnState, handleChecked, setInitialColumnState } = useColumnState()
+    console.log(data);
+
 
 
     //Follow theo isLoading và data

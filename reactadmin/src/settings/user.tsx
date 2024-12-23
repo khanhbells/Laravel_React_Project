@@ -37,7 +37,6 @@ const tableColumn: tableColumn[] = [
                 <Avatar className="mr-[15px] ml-[15px]">
                     {item.image ? <AvatarImage src={item.image} alt="avatar" /> : <AvatarFallback>{getInitialName(item.name)}</AvatarFallback>}
                 </Avatar>
-                <span>{item.name}</span>
             </div>
         )
     },

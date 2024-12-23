@@ -42,7 +42,6 @@ class UserController extends Controller
     public function create(StoreUserRequest $request)
     {
         $auth = auth()->user();
-
         $data = $this->userService->create($request, $auth);
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([

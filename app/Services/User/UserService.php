@@ -5,15 +5,12 @@ namespace App\Services\User;
 use App\Services\BaseService;
 use App\Repositories\User\UserRepository;
 use Illuminate\Support\Facades\DB;
-use App\Classes\FileUploader;
 use App\Enums\Status;
-use Illuminate\Support\Facades\Hash;
 
 
 class UserService extends BaseService
 {
     protected $userRepository;
-    protected $fileUploader;
     public function __construct(
         UserRepository $userRepository,
     ) {
@@ -49,9 +46,8 @@ class UserService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $payload = $this->request($request, $auth);
-
-
+            $except = ['re_password'];
+            $payload = $this->request($request, $auth, $except);
             $user = $this->userRepository->create($payload);
 
             DB::commit();
@@ -72,8 +68,8 @@ class UserService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $payload = $this->request($request, $auth);
-
+            $except = [];
+            $payload = $this->request($request, $auth, $except);
             $user = $this->userRepository->update($id, $payload);
             // dd($user);
             DB::commit();
@@ -88,24 +84,5 @@ class UserService extends BaseService
                 'message' => $e->getMessage()
             ];
         }
-    }
-
-    private function request($request, $auth)
-    {
-
-        $payload = $request->except(['re_password', '_method', 'created_at']);
-        $customFolder = ['avatar'];
-        if ($request->file('image')) {
-            $imageType = 'image';
-            $this->fileUploader = new FileUploader($auth->email);
-            $payload['image'] = $this->fileUploader->uploadFile($request->file('image'), $imageType, $customFolder);
-        } else {
-            $payload['image'] = str_replace(config('app.url') . 'storage', 'public', $payload['image']);
-        }
-        if ($request->input('password') && !empty($request->input('password'))) {
-            $payload['password'] = Hash::make($payload['password']);
-        }
-        $payload['publish'] = 1;
-        return $payload;
     }
 }

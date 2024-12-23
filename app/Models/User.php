@@ -40,6 +40,13 @@ class User extends Authenticatable implements JWTSubject
         'password' => 'hashed',
     ];
 
+    public function attributes()
+    {
+        return [
+            'publish' == 1,
+        ];
+    }
+
     // Rest omitted for brevity
 
     /**

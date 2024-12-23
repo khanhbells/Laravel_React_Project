@@ -59,8 +59,13 @@ const baseSave = async<T,>(apiUrl: string, payload: PayloadInput<T>, updateParam
     keys.forEach((key) => {
         const value = payload[key]
         if (value instanceof FileList && value.length > 0) {
-            for (let i = 0; i < value.length; i++) {
-                formData.append(`${key}[]`, value[i])
+            if (value.length === 1) {
+                formData.append(key as string, value[0])
+            }
+            else {
+                for (let i = 0; i < value.length; i++) {
+                    formData.append(`${key}[]`, value[i])
+                }
             }
             hasFile = true
         } else if (value instanceof File) {
@@ -82,7 +87,10 @@ const baseSave = async<T,>(apiUrl: string, payload: PayloadInput<T>, updateParam
         headers['Content-Type'] = 'multipart/form-data'
     }
 
-    const response = await axios.post(apiUrl, formData, headers)
+    const response = await axios.post(apiUrl, formData, {
+        headers: headers
+    })
+    return response.data
 
 }
 

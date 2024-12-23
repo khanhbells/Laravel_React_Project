@@ -8,7 +8,7 @@ const pagination = async (queryString: string, action: string) => {
 }
 
 const save = async (payload: PayloadInput, updateParams: { action: string, id: string | null }) => {
-    baseSave('/users', payload, updateParams)
+    return baseSave('/users', payload, updateParams)
 }
 
 const update = async (payload: PayloadInput) => {

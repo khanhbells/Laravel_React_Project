@@ -17,10 +17,9 @@ const useFormSubmit = <T extends FieldValues, U extends Record<string, any>>(
     const mutation = useMutation<void, Error, T>({
         mutationFn: (payload) => submitFn(payload, updateParams),
         onSuccess: (response) => {
-            // console.log(response);
-            // closeSheet()
-            // showToast('Cập nhật dữ liệu thành công', 'success');
-            // refetch()
+            closeSheet()
+            showToast('Cập nhật dữ liệu thành công', 'success');
+            refetch()
         },
         onError: (error: any) => {
             console.error('Lỗi: ', error);
