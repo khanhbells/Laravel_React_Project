@@ -71,15 +71,29 @@ class UserController extends Controller
     public function show(Request $request, $id)
     {
         if (empty($id) || $id < 0) {
-            return response()->json([
-                'message' => 'Mã ID không hợp lệ',
-                'code' => Status::ERROR
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->returnIfIdValidateFail();
         }
 
         $user = $this->userRepository->findById($id);
 
         return response()->json(new UserResource($user));
+    }
+
+    public function destroy($id, Request $request)
+    {
+        if (empty($id) || $id < 0) {
+            return $this->returnIfIdValidateFail();
+        }
+        if ($this->userService->delete($id)) {
+            return response()->json([
+                'message' => 'Xóa bản ghi thành công',
+                'code' => Status::SUCCESS
+            ], Response::HTTP_OK);
+        }
+        return response()->json([
+            'message' => 'Network Error',
+            'code' => Status::ERROR
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     public function updateStatusByField(UpdateByFieldRequest $request, $id)
@@ -92,6 +106,14 @@ class UserController extends Controller
         }
         return response()->json([
             'message' =>  'Cập nhật dữ liệu không thành công',
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    private function returnIfIdValidateFail()
+    {
+        return response()->json([
+            'message' => 'Mã ID không hợp lệ',
+            'code' => Status::ERROR
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

@@ -212,10 +212,13 @@ const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
                 <div className="text-center">
                     <label htmlFor="upload-image">
                         <Avatar className="w-[100px] h-[100px] inline-block cursor-pointer shadow-md border">
-                            {(data && data.image && action === 'update')
-                                ? <AvatarImage src={data.image} />
-                                : <AvatarImage src={images.length > 0 ? images[0].preview : 'https://github.com/shadcn.png'} />
-                            }
+                            {images.length > 0 ? (
+                                <AvatarImage src={images[0].preview} />
+                            ) : data && data.image ? (
+                                <AvatarImage src={data.image} />
+                            ) : (
+                                <AvatarImage src='https://github.com/shadcn.png' />
+                            )}
                         </Avatar>
                     </label>
                 </div>

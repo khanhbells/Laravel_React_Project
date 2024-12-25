@@ -49,6 +49,9 @@ const Filter = ({ isAnyChecked, checkedState, model, refetch, handleQueryString,
 
     //Open dialog
     const openAlertDialog = (value: string) => {
+
+        console.log(value);
+
         setAlertDialogOpen(true)
         setActionSelectedValue(value)
     }

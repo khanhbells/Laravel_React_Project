@@ -1,7 +1,7 @@
 //Create User
 import UserStore from "./Store"
 //pagination
-import { pagination } from "@/service/UserService"
+import { pagination, destroy } from "@/service/UserService"
 import Paginate from "@/components/paginate"
 //breadcrumb
 import PageHeading from "@/components/heading"
@@ -65,6 +65,8 @@ const User = () => {
                             handleCheckedChange={handleCheckedChange}
                             handleCheckedAllChange={handleCheckedAllChange}
                             openSheet={openSheet}
+                            destroy={destroy}
+                            refetch={refetch}
                         />
                     </CardContent>
                     <CardFooter>

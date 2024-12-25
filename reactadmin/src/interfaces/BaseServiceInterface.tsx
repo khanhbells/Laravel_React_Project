@@ -33,6 +33,8 @@ export interface CustomTableProps extends SheetProps {
     checkedAllState: boolean,
     handleCheckedChange: (id: number) => void,
     handleCheckedAllChange: () => void,
+    destroy: (id: string) => void,
+    refetch: any,
 }
 
 
@@ -41,7 +43,9 @@ export interface CustomAlertDialogProps {
     title: string,
     description: string,
     closeAlertDialog: () => void,
-    confirmAction: () => void
+    confirmAction?: () => void,
+    isDialogLoading?: boolean
+
 }
 
 export interface SelectBoxItem {

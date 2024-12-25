@@ -7,16 +7,17 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
 import { CustomAlertDialogProps } from "@/interfaces/BaseServiceInterface"
-
-const CustomAlertDialog = ({ isOpen,
+import { ReloadIcon } from "@radix-ui/react-icons"
+const CustomAlertDialog = ({
+    isOpen,
     title,
     description,
     closeAlertDialog,
-    confirmAction
+    confirmAction,
+    isDialogLoading
 }: CustomAlertDialogProps) => {
     return (
         <>
@@ -31,7 +32,10 @@ const CustomAlertDialog = ({ isOpen,
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel onClick={closeAlertDialog}>Hủy bỏ</AlertDialogCancel>
-                        <AlertDialogAction onClick={confirmAction}>Tiếp tục</AlertDialogAction>
+                        <AlertDialogAction disabled={isDialogLoading} className="cursor-pointer" onClick={confirmAction} >
+                            {isDialogLoading ? <ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> : null}
+                            {isDialogLoading ? 'Đang xử lý' : 'Thực hiện thao tác'}
+                        </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

@@ -31,7 +31,7 @@ interface tableColumn {
 }
 const tableColumn: tableColumn[] = [
     {
-        name: 'ID',
+        name: 'Avartar',
         render: (item: User) => (
             <div className="flex items-center">
                 <Avatar className="mr-[15px] ml-[15px]">
@@ -64,13 +64,35 @@ const tableColumn: tableColumn[] = [
 
 ]
 
-const buttonActions = [
+export type Row = Record<string, any>
+export type OpenSheetFunction = (sheet: Sheet) => void
+export type ActionParam = keyof Row | `${string}:f`
+
+export type ParamToType<T extends ActionParam> =
+    T extends `${string}:f` ? Function :
+    T extends keyof Row ? Row[T] :
+    never;
+export type ParamsToTuple<T extends ActionParam[]> = {
+    [K in keyof T]: ParamToType<T[K]>
+}
+
+export interface ButtonAction<T extends ActionParam[]> {
+    params?: T,
+    className: string,
+    icon?: React.ReactNode,
+    path?: string,
+    method?: string,
+    onClick?: (...agrs: ParamsToTuple<T>) => void,
+}
+
+const buttonActions: ButtonAction<ActionParam[]>[] = [
     {
         path: '/user/update',
         icon: <FaRegEdit className="text-white" />,
         className: 'flex mr-[5px]',
         method: 'create',
-        onClick: (id: string, openSheet: (sheet: Sheet) => void) => {
+        params: ['id', 'openSheet:f'],
+        onClick: (id: string, openSheet: OpenSheetFunction) => {
             openSheet({ open: true, action: 'update', id: id })
         }
     },
@@ -78,7 +100,12 @@ const buttonActions = [
         path: '/user/delete',
         icon: <RiDeleteBin6Line className="text-white" />,
         className: 'bg-[#ec4758] mr-[5px]',
-        method: 'delete'
+        method: 'delete',
+        params: ['id', 'handleAlertDialog:f', 'destroy:f'],
+        onClick: (id: string, handleAlertDialog: any, destroy: any) => {
+            handleAlertDialog(id, destroy)
+            // confirmAction(destroy)
+        }
     },
     {
         path: '/user/reset',

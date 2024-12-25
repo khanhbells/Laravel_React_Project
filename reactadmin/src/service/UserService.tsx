@@ -1,6 +1,7 @@
 import axios from "@/configs/axios";
 import { PayloadInput, User } from "@/types/User";
 import { baseSave } from "./BaseService";
+import { baseDestroy } from "./BaseService";
 
 const pagination = async (queryString: string, action: string) => {
     const response = await axios.get(`/users?${queryString}`)
@@ -17,6 +18,14 @@ const update = async (payload: PayloadInput) => {
     //     }
 }
 
+const destroy = async (id: string) => {
+
+    console.log(id, 'users');
+
+    return baseDestroy(id, 'users')
+
+}
+
 const getUserById = async (userId: string | null): Promise<User> => {
     const response = await axios.get(`users/${userId}`)
     return response.data
@@ -25,5 +34,6 @@ const getUserById = async (userId: string | null): Promise<User> => {
 export {
     pagination,
     save,
-    getUserById
+    getUserById,
+    destroy
 }

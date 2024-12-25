@@ -37,6 +37,11 @@ class BaseRepository
         return $model;
     }
 
+    public function delete($id)
+    {
+        return $this->findById($id)->delete($id);
+    }
+
     public function findById(
         $modelId,
         $column = ['*'],

@@ -85,4 +85,22 @@ class UserService extends BaseService
             ];
         }
     }
+
+    public function delete($id)
+    {
+        DB::beginTransaction();
+        try {
+            $this->userRepository->delete($id);
+            DB::commit();
+            return [
+                'code' => Status::SUCCESS
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return [
+                'code' => Status::ERROR,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
 }
