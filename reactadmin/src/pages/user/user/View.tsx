@@ -1,7 +1,7 @@
 //Create User
 import UserStore from "./Store"
 //pagination
-import { pagination, destroy } from "@/service/UserService"
+import { pagination, destroy, changePassword } from "@/service/UserService"
 import Paginate from "@/components/paginate"
 //breadcrumb
 import PageHeading from "@/components/heading"
@@ -17,6 +17,8 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import CustomDialog from "@/components/CustomDialog"
+import Recovery from "./Recovery"
 //filter
 import Filter from "@/components/Filter"
 //Checkbox
@@ -67,6 +69,7 @@ const User = () => {
                             openSheet={openSheet}
                             destroy={destroy}
                             refetch={refetch}
+                            changePassword={changePassword}
                         />
                     </CardContent>
                     <CardFooter>
@@ -87,6 +90,13 @@ const User = () => {
                         action={isSheetOpen.action}
                     />
                 </CustomSheet>
+                <CustomDialog
+                    heading="Đổi mật khẩu"
+                    description="Nhập đầy đủ thông tin dưới đây. Các mục có dấu (*) là bắt buộc"
+                    buttonLoading={false}
+                >
+                    <Recovery />
+                </CustomDialog>
             </div >
         </>
     )

@@ -35,6 +35,7 @@ export interface CustomTableProps extends SheetProps {
     handleCheckedAllChange: () => void,
     destroy: (id: string) => void,
     refetch: any,
+    [key: string]: any
 }
 
 

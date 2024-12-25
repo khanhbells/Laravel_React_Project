@@ -31,9 +31,14 @@ const getUserById = async (userId: string | null): Promise<User> => {
     return response.data
 }
 
+const changePassword = () => {
+
+}
+
 export {
     pagination,
     save,
     getUserById,
-    destroy
+    destroy,
+    changePassword
 }

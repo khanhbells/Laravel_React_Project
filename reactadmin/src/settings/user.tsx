@@ -1,3 +1,5 @@
+
+import React from "react";
 import { User } from "@/types/User";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { FaRegEdit } from "react-icons/fa";
@@ -5,6 +7,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdOutlineLockReset } from "react-icons/md";
 import { getInitialName } from "@/helper/myHelper";
 import { Sheet } from "@/hook/useSheet";
+import Recovery from "@/pages/user/user/Recovery";
 
 const breadcrumb = {
 
@@ -66,10 +69,12 @@ const tableColumn: tableColumn[] = [
 
 export type Row = Record<string, any>
 export type OpenSheetFunction = (sheet: Sheet) => void
-export type ActionParam = keyof Row | `${string}:f`
+export type ActionParam = keyof Row | `${string}:f` | `${string}:c` | `${string}:pf` // pf: prop function:
 
 export type ParamToType<T extends ActionParam> =
     T extends `${string}:f` ? Function :
+    T extends `${string}:pf` ? Function :
+    T extends `${string}:c` ? React.ComponentType<any> :
     T extends keyof Row ? Row[T] :
     never;
 export type ParamsToTuple<T extends ActionParam[]> = {
@@ -83,6 +88,7 @@ export interface ButtonAction<T extends ActionParam[]> {
     path?: string,
     method?: string,
     onClick?: (...agrs: ParamsToTuple<T>) => void,
+    component?: React.ComponentType<any>
 }
 
 const buttonActions: ButtonAction<ActionParam[]>[] = [
@@ -108,10 +114,15 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
         }
     },
     {
-        path: '/user/reset',
+        path: '/user/recovery',
         icon: <MdOutlineLockReset className="text-white text-[20px]" />,
         className: 'bg-[#f8ac59]',
-        method: 'reset'
+        method: 'reset',
+        params: ['id', 'changePassword:pf', 'handleDialog:f', 'Recovery:c'],
+        component: Recovery,
+        onClick: (id: string, changePassword: Function, handleDialog: Function, Recovery: React.ComponentType<any>) => {
+            handleDialog(id, changePassword, Recovery)
+        }
     },
 ]
 

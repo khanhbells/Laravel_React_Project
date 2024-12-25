@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import React, { useEffect } from "react"
 import { Link, useSearchParams, useNavigate } from "react-router-dom"
 
 import { Checkbox } from "../components/ui/checkbox"
@@ -26,6 +26,7 @@ import useDialog from "@/hook/useDialog"
 
 
 import { CustomTableProps } from "@/interfaces/BaseServiceInterface"
+import { changePassword } from "@/service/UserService"
 
 const CustomTable = ({
     data,
@@ -40,14 +41,21 @@ const CustomTable = ({
     openSheet,
     destroy,
     refetch,
+    ...restProps
 }: CustomTableProps) => {
 
     const { columnState, handleChecked, setInitialColumnState } = useColumnState()
     const { confirmAction, openAlertDialog, closeAlertDialog, alertDialogOpen, isLoading: isDialogLoading } = useDialog(refetch)
 
+
+
     const handleAlertDialog = (id: string, callback: any) => {
         openAlertDialog(id, callback)
         // setCurrentAction()
+    }
+
+    const handleDialog = (id: string, callback: Function, component: React.ComponentType<any>) => {
+        console.log(id, callback, component);
     }
 
     //Follow theo isLoading và data
@@ -118,9 +126,17 @@ const CustomTable = ({
                                             action.onClick && action.params ? (e: React.
                                                 MouseEvent<HTMLButtonElement>) => {
                                                 const args = action.params?.map(param => {
-                                                    if (typeof param === 'string' && param.endsWith(':f')) {
-                                                        return eval(param.slice(0, -2))
-                                                    } else {
+                                                    if (typeof param === 'string' && (param.endsWith(':f') || param.endsWith(':pf') || param.endsWith(':c'))) {
+                                                        if (param.endsWith(':f')) {
+                                                            return eval(param.slice(0, -2))
+                                                        } else if (param.endsWith(':pf')) {
+                                                            const functionName = param.slice(0, -3)
+                                                            return restProps[functionName]
+                                                        } else if (param.endsWith(':c')) {
+                                                            return action.component
+                                                        }
+                                                    }
+                                                    else {
                                                         return row[param as keyof Row]
                                                     }
                                                 }) as ParamsToTuple<typeof action.params>
