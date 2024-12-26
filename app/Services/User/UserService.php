@@ -68,7 +68,7 @@ class UserService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $except = [];
+            $except = ['re_password'];
             $payload = $this->request($request, $auth, $except);
             $user = $this->userRepository->update($id, $payload);
             // dd($user);

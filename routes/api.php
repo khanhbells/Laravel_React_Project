@@ -37,6 +37,7 @@ Route::group([
     Route::put('users/{id}', [UserController::class, 'update']);
     Route::delete('users/{id}', [UserController::class, 'destroy']);
 
+    Route::put('users/{id}/reset-password', [UserController::class, 'resetPassword']);
     Route::post('check-email', [UserController::class, 'create']);
     Route::put('users/{id}/status', [UserController::class, 'updateStatusByField']);
 

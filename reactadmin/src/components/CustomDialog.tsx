@@ -1,10 +1,8 @@
 //REACT
-import React, { useState } from "react"
+import React, { ReactNode, useState } from "react"
 //COMPONENT
 import LoadingButton from "@/components/LoadingButton"
 import { Button } from "@/components/ui/button"
-import { Label } from "./ui/label"
-import { Input } from "./ui/input"
 import {
     Dialog,
     DialogContent,
@@ -12,36 +10,38 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
+    DialogClose
 } from "@/components/ui/dialog"
 
 
 interface CustomDialogProps {
-    children: React.ReactNode,
+    children: ReactNode,
     heading: string,
     description: string,
-    buttonLoading: boolean
+    buttonLoading: boolean,
+    open: boolean,
+    close: () => void
 }
 const CustomDialog = ({
     children,
     heading,
     description,
-    buttonLoading
+    buttonLoading,
+    open,
+    close
 }: CustomDialogProps) => {
-    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+
     return (
         <>
-            <Dialog open={isDialogOpen}>
+            <Dialog open={open} onOpenChange={close}>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
                         <DialogTitle>{heading}</DialogTitle>
-                        <DialogDescription>
+                        <DialogDescription className="text-[12px] text-[#f00]">
                             {description}
                         </DialogDescription>
                     </DialogHeader>
                     {children}
-                    <DialogFooter>
-                        <LoadingButton loading={buttonLoading} text="Đổi mật khẩu" />
-                    </DialogFooter>
                 </DialogContent>
             </Dialog>
         </>

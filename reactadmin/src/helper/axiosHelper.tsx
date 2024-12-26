@@ -1,15 +1,12 @@
 import axios from "axios";
+import { showToast } from "./myHelper";
 import { toast } from "react-toastify";
-const handleAxiosError = (error: unknown): void => {
+const handleAxiosError = (error: unknown) => {
 
     if (axios.isAxiosError(error)) {
-        if (error.response && error.response.data && error.response.data.error) {
-            console.log(error.response.data.error)
-        } else {
-            console.log('Network Error')
-        }
+        showToast(error.response?.data.message, 'error')
     } else {
-        console.log('Đã xảy ra lỗi không được xác định. Hãy thử lại sau')
+        showToast('Đã xảy ra lỗi không được xác định. Hãy thử lại sau', 'error')
     }
 
 }

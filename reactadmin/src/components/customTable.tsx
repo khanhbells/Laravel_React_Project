@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { ReactNode, useEffect, useState } from "react"
 import { Link, useSearchParams, useNavigate } from "react-router-dom"
 
 import { Checkbox } from "../components/ui/checkbox"
@@ -28,6 +28,9 @@ import useDialog from "@/hook/useDialog"
 import { CustomTableProps } from "@/interfaces/BaseServiceInterface"
 import { changePassword } from "@/service/UserService"
 
+import CustomDialog from "@/components/CustomDialog"
+
+
 const CustomTable = ({
     data,
     isLoading,
@@ -47,15 +50,25 @@ const CustomTable = ({
     const { columnState, handleChecked, setInitialColumnState } = useColumnState()
     const { confirmAction, openAlertDialog, closeAlertDialog, alertDialogOpen, isLoading: isDialogLoading } = useDialog(refetch)
 
+    const [DialogComponent, setDialogComponent] = useState<React.ComponentType<any> | null>(null)
+
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+
 
 
     const handleAlertDialog = (id: string, callback: any) => {
         openAlertDialog(id, callback)
-        // setCurrentAction()
     }
 
-    const handleDialog = (id: string, callback: Function, component: React.ComponentType<any>) => {
-        console.log(id, callback, component);
+    const handleDialog = (id: string, callback: Function, Component: React.ComponentType<any>) => {
+        setDialogComponent(() => (props: any) =>
+            <Component
+                id={id}
+                callback={callback}
+                {...props}
+            />
+        );
+        setIsDialogOpen(true)
     }
 
     //Follow theo isLoading và data
@@ -63,7 +76,6 @@ const CustomTable = ({
         if (!isLoading && data[model]) {
             setInitialColumnState(data[model], 'publish')
         }
-
     }, [isLoading, data])
 
     return (
@@ -169,6 +181,20 @@ const CustomTable = ({
                 confirmAction={() => confirmAction()}
                 isDialogLoading={isDialogLoading}
             />
+            {isDialogOpen && DialogComponent && (
+                <CustomDialog
+                    heading="Đổi mật khẩu"
+                    description="Nhập đầy đủ thông tin dưới đây. Các mục có dấu (*) là bắt buộc"
+                    buttonLoading={false}
+                    open={isDialogOpen}
+                    close={() => setIsDialogOpen(false)}
+                >
+                    <DialogComponent
+                        close={() => setIsDialogOpen(false)}
+                    />
+                </CustomDialog>
+            )}
+
         </>
     )
 }

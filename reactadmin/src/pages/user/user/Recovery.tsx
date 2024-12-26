@@ -1,21 +1,88 @@
+//REACT
+import { useState } from "react";
+//COMPONENT
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-const Recovery = () => {
+import { useForm, SubmitHandler } from "react-hook-form";
+import LoadingButton from "@/components/LoadingButton"
+import CustomInput from "@/components/CustomInput";
+//HELPERS
+import { showToast } from "@/helper/myHelper";
+import { handleAxiosError } from "@/helper/axiosHelper";
+type Inputs = {
+    password: string,
+    re_password: string
+};
+
+interface RecoveryProps {
+    id: string,
+    callback: Function
+    [key: string]: any
+
+}
+
+const Recovery = ({
+    id,
+    callback,
+    ...restProps
+}: RecoveryProps) => {
+
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+    } = useForm<Inputs>()
+
+    const changePasswordHanler: SubmitHandler<Inputs> = async (payload) => {
+
+        setIsLoading(true)
+        try {
+            const res = await callback(id, payload)
+            if (res.code === 200) {
+                showToast(res.message, res.code === 200 ? 'success' : 'error')
+                restProps.close()
+            }
+        } finally {
+            setIsLoading(false)
+        }
+
+    };
+
     return (
-        <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                    Name
-                </Label>
-                <Input id="name" value="Pedro Duarte" className="col-span-3" />
+        <form onSubmit={handleSubmit(changePasswordHanler)}>
+            <div className="grid gap-4 py-4">
+                <CustomInput
+                    register={register}
+                    errors={errors}
+                    label="Mật khẩu mới"
+                    name="password"
+                    type="password"
+                    rules={
+                        {
+                            required: 'Bạn chưa nhập vào ô mật khẩu'
+                        }
+                    }
+                    value=""
+                />
+                <CustomInput
+                    register={register}
+                    errors={errors}
+                    label="Nhập lại"
+                    name="re_password"
+                    type="password"
+                    rules={
+                        {
+                            required: 'Bạn chưa nhập vào ô nhập lại mật khẩu'
+                        }
+                    }
+                    value=""
+                />
+                <LoadingButton loading={isLoading} text="Thực hiện" />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="username" className="text-right">
-                    Username
-                </Label>
-                <Input id="username" value="@peduarte" className="col-span-3" />
-            </div>
-        </div>
+        </form>
     )
 }
 

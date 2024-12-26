@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UpdateByFieldRequest;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Requests\User\StoreUserRequest;
+use App\Http\Requests\User\ChangePasswordUserRequest;
 use NunoMaduro\Collision\Adapters\Phpunit\State;
 
 class UserController extends Controller
@@ -56,16 +57,12 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
+        return $this->baseUpdate($request, $id);
+    }
 
-        $auth = auth()->user();
-        $data = $this->userService->update($request, $id, $auth);
-
-        if ($data['code'] == Status::SUCCESS) {
-            return response()->json([
-                'message' => 'Cập nhật bản ghi thành công',
-                'user' => new UserResource($data['user'])
-            ], Response::HTTP_OK);
-        }
+    public function resetPassword(ChangePasswordUserRequest $request, $id)
+    {
+        return $this->baseUpdate($request, $id);
     }
 
     public function show(Request $request, $id)
@@ -78,6 +75,8 @@ class UserController extends Controller
 
         return response()->json(new UserResource($user));
     }
+
+
 
     public function destroy($id, Request $request)
     {
@@ -115,5 +114,19 @@ class UserController extends Controller
             'message' => 'Mã ID không hợp lệ',
             'code' => Status::ERROR
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    private function baseUpdate($request, $id)
+    {
+        $auth = auth()->user();
+        $data = $this->userService->update($request, $id, $auth);
+
+        if ($data['code'] == Status::SUCCESS) {
+            return response()->json([
+                'message' => 'Cập nhật bản ghi thành công',
+                'user' => new UserResource($data['user']),
+                'code' => Response::HTTP_OK
+            ], Response::HTTP_OK);
+        }
     }
 }

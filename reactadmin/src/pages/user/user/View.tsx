@@ -17,8 +17,6 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import CustomDialog from "@/components/CustomDialog"
-import Recovery from "./Recovery"
 //filter
 import Filter from "@/components/Filter"
 //Checkbox
@@ -76,27 +74,23 @@ const User = () => {
                         {!isLoading && data[model] && data.links ? <Paginate links={data?.links} pageChange={handlePageChange} /> : null}
                     </CardFooter>
                 </Card>
-                <CustomSheet
-                    title={isSheetOpen.action === 'update' ? breadcrumb.update.title : breadcrumb.create.title}
-                    description={breadcrumb.create.description}
-                    isSheetOpen={isSheetOpen.open}
-                    closeSheet={closeSheet}
-                    className="w-[400px] sm:w-[500px]"
-                >
-                    <UserStore
-                        refetch={refetch}
+                {isSheetOpen && (
+                    <CustomSheet
+                        title={isSheetOpen.action === 'update' ? breadcrumb.update.title : breadcrumb.create.title}
+                        description={breadcrumb.create.description}
+                        isSheetOpen={isSheetOpen.open}
                         closeSheet={closeSheet}
-                        userId={isSheetOpen.id}
-                        action={isSheetOpen.action}
-                    />
-                </CustomSheet>
-                <CustomDialog
-                    heading="Đổi mật khẩu"
-                    description="Nhập đầy đủ thông tin dưới đây. Các mục có dấu (*) là bắt buộc"
-                    buttonLoading={false}
-                >
-                    <Recovery />
-                </CustomDialog>
+                        className="w-[400px] sm:w-[500px]"
+                    >
+                        <UserStore
+                            refetch={refetch}
+                            closeSheet={closeSheet}
+                            userId={isSheetOpen.id}
+                            action={isSheetOpen.action}
+                        />
+                    </CustomSheet>
+                )}
+
             </div >
         </>
     )

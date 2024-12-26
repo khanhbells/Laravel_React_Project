@@ -121,6 +121,9 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
         params: ['id', 'changePassword:pf', 'handleDialog:f', 'Recovery:c'],
         component: Recovery,
         onClick: (id: string, changePassword: Function, handleDialog: Function, Recovery: React.ComponentType<any>) => {
+            const params = {
+                id: id
+            }
             handleDialog(id, changePassword, Recovery)
         }
     },
