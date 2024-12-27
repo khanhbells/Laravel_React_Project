@@ -26,7 +26,12 @@ import useSheet from "@/hook/useSheet"
 import CustomSheet from "@/components/CustomSheet"
 //settings
 import { breadcrumb, model, tableColumn } from "@/settings/user"
-
+import { filterItems, extraFilterItems } from "@/settings/user"
+import { SelectConfig } from "@/components/CustomFilter"
+//contexts
+import { FilterProvider } from "@/contexts/FilterContext"
+//
+import { useState } from "react"
 const User = () => {
     const breadcrumbData: Breadcrumb = breadcrumb.index
     //REACT QUERY
@@ -36,9 +41,28 @@ const User = () => {
     const somethingChecked = isAnyChecked()
     const { isSheetOpen, openSheet, closeSheet } = useSheet()
 
+    const [customFilter, setCustomFilter] = useState<SelectConfig[]>([
+        {
+            name: 'user_catalogue_id',
+            placeholder: 'Chọn nhóm thành viên',
+            options: [
+                {
+                    value: '0',
+                    label: 'Tất cả nhóm thành viên'
+                },
+                {
+                    value: '1',
+                    label: 'Admin'
+                },
+            ]
+
+        },
+    ]);
+
     return (
-        <>
+        <FilterProvider customFilters={customFilter}>
             <PageHeading breadcrumb={breadcrumbData} />
+
             <div className="container">
                 <Card className="rounded-[5px] mt-[15px] ">
                     <CardHeader className="border-b border-solid border-[#f3f3f3] p-[20px]">
@@ -53,6 +77,8 @@ const User = () => {
                             refetch={refetch}
                             handleQueryString={(filters: any) => handleQueryString(filters)}
                             openSheet={openSheet}
+                            items={filterItems}
+                            buttonText="Thêm mới thành viên"
                         />
                         <CustomTable
                             isLoading={isLoading}
@@ -92,7 +118,7 @@ const User = () => {
                 )}
 
             </div >
-        </>
+        </FilterProvider>
     )
 }
 export default User

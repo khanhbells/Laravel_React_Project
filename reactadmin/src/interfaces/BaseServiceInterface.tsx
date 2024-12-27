@@ -20,7 +20,9 @@ export interface FilterProps extends CheckStateInterface, SheetProps {
     isAnyChecked: boolean,
     model: string,
     refetch: any,
-    handleQueryString: any
+    handleQueryString: any,
+    items: BaseFilterItem[],
+    buttonText: string
 }
 
 export interface CustomTableProps extends SheetProps {
@@ -60,4 +62,21 @@ export interface SelectBoxItem {
     name: string,
     control: any,
     errors: any,
+}
+
+export interface BaseFilterItem {
+    value: string,
+    label: string,
+    icon: React.ReactNode
+}
+
+export interface SelectOption {
+    value: string,
+    label: string
+}
+
+export interface Select {
+    placeholder: string,
+    id?: string,
+    items: SelectOption[]
 }

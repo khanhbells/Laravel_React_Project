@@ -1,13 +1,22 @@
-
+//REACT
 import React from "react";
-import { User } from "@/types/User";
+//COMPONENTS
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdOutlineLockReset } from "react-icons/md";
-import { getInitialName } from "@/helper/myHelper";
-import { Sheet } from "@/hook/useSheet";
 import Recovery from "@/pages/user/user/Recovery";
+import { FaXmark } from "react-icons/fa6"
+import { IoCheckmarkSharp } from "react-icons/io5";
+import { AiOutlineStop } from "react-icons/ai";
+//SETTINGS
+import { getInitialName } from "@/helper/myHelper";
+import { User } from "@/types/User";
+//INTERFACE & TYPE
+import { BaseFilterItem } from "@/interfaces/BaseServiceInterface";
+import { Select } from "@/interfaces/BaseServiceInterface";
+//HOOK
+import { Sheet } from "@/hook/useSheet";
 
 const breadcrumb = {
 
@@ -129,9 +138,47 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
     },
 ]
 
+
+const filterItems: BaseFilterItem[] = [
+    {
+        value: 'deleteAll',
+        label: 'Xóa',
+        icon: <FaXmark className="mr-[5px]" />
+    },
+    {
+        value: 'publish|2',
+        label: 'Xuất bản',
+        icon: <IoCheckmarkSharp className="mr-[5px]" />
+    },
+    {
+        value: 'publish|1',
+        label: 'Ngừng xuất bản',
+        icon: <AiOutlineStop className="mr-[5px]" />
+    },
+]
+
+const extraFilterItems: Select[] = [
+    {
+        id: 'user_catalogue_Id',
+        placeholder: 'Chọn Nhóm Thành Viên',
+        items: [
+            {
+                value: '0',
+                label: 'Tất cả các nhóm'
+            },
+            {
+                value: '1',
+                label: 'Admin'
+            }
+        ]
+    }
+]
+
 export {
     breadcrumb,
     model,
     tableColumn,
     buttonActions,
+    extraFilterItems,
+    filterItems
 }

@@ -1,19 +1,24 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
 export type ToastType = 'success' | 'warning' | 'error' | null;
-
 interface ToastContextType {
     message: string,
     type: ToastType,
     setMessage: (message: string, type?: ToastType) => void,
 }
-
-
 const ToastContext = createContext<ToastContextType | undefined>(undefined)
-
 interface ToastProviderProps {
     children: ReactNode
 }
+export const useToast = (): ToastContextType => {
+    const context = useContext(ToastContext)
+    if (!context) {
+        throw new Error('Có vấn đề xảy ra')
+    }
+    return context
+}
+
+
 
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
     const [message, setToastMessage] = useState<string>('')
@@ -31,10 +36,3 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
     )
 }
 
-export const useToast = (): ToastContextType => {
-    const context = useContext(ToastContext)
-    if (!context) {
-        throw new Error('Có vấn đề xảy ra')
-    }
-    return context
-}
