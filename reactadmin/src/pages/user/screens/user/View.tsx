@@ -1,5 +1,5 @@
 //Create User
-import UserStore from "./Store"
+import UserStore from "./include/Store"
 //pagination
 import { pagination, destroy, changePassword } from "@/service/UserService"
 import Paginate from "@/components/paginate"
@@ -25,8 +25,8 @@ import useCheckBoxState from "@/hook/useCheckBoxState"
 import useSheet from "@/hook/useSheet"
 import CustomSheet from "@/components/CustomSheet"
 //settings
-import { breadcrumb, model, tableColumn } from "@/settings/user"
-import { filterItems, extraFilterItems } from "@/settings/user"
+import { breadcrumb, model, tableColumn } from "../../settings/userSettings"
+import { filterItems } from "@/settings/globalSettings"
 import { SelectConfig } from "@/components/CustomFilter"
 //contexts
 import { FilterProvider } from "@/contexts/FilterContext"
@@ -62,7 +62,6 @@ const User = () => {
     return (
         <FilterProvider customFilters={customFilter}>
             <PageHeading breadcrumb={breadcrumbData} />
-
             <div className="container">
                 <Card className="rounded-[5px] mt-[15px] ">
                     <CardHeader className="border-b border-solid border-[#f3f3f3] p-[20px]">
@@ -116,7 +115,6 @@ const User = () => {
                         />
                     </CustomSheet>
                 )}
-
             </div >
         </FilterProvider>
     )

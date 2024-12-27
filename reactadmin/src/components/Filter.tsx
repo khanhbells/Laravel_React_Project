@@ -1,7 +1,5 @@
 //REACT
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 //COMPONENT
 import {
     Select,
@@ -18,18 +16,10 @@ import CustomFilter from "./CustomFilter";
 //SETTINGS
 import { FilterProps } from "@/interfaces/BaseServiceInterface";
 import { perpages, publishs, sort } from "../constant/general";
-import { showToast } from "../helper/myHelper"
-import { clearToast } from "../redux/slide/toastSlice"
 //HOOK
 import useFilterAction from "@/hook/useFilterAction";
 import useDebounce from "@/hook/useDebounce";
 
-
-interface FilterInterface {
-    perpage: string | undefined,
-    publish: string | undefined,
-    parent_id: string | undefined
-}
 
 const Filter = ({
     isAnyChecked,
@@ -41,65 +31,29 @@ const Filter = ({
     items,
     buttonText
 }: FilterProps) => {
-
-    const dispatch = useDispatch()
-    const [alertDialogOpen, setAlertDialogOpen] = useState<boolean>(false)
-
-    const [actionSelectedValue, setActionSelectedValue] = useState<string>('')
-    const [searchParams, setSearchParams] = useSearchParams()
-    const [filters, setFilters] = useState<FilterInterface>({
-        perpage: searchParams.get('perpage') || '10',
-        publish: searchParams.get('publish') || undefined,
-        parent_id: searchParams.get('parent_id') || undefined
-    })
-
-    const [keyword, setKeyword] = useState<string>(searchParams.get('keyword') || '')
-    const { actionSwitch } = useFilterAction()
-
-    //Open dialog
-    const openAlertDialog = (value: string) => {
-        // console.log(value);
-        setAlertDialogOpen(true)
-        setActionSelectedValue(value)
-    }
-    const closeAlertDialog = () => {
-        setAlertDialogOpen(false)
-        setActionSelectedValue('')
-    }
-    const confirmAction = async (value: string): Promise<void> => {
-        const [action, selectedValue] = value.split('|')
-        const response = await actionSwitch(action, selectedValue, { checkedState }, model, refetch)
-        closeAlertDialog()
-        showToast(response?.message, 'success')
-        dispatch(clearToast())
-    }
-
-
-
     //Delay keyword
     const { debounce } = useDebounce()
+    const {
+        alertDialogOpen,
+        closeAlertDialog,
+        confirmAction,
+        actionSelectedValue,
+        openAlertDialog, filters,
+        keyword,
+        handleFilter,
+        debounceInputSearch
+    } = useFilterAction(checkedState, model, refetch, debounce)
 
-    const debounceInputSearch = debounce((value: string) => {
-        setKeyword(value)
-    }, 300)
+
 
     useEffect(() => {
         handleQueryString({ ...filters, keyword: keyword })
     }, [keyword])
 
-
-
-
-    //Change filter
-    const handleFilter = (value: string, field: string) => {
-        setFilters(prevFilter => ({ ...prevFilter, [field]: value }))
-    }
     useEffect(() => {
         handleQueryString({ ...filters, keyword: keyword })
     }, [filters])
-
-
-    //
+    //openSheet
     const detectButtonAction = () => {
         openSheet({ open: true, action: '', id: null })
     }
@@ -108,7 +62,6 @@ const Filter = ({
     return (
         <>
             <div className="mb-[15px]">
-
                 {alertDialogOpen && (
                     <CustomAlertDialog
                         isOpen={alertDialogOpen}
@@ -118,7 +71,6 @@ const Filter = ({
                         confirmAction={() => confirmAction(actionSelectedValue)}
                     />
                 )}
-
                 <div className="flex justify-between items-center">
                     <div className="filter-action">
                         <div className="flex justify-between items-center">
@@ -171,7 +123,7 @@ const Filter = ({
                                     </Select>
                                 </div>
                                 <div className="mr-[10px]">
-                                    <Select onValueChange={(value) => handleFilter(value, 'sort')} >
+                                    <Select onValueChange={(value) => handleFilter(value, 'sort')} defaultValue={filters.sort}>
                                         <SelectTrigger className="w-[180px]">
                                             <SelectValue placeholder="Sắp xếp theo" />
                                         </SelectTrigger>
@@ -196,10 +148,7 @@ const Filter = ({
                                     />
                                 </div>
                             </div>
-
                         </div>
-
-
                     </div>
                     <div>
                         <Button

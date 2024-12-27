@@ -57,11 +57,9 @@ export interface SelectBoxItem {
     options: Option[],
     onSelectChange?: (value: string | undefined) => void,
     isLoading?: boolean,
-    rules?: object,
     value: Option | null,
     name: string,
     control: any,
-    errors: any,
 }
 
 export interface BaseFilterItem {
@@ -79,4 +77,28 @@ export interface Select {
     placeholder: string,
     id?: string,
     items: SelectOption[]
+}
+
+export type Row = Record<string, any>
+export type OpenSheetFunction = (sheet: Sheet) => void
+export type ActionParam = keyof Row | `${string}:f` | `${string}:c` | `${string}:pf` // pf: prop function:
+
+export type ParamToType<T extends ActionParam> =
+    T extends `${string}:f` ? Function :
+    T extends `${string}:pf` ? Function :
+    T extends `${string}:c` ? React.ComponentType<any> :
+    T extends keyof Row ? Row[T] :
+    never;
+export type ParamsToTuple<T extends ActionParam[]> = {
+    [K in keyof T]: ParamToType<T[K]>
+}
+
+export interface ButtonAction<T extends ActionParam[]> {
+    params?: T,
+    className: string,
+    icon?: React.ReactNode,
+    path?: string,
+    method?: string,
+    onClick?: (...agrs: ParamsToTuple<T>) => void,
+    component?: React.ComponentType<any>
 }

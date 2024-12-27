@@ -34,8 +34,8 @@ const CustomFilter: React.FC<CustomFilterProps> = ({
 
     return (
         <div className="flex items-center mt-[10px]">
-            {filters && filters.map((filter) => (
-                <div className="mr-[10px]">
+            {filters && filters.map((filter, index) => (
+                <div className="mr-[10px]" key={index}>
                     <Select
                         onValueChange={(value) => handleFilter(value, filter.name)}
                     >
@@ -43,8 +43,8 @@ const CustomFilter: React.FC<CustomFilterProps> = ({
                             <SelectValue placeholder={filter.placeholder} />
                         </SelectTrigger>
                         <SelectContent >
-                            {filter.options && filter.options.map((option) => (
-                                <SelectItem className="cursor-pointer" value={option.value}>
+                            {filter.options && filter.options.map((option, optionIndex) => (
+                                <SelectItem key={optionIndex} className="cursor-pointer" value={option.value}>
                                     {option.label}
                                 </SelectItem>
                             ))}

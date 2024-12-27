@@ -60,11 +60,6 @@ const Recovery = ({
                     label="Mật khẩu mới"
                     name="password"
                     type="password"
-                    rules={
-                        {
-                            required: 'Bạn chưa nhập vào ô mật khẩu'
-                        }
-                    }
                     value=""
                 />
                 <CustomInput
@@ -73,11 +68,6 @@ const Recovery = ({
                     label="Nhập lại"
                     name="re_password"
                     type="password"
-                    rules={
-                        {
-                            required: 'Bạn chưa nhập vào ô nhập lại mật khẩu'
-                        }
-                    }
                     value=""
                 />
                 <LoadingButton loading={isLoading} text="Thực hiện" />

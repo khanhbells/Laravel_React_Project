@@ -15,7 +15,6 @@ interface CustomSelectBoxProps {
     defaultValue?: Option,
     onSelectChange?: (value: string | undefined) => void,
     isLoading?: boolean,
-    rules?: object,
     value: Option | null,
     name: string,
     register?: any,
@@ -30,7 +29,6 @@ const CustomSelectBox = ({
     onSelectChange,
     isLoading,
     register,
-    rules,
     name,
     control,
     errors,
@@ -49,33 +47,34 @@ const CustomSelectBox = ({
     }, [value])
 
     return (
-        <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="image" className="text-right">
-                {title}
-            </Label>
-            <Controller
-                name={name}
-                control={control}
-                rules={rules}
-                render={({ field: { onChange } }) => (
-                    <Select
-                        options={isLoading ? [] : options}
-                        className="w-[334px]"
-                        placeholder={placeholder ?? ''}
-                        onChange={(selected) => {
-                            setSelectedValue(selected)
-                            onChange(selected?.value)
-                            onSelectChange && onSelectChange(selected?.value)
-                        }}
-                        value={selectedValue || null}
-                        isLoading={isLoading}
-                    />
-                )}
-            />
-            < div className="error-line text-right mt-[-10px]" >
-                {errors[name] && <span className="text-red-500 text-xs">{errors[name].message}</span>}
+        <>
+            <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="image" className="text-right">
+                    {title}
+                </Label>
+                <Controller
+                    name={name}
+                    control={control}
+                    render={({ field }) => (
+                        <Select
+                            options={isLoading ? [] : options}
+                            className="w-[334px]"
+                            placeholder={placeholder ?? ''}
+                            onChange={(selected) => {
+                                setSelectedValue(selected)
+                                field.onChange(selected?.value)
+                                onSelectChange && onSelectChange(selected?.value)
+                            }}
+                            value={options.find(option => option.value === field.value) || null}
+                            isLoading={isLoading}
+                        />
+                    )}
+                />
             </div >
-        </div >
+            <div className="error-line text-right mt-[-10px]" >
+                {errors[name] && <span className="text-red-500 text-xs">{errors[name].message}</span>}
+            </div>
+        </>
     )
 }
 

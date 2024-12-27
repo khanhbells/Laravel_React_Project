@@ -13,15 +13,16 @@ import useUpload from "@/hook/useUpload";
 import useFormSubmit from "@/hook/useFormSubmit";
 import useSelectBox from "@/hook/useSelectbox";
 //SETTING
-import { validation } from "@/validations/user/StoreUserValidation";
+import { formField } from "../../../settings/userSettings";
 import { PayloadInput, User } from "@/types/User";
 import { Option } from "@/components/CustomSelectBox";
-import { keys } from "ts-transformer-keys";
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup';
 //SERVICE
 import { save, getUserById } from "@/service/UserService";
 //INTERFACES
 import { SelectBoxItem } from "@/interfaces/BaseServiceInterface";
-
+import { schema } from "../../../validations/user";
 interface UserStoreProps {
     refetch: any;
     closeSheet: () => void,
@@ -29,7 +30,10 @@ interface UserStoreProps {
     action: string
 }
 
+
+
 const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
+
 
     const {
         register,
@@ -38,10 +42,15 @@ const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
         formState: { errors },
         control,
         setValue
-    } = useForm<PayloadInput>()
+    } = useForm<PayloadInput>({
+        // mode: 'onChange',
+        // reValidateMode: 'onChange',
+        resolver: yupResolver(schema)
+    })
 
-    const password = useRef({})
-    password.current = watch('password', '')
+
+    // const password = useRef({})
+    // password.current = watch('password', '')
     //Location
     const { provinces, districts, wards, setProvinceId, setDistrictId, isProvinceLoading, isDistrictLoading, isWardLoading } = useLocationState()
     const { images, handleImageChange } = useUpload(false)
@@ -53,16 +62,16 @@ const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
             enabled: action === 'update' && !!userId,
         }
     )
-    const [validationRules, setValidationRules] = useState(() => validation(action, password, undefined))
+    const [validationRules, setValidationRules] = useState(() => formField(action, undefined))
 
     //follow data seen update
     useEffect(() => {
         if (!isLoading && data && action === 'update') {
-            setValidationRules(validation(action, null, data))
+            setValidationRules(formField(action, data))
             Object.keys(data).forEach((key) => {
                 const value = data[key as keyof User]
 
-                if (typeof value === 'string' || value === null) {
+                if (typeof value === 'string' || value === undefined) {
                     setValue(key as keyof PayloadInput, value)
                 } else {
                     setValue(key as keyof PayloadInput, String(value))
@@ -86,12 +95,8 @@ const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
             placeholder: 'Chọn loại thành viên',
             options: userCatalogues,
             value: defaultSelectValue,
-            rules: {
-                // required: true
-            },
             name: 'user_catalogue_id',
             control: control,
-            errors: errors
         },
         {
             title: 'Thành phố',
@@ -101,10 +106,8 @@ const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
             onSelectChange: (value: string | undefined) => {
                 setProvinceId(value)
             },
-            rules: {},
             name: 'province_id',
             control: control,
-            errors
         },
         {
             title: 'Quận/Huyện',
@@ -113,10 +116,8 @@ const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
             value: defaultSelectValue,
             onSelectChange: (value: string | undefined) => setDistrictId(value),
             isLoading: isDistrictLoading,
-            rules: {},
             name: 'district_id',
             control: control,
-            errors
         },
         {
             title: 'Phường Xã',
@@ -124,13 +125,11 @@ const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
             options: [],
             value: defaultSelectValue,
             isLoading: isWardLoading,
-            rules: {},
             name: 'ward_id',
             control: control,
-            errors
 
         },
-    ], [userCatalogues, defaultSelectValue, setProvinceId, setProvinceId, setDistrictId])
+    ], [userCatalogues, defaultSelectValue, setProvinceId, setDistrictId])
 
     const { selectBox, updateSelectBoxValue, updateSelectBoxOptions } = useSelectBox(initialSelectBoxs)
 
@@ -189,6 +188,7 @@ const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
                         key={index}
                         {...item}
                         register={register}
+                        errors={errors}
                     />
                 ))}
 

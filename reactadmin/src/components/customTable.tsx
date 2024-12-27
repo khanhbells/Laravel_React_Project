@@ -19,13 +19,14 @@ import {
     TableRow,
 } from "../components/ui/table"
 
-import { buttonActions, Row, ActionParam, ParamToType, ParamsToTuple } from "@/settings/user"
+
+import { buttonActions } from "@/pages/user/settings/userSettings"
 
 import CustomAlertDialog from "@/components/CustomAlertDialog";
 import useDialog from "@/hook/useDialog"
 
 
-import { CustomTableProps } from "@/interfaces/BaseServiceInterface"
+import { CustomTableProps, Row, ParamsToTuple } from "@/interfaces/BaseServiceInterface"
 import { changePassword } from "@/service/UserService"
 
 import CustomDialog from "@/components/CustomDialog"

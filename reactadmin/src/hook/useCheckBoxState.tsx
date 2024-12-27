@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react"
 
 
+export type CheckedState = {
+    [key: number]: boolean
+}
+
 const useCheckBoxState = (data: any, model: string, isLoading: boolean) => {
 
-    const [checkedState, setCheckedState] = useState<{ [key: number]: boolean }>({})
+    const [checkedState, setCheckedState] = useState<CheckedState>({})
     const [checkedAllState, setCheckedAllState] = useState<boolean>(false)
 
     //Checkbox row

@@ -5,18 +5,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdOutlineLockReset } from "react-icons/md";
-import Recovery from "@/pages/user/user/Recovery";
-import { FaXmark } from "react-icons/fa6"
-import { IoCheckmarkSharp } from "react-icons/io5";
-import { AiOutlineStop } from "react-icons/ai";
+import Recovery from "@/pages/user/screens/user/include/Recovery";
 //SETTINGS
 import { getInitialName } from "@/helper/myHelper";
 import { User } from "@/types/User";
 //INTERFACE & TYPE
-import { BaseFilterItem } from "@/interfaces/BaseServiceInterface";
+import { ButtonAction, ActionParam, OpenSheetFunction } from "@/interfaces/BaseServiceInterface";
 import { Select } from "@/interfaces/BaseServiceInterface";
 //HOOK
-import { Sheet } from "@/hook/useSheet";
 
 const breadcrumb = {
 
@@ -76,29 +72,7 @@ const tableColumn: tableColumn[] = [
 
 ]
 
-export type Row = Record<string, any>
-export type OpenSheetFunction = (sheet: Sheet) => void
-export type ActionParam = keyof Row | `${string}:f` | `${string}:c` | `${string}:pf` // pf: prop function:
 
-export type ParamToType<T extends ActionParam> =
-    T extends `${string}:f` ? Function :
-    T extends `${string}:pf` ? Function :
-    T extends `${string}:c` ? React.ComponentType<any> :
-    T extends keyof Row ? Row[T] :
-    never;
-export type ParamsToTuple<T extends ActionParam[]> = {
-    [K in keyof T]: ParamToType<T[K]>
-}
-
-export interface ButtonAction<T extends ActionParam[]> {
-    params?: T,
-    className: string,
-    icon?: React.ReactNode,
-    path?: string,
-    method?: string,
-    onClick?: (...agrs: ParamsToTuple<T>) => void,
-    component?: React.ComponentType<any>
-}
 
 const buttonActions: ButtonAction<ActionParam[]>[] = [
     {
@@ -139,23 +113,7 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
 ]
 
 
-const filterItems: BaseFilterItem[] = [
-    {
-        value: 'deleteAll',
-        label: 'Xóa',
-        icon: <FaXmark className="mr-[5px]" />
-    },
-    {
-        value: 'publish|2',
-        label: 'Xuất bản',
-        icon: <IoCheckmarkSharp className="mr-[5px]" />
-    },
-    {
-        value: 'publish|1',
-        label: 'Ngừng xuất bản',
-        icon: <AiOutlineStop className="mr-[5px]" />
-    },
-]
+
 
 const extraFilterItems: Select[] = [
     {
@@ -174,11 +132,58 @@ const extraFilterItems: Select[] = [
     }
 ]
 
+export const formField = (action: string, data?: User | undefined) => {
+    const showPasswordField = action !== 'update'
+    const baseField = [
+        {
+            label: "Họ tên *",
+            name: "name",
+            type: "text",
+            value: data && data.name
+        },
+        {
+            label: "Email *",
+            name: "email",
+            type: "text",
+            value: data && data.email
+
+        },
+        {
+            label: "Điện thoại *",
+            name: "phone",
+            type: "text",
+            value: data && data.phone
+        },
+        {
+            label: "Ngày sinh",
+            name: "birthday",
+            type: "date",
+            value: data && data.birthday
+        },
+    ]
+
+    const passwordFields = [
+        {
+            label: "Mật khẩu (*)",
+            name: "password",
+            type: "password",
+            value: ''
+        },
+        {
+            label: "Nhập lại mk (*)",
+            name: "confirmPassword",
+            type: "password",
+            value: ''
+        }
+    ]
+
+    return showPasswordField ? [...baseField, ...passwordFields] : baseField;
+}
+
 export {
     breadcrumb,
     model,
     tableColumn,
     buttonActions,
     extraFilterItems,
-    filterItems
 }
