@@ -23,15 +23,15 @@ class ChangePasswordUserRequest extends FormRequest
     {
         return [
             'password' => 'required',
-            're_password' => 'required|same:password',
+            'confirmPassword' => 'required|same:password',
         ];
     }
     public function messages(): array
     {
         return [
             'password.required' => 'Bạn chưa nhập vào mật khẩu!',
-            're_password.required' => 'Bạn chưa nhập vào xác nhận mật khẩu!',
-            're_password.same' => 'Mật khẩu không khớp!',
+            'confirmPassword.required' => 'Bạn chưa nhập vào xác nhận mật khẩu!',
+            'confirmPassword.same' => 'Mật khẩu không khớp!',
         ];
     }
 }

@@ -43,8 +43,7 @@ const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
         control,
         setValue
     } = useForm<PayloadInput>({
-        // mode: 'onChange',
-        // reValidateMode: 'onChange',
+        context: { action },
         resolver: yupResolver(schema)
     })
 

@@ -33,13 +33,12 @@ const getUserById = async (userId: string | null): Promise<User> => {
     return response.data
 }
 
-const changePassword = async (id: string, payload: { password: string, re_password: string }) => {
+const changePassword = async (id: string, payload: { password: string, confirmPassword: string }) => {
     try {
 
-        const response = await axios.post(`users/${id}/reset-password`, {
+        const response = await axios.put(`users/${id}/reset-password`, {
             password: payload.password,
-            re_password: payload.re_password,
-            _method: 'PUT'
+            confirmPassword: payload.confirmPassword,
         })
 
         return response.data

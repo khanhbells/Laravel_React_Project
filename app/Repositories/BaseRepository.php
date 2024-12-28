@@ -47,7 +47,7 @@ class BaseRepository
         $column = ['*'],
         $relation = []
     ) {
-        return $this->model->select($column)->with($relation)->findOrFail($modelId);
+        return $this->model->select($column)->with($relation)->find($modelId);
     }
 
     public function deleteBatch($ids = [])

@@ -13,7 +13,7 @@ use App\Http\Requests\UpdateByFieldRequest;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\ChangePasswordUserRequest;
-use NunoMaduro\Collision\Adapters\Phpunit\State;
+use App\Http\Requests\User\UpdateUserRequest;
 
 class UserController extends Controller
 {
@@ -55,7 +55,7 @@ class UserController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, $id)
     {
         return $this->baseUpdate($request, $id);
     }
@@ -71,12 +71,22 @@ class UserController extends Controller
             return $this->returnIfIdValidateFail();
         }
 
+
+
         $user = $this->userRepository->findById($id);
 
-        return response()->json(new UserResource($user));
+
+        if (!$user) {
+            return response()->json([
+                'code' => Status::ERROR,
+                'message' => 'Không có dữ liệu phù hợp'
+            ], Response::HTTP_NOT_FOUND);
+        } else {
+            return response()->json(
+                new UserResource($user)
+            );
+        }
     }
-
-
 
     public function destroy($id, Request $request)
     {
