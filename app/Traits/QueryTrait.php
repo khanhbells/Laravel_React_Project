@@ -33,4 +33,18 @@ trait QueryTrait
         }
         return $query;
     }
+    public function scopeRelationCount($query, $relationCount)
+    {
+        if (isset($relationCount) && is_array($relationCount) && count($relationCount)) {
+            $query->withCount($relationCount);
+        }
+        return $query;
+    }
+    public function relation($query, $relation)
+    {
+        if (isset($relation) && is_array($relation) && count($relation)) {
+            $query->with($relation);
+        }
+        return $query;
+    }
 }

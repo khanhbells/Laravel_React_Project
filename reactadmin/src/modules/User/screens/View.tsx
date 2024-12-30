@@ -25,13 +25,14 @@ import useCheckBoxState from "@/hook/useCheckBoxState"
 import useSheet from "@/hook/useSheet"
 import CustomSheet from "@/components/CustomSheet"
 //settings
-import { breadcrumb, model, tableColumn } from "../../settings/userSettings"
+import { breadcrumb, model, tableColumn } from "../settings/userSettings"
 import { filterItems } from "@/settings/globalSettings"
 import { SelectConfig } from "@/components/CustomFilter"
 //contexts
 import { FilterProvider } from "@/contexts/FilterContext"
 //
 import { useState } from "react"
+import { buttonActions } from "../settings/userSettings"
 const User = () => {
     const breadcrumbData: Breadcrumb = breadcrumb.index
     //REACT QUERY
@@ -93,6 +94,7 @@ const User = () => {
                             destroy={destroy}
                             refetch={refetch}
                             changePassword={changePassword}
+                            buttonActions={buttonActions}
                         />
                     </CardContent>
                     <CardFooter>
@@ -110,7 +112,7 @@ const User = () => {
                         <UserStore
                             refetch={refetch}
                             closeSheet={closeSheet}
-                            userId={isSheetOpen.id}
+                            id={isSheetOpen.id}
                             action={isSheetOpen.action}
                         />
                     </CustomSheet>

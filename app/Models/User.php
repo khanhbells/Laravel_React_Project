@@ -68,4 +68,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function user_catalogues()
+    {
+        return $this->belongsTo(UserCatalogue::class, 'user_catalogue_id', 'id');
+    }
 }

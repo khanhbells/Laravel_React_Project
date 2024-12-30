@@ -13,7 +13,7 @@ import useUpload from "@/hook/useUpload";
 import useFormSubmit from "@/hook/useFormSubmit";
 import useSelectBox from "@/hook/useSelectbox";
 //SETTING
-import { formField } from "../../../settings/userSettings";
+import { formField } from "../../settings/userSettings";
 import { PayloadInput, User } from "@/types/User";
 import { Option } from "@/components/CustomSelectBox";
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -22,17 +22,12 @@ import * as yup from 'yup';
 import { save, getUserById } from "@/service/UserService";
 //INTERFACES
 import { SelectBoxItem } from "@/interfaces/BaseServiceInterface";
-import { schema } from "../../../validations/user";
-interface UserStoreProps {
-    refetch: any;
-    closeSheet: () => void,
-    userId: string | null,
-    action: string
-}
+import { schema } from "../../validations/user";
+import { StoreProps } from "@/interfaces/BaseServiceInterface";
 
 
 
-const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
+const UserStore = ({ id, action, refetch, closeSheet }: StoreProps) => {
 
 
     const {
@@ -53,12 +48,12 @@ const UserStore = ({ userId, action, refetch, closeSheet }: UserStoreProps) => {
     //Location
     const { provinces, districts, wards, setProvinceId, setDistrictId, isProvinceLoading, isDistrictLoading, isWardLoading } = useLocationState()
     const { images, handleImageChange } = useUpload(false)
-    const { onSubmitHanler, loading } = useFormSubmit(save, refetch, closeSheet, { action: action, id: userId })
+    const { onSubmitHanler, loading } = useFormSubmit(save, refetch, closeSheet, { action: action, id: id })
 
-    const { data, isLoading, isError } = useQuery<User>(['user', userId],
-        () => getUserById(userId),
+    const { data, isLoading, isError } = useQuery<User>(['user', id],
+        () => getUserById(id),
         {
-            enabled: action === 'update' && !!userId,
+            enabled: action === 'update' && !!id,
         }
     )
     const [validationRules, setValidationRules] = useState(() => formField(action, undefined))

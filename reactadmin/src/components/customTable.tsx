@@ -20,7 +20,7 @@ import {
 } from "../components/ui/table"
 
 
-import { buttonActions } from "@/pages/user/settings/userSettings"
+// import { buttonActions } from "@/modules/User/settings/userSettings"
 
 import CustomAlertDialog from "@/components/CustomAlertDialog";
 import useDialog from "@/hook/useDialog"
@@ -48,6 +48,7 @@ const CustomTable = ({
     ...restProps
 }: CustomTableProps) => {
 
+    const { buttonActions } = restProps;
     const { columnState, handleChecked, setInitialColumnState } = useColumnState()
     const { confirmAction, openAlertDialog, closeAlertDialog, alertDialogOpen, isLoading: isDialogLoading } = useDialog(refetch)
 
@@ -116,7 +117,7 @@ const CustomTable = ({
                                 Có lỗi xảy ra trong quá trình truy xuất dữ liệu. Hãy thử lại sau
                             </TableCell>
                         </TableRow>
-                    ) : data[model].length ? (data[model] && data[model].map((row: any, index: number) => (
+                    ) : data[model] ? (data[model] && data[model].map((row: any, index: number) => (
                         <TableRow key={index} className={checkedState[row.id] ? 'bg-[#ffc]' : ''}>
                             <TableCell className="font-medium">
                                 <Checkbox id="checkAll"
@@ -132,13 +133,13 @@ const CustomTable = ({
                                 <Switch value={row.id} checked={columnState[row.id]?.publish} onCheckedChange={() => handleChecked(row.id, 'publish', model)} />
                             </TableCell>
                             <TableCell className="flex justify-center">
-                                {buttonActions && buttonActions.map((action, index) => (
+                                {buttonActions && buttonActions.map((action: any, index: number) => (
                                     <Button
                                         key={index} className={`${action.className} p-[15px]`}
                                         onClick={
                                             action.onClick && action.params ? (e: React.
                                                 MouseEvent<HTMLButtonElement>) => {
-                                                const args = action.params?.map(param => {
+                                                const args = action.params?.map((param: any) => {
                                                     if (typeof param === 'string' && (param.endsWith(':f') || param.endsWith(':pf') || param.endsWith(':c'))) {
                                                         if (param.endsWith(':f')) {
                                                             return eval(param.slice(0, -2))

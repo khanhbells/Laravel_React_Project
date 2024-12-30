@@ -28,18 +28,20 @@ class BaseService
     }
     protected function request(
         $request,
-        $auth,
+        $auth = null,
         $except = [],
         $customFolder = ['avatar'],
         $imageType = 'image'
     ) {
         $payload = $request->except(['_method', 'created_at', ...$except]);
-        if ($request->file('image')) {
-            $this->fileUploader = new FileUploader($auth->email);
-            $payload['image'] = $this->fileUploader->uploadFile($request->file('image'), $imageType, $customFolder);
-        } else {
-            if ($request->input('image')) {
-                $payload['image'] = str_replace(config('app.url') . 'storage', 'public', $payload['image']);
+        if ($auth != null) {
+            if ($request->file('image')) {
+                $this->fileUploader = new FileUploader($auth->email);
+                $payload['image'] = $this->fileUploader->uploadFile($request->file('image'), $imageType, $customFolder);
+            } else {
+                if ($request->input('image')) {
+                    $payload['image'] = str_replace(config('app.url') . 'storage', 'public', $payload['image']);
+                }
             }
         }
         if ($request->input('password') && !empty($request->input('password'))) {

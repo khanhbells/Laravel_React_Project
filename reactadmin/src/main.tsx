@@ -17,10 +17,10 @@ import {
 import AuthMiddleware from './middleware/AuthMiddleware';
 import NoAuthMiddleware from './middleware/NoAuthMiddleware';
 import Layout from './components/layout';
-import Dashboard from './pages/Dashboard';
-import Login from './pages/Login';
-import UserIndex from '@/pages/user/screens/user/View'
-import UserStore from '@/pages/user/screens/user/include/Store';
+import Dashboard from './modules/Dashboard';
+import Login from './modules/Login';
+import UserIndex from '@/modules/User/screens/View'
+import UserCatalogueIndex from '@/modules/UserCatalogue/screens/View';
 import './index.css';
 import { ReactQueryDevtools } from 'react-query/devtools'
 
@@ -48,9 +48,8 @@ const router = createBrowserRouter([
         path: "/user/index", element: <UserIndex />
       },
       {
-        path: "/user/create", element: <UserStore />
+        path: "/user/catalogue/index", element: <UserCatalogueIndex />
       },
-
     ]
   },
 ]);

@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdOutlineLockReset } from "react-icons/md";
-import Recovery from "@/modules/User/screens/user/include/Recovery";
+import Recovery from "@/modules/User/screens/include/Recovery";
 //SETTINGS
 import { getInitialName } from "@/helper/myHelper";
 import { User } from "@/types/User";

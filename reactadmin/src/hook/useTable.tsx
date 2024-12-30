@@ -47,7 +47,7 @@ const useTable = ({ model, pagination }: UseTableProps) => {
     })
     const [filters, setFilters] = useState<FilterParam>({})
 
-    const { isLoading, data, isError, refetch } = useQuery(['users', queryString], () => pagination(queryString))
+    const { isLoading, data, isError, refetch } = useQuery([model, queryString], () => pagination(queryString))
 
 
 

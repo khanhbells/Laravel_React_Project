@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\Api\V1\UserCatalogueController;
 use App\Http\Controllers\Api\V1\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -43,8 +44,20 @@ Route::group([
 
     // -------------------------------------------------------------------------------
 
+    // User Catalogue
+    Route::get('user_catalogues', [UserCatalogueController::class, 'index']);
+    Route::get('user_catalogues/{id}', [UserCatalogueController::class, 'show']);
+    Route::post('user_catalogues', [UserCatalogueController::class, 'create']);
+    Route::put('user_catalogues/{id}', [UserCatalogueController::class, 'update']);
+    Route::delete('user_catalogues/{id}', [UserCatalogueController::class, 'destroy']);
+
+    Route::put('user_catalogues/{id}/status', [UserCatalogueController::class, 'updateStatusByField']);
+
+    // -------------------------------------------------------------------------------
+
     Route::delete('records/delete/batch', [DashboardController::class, 'deleteBatch']);
     Route::put('records/update/batch', [DashboardController::class, 'updateBatch']);
+
 
     // Location
     Route::get('location', [DashboardController::class, 'location']);

@@ -102,3 +102,10 @@ export interface ButtonAction<T extends ActionParam[]> {
     onClick?: (...agrs: ParamsToTuple<T>) => void,
     component?: React.ComponentType<any>
 }
+
+export interface StoreProps {
+    refetch: any;
+    closeSheet: () => void,
+    id: string | null,
+    action: string
+}

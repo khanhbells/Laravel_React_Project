@@ -19,6 +19,7 @@ class BaseRepository
             ->select($params['select'])
             ->condition($params['condition'] ?? [])
             ->keyword($params['keyword'] ?? '')
+            ->relationCount($params['relationCount'] ?? [])
             ->orderBy($params['orderBy'][0], $params['orderBy'][1])
             ->paginate($params['perpage']);
     }
