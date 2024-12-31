@@ -13,7 +13,6 @@ import { User } from "@/types/User";
 import { ButtonAction, ActionParam, OpenSheetFunction } from "@/interfaces/BaseServiceInterface";
 import { Select } from "@/interfaces/BaseServiceInterface";
 //HOOK
-
 const breadcrumb = {
 
     index: {
@@ -67,7 +66,7 @@ const tableColumn: tableColumn[] = [
     },
     {
         name: 'Nhóm thành viên',
-        render: (item: User) => <span>{'-'}</span>
+        render: (item: User) => <span>{item.user_catalogues ?? '-'}</span>
     },
 
 ]

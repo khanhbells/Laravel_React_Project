@@ -1,8 +1,7 @@
-import { useQuery } from "react-query"
 //Create User
-import UserStore from "./include/Store"
+import Store from "./include/Store"
 //pagination
-import { pagination, destroy, changePassword } from "@/service/UserService"
+import { pagination, destroy } from "@/service/PostCatalogueService"
 import Paginate from "@/components/paginate"
 //breadcrumb
 import PageHeading from "@/components/heading"
@@ -26,18 +25,17 @@ import useCheckBoxState from "@/hook/useCheckBoxState"
 import useSheet from "@/hook/useSheet"
 import CustomSheet from "@/components/CustomSheet"
 //settings
-import { breadcrumb, model, tableColumn } from "../settings/userSettings"
+import { breadcrumb, tableColumn, buttonActions } from "@/modules/PostCatalogue/settings/PostCatalogueSettings"
 import { filterItems } from "@/settings/globalSettings"
 import { SelectConfig } from "@/components/CustomFilter"
-import { UserCatalogue } from "@/interfaces/types/UserCatalogueType"
 //contexts
 import { FilterProvider } from "@/contexts/FilterContext"
 //
-import { useState, useMemo, useEffect, useCallback, useRef } from "react"
-import { buttonActions } from "../settings/userSettings"
-import { pagination as userCataloguePagination } from "@/service/UserCatalogueService"
-const User = () => {
+import { useState } from "react"
+const PostCatalogue = () => {
+    const model = 'post_catalogues'
     const breadcrumbData: Breadcrumb = breadcrumb.index
+
     //REACT QUERY
     const { isLoading, data, isError, refetch, handlePageChange, handleQueryString } = useTable({ model, pagination })
     //Checkbox
@@ -45,40 +43,7 @@ const User = () => {
     const somethingChecked = isAnyChecked()
     const { isSheetOpen, openSheet, closeSheet } = useSheet()
 
-    const { data: dataUserCatalogues, isLoading: isUserCatalogueLoading, isError: isUserCatalogueError } = useQuery(['user_catalogues'],
-        () => userCataloguePagination('sort=name,asc'),
-    )
-
-    const userCatalogues = useMemo(() => {
-        if (!isUserCatalogueLoading && dataUserCatalogues) {
-            return dataUserCatalogues['user_catalogues'].map((userCatalogueItem: UserCatalogue) => ({
-                value: String(userCatalogueItem.id),
-                label: String(userCatalogueItem.name)
-            }))
-        }
-        return []
-    }, [dataUserCatalogues, isUserCatalogueLoading])
-
-
-    const [customFilter, setCustomFilter] = useState<SelectConfig[]>([
-        {
-            name: 'user_catalogue_id',
-            placeholder: 'Chọn nhóm thành viên',
-            options: []
-        },
-    ]);
-
-    const setCustomFilterCallback = useCallback((prevState: SelectConfig[]) =>
-        prevState.map((item) =>
-            item.name === 'user_catalogue_id'
-                ? { ...item, options: [{ value: 0, label: 'Tất cả các nhóm' }, ...userCatalogues] } : item
-        ), [userCatalogues])
-
-    useEffect(() => {
-        if (userCatalogues.length) {
-            setCustomFilter(setCustomFilterCallback)
-        }
-    }, [userCatalogues])
+    const [customFilter, setCustomFilter] = useState<SelectConfig[]>([]);
 
     return (
         <FilterProvider customFilters={customFilter}>
@@ -86,8 +51,8 @@ const User = () => {
             <div className="container">
                 <Card className="rounded-[5px] mt-[15px] ">
                     <CardHeader className="border-b border-solid border-[#f3f3f3] p-[20px]">
-                        <CardTitle className="uppercase">Quản lý danh sách thành viên</CardTitle>
-                        <CardDescription className="text-xs text-[#f00000]">Hiển thị danh sách thành viên, sử dụng các chức năng bên dưới để lọc theo mong muốn</CardDescription>
+                        <CardTitle className="uppercase">Quản lý danh sách nhóm bài viết</CardTitle>
+                        <CardDescription className="text-xs text-[#f00000]">Hiển thị danh sách nhóm bài viết, sử dụng các chức năng bên dưới để lọc theo mong muốn</CardDescription>
                     </CardHeader>
                     <CardContent className="p-[15px]">
                         <Filter
@@ -98,7 +63,7 @@ const User = () => {
                             handleQueryString={(filters: any) => handleQueryString(filters)}
                             openSheet={openSheet}
                             items={filterItems}
-                            buttonText="Thêm mới thành viên"
+                            buttonText="Thêm mới nhóm bài viết"
                         />
                         <CustomTable
                             isLoading={isLoading}
@@ -113,7 +78,6 @@ const User = () => {
                             openSheet={openSheet}
                             destroy={destroy}
                             refetch={refetch}
-                            changePassword={changePassword}
                             buttonActions={buttonActions}
                         />
                     </CardContent>
@@ -129,12 +93,11 @@ const User = () => {
                         closeSheet={closeSheet}
                         className="w-[400px] sm:w-[500px]"
                     >
-                        <UserStore
+                        <Store
                             refetch={refetch}
                             closeSheet={closeSheet}
                             id={isSheetOpen.id}
                             action={isSheetOpen.action}
-                            userCatalogueData={userCatalogues}
                         />
                     </CustomSheet>
                 )}
@@ -142,4 +105,4 @@ const User = () => {
         </FilterProvider>
     )
 }
-export default User
+export default PostCatalogue

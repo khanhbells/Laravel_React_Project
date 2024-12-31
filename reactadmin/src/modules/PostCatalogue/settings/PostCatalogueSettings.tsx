@@ -5,21 +5,24 @@ import { Link } from "react-router-dom";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 //SETTINGS
-import { UserCatalogue } from "@/interfaces/types/UserCatalogueType";
+import { PostCatalogue } from "@/interfaces/types/PostCatalogueType";
 //INTERFACE & TYPE
 import { ButtonAction, ActionParam, OpenSheetFunction } from "@/interfaces/BaseServiceInterface";
 import { Select } from "@/interfaces/BaseServiceInterface";
 //HOOK
 
 
+const model = 'post_catalogues'
+
+
 const breadcrumb = {
 
     index: {
-        title: 'Quản lý nhóm thành viên',
-        route: '/user/index'
+        title: 'Quản lý nhóm bài viết',
+        route: '/post/index'
     },
     create: {
-        title: 'Thêm mới nhóm thành viên',
+        title: 'Thêm mới nhóm bài viết',
         description: 'Nhập đầy đủ các thông tin dưới đây. Các mục có dấu (*) là bắt buộc',
     },
     update: {
@@ -29,25 +32,24 @@ const breadcrumb = {
 
 }
 
-const model = 'user_catalogues'
 
 interface tableColumn {
     name: string,
-    render: (item: UserCatalogue) => JSX.Element
+    render: (item: PostCatalogue) => JSX.Element
 }
 const tableColumn: tableColumn[] = [
     {
-        name: 'Tên nhóm thành viên',
-        render: (item: UserCatalogue) => <span><Link to={`/user/index?user_catalogue_id=${item.id}`}>{item.name}</Link></span>
+        name: 'Tên nhóm bài viết',
+        render: (item: PostCatalogue) => <span><Link to={`/post/index?post_catalogue_id=${item.id}`}>{item.name}</Link></span>
     },
 
     {
         name: 'Số lượng',
-        render: (item: UserCatalogue) => <span className="">{item.users_count}</span>
+        render: (item: PostCatalogue) => <span className="">{item.posts_count}</span>
     },
     {
         name: 'Mô tả',
-        render: (item: UserCatalogue) => <span>{item.description}</span>
+        render: (item: PostCatalogue) => <span>{item.description}</span>
     },
 
 ]
@@ -81,8 +83,8 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
 
 const extraFilterItems: Select[] = [
     {
-        id: 'user_catalogue_Id',
-        placeholder: 'Chọn Nhóm Thành Viên',
+        id: 'post_catalogue_Id',
+        placeholder: 'Chọn Nhóm bài viết',
         items: [
             {
                 value: '0',

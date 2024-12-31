@@ -1,5 +1,5 @@
 import { FaHome, FaUser } from "react-icons/fa"
-
+import { IoNewspaperOutline } from "react-icons/io5";
 export const sidebarItem = [
     {
         label: 'MAIN',
@@ -38,7 +38,22 @@ export const sidebarItem = [
                         to: '/user/index'
                     }
                 ]
-            }
-        ]
+            },
+            {
+                icon: <IoNewspaperOutline className="text-sm mr-2" />,
+                active: ['post'],
+                label: 'Quản Lý Bài Viết',
+                links: [
+                    {
+                        title: 'Nhóm bài viết',
+                        to: '/post/catalogue/index'
+                    },
+                    // {
+                    //     title: 'Thành viên',
+                    //     to: '/user/index'
+                    // }
+                ]
+            },
+        ],
     }
 ]

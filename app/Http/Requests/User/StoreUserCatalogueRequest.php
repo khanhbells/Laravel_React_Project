@@ -29,7 +29,7 @@ class StoreUserCatalogueRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Bạn chưa nhập vào Họ tên!',
+            'name.required' => 'Bạn chưa nhập vào nhóm thành viên!',
         ];
     }
 }

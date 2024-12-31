@@ -18,16 +18,26 @@ import { PayloadInput, User } from "@/types/User";
 import { Option } from "@/components/CustomSelectBox";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup';
+import { UserCatalogue } from "@/interfaces/types/UserCatalogueType";
 //SERVICE
 import { save, getUserById } from "@/service/UserService";
+import { pagination } from "@/service/UserCatalogueService";
 //INTERFACES
 import { SelectBoxItem } from "@/interfaces/BaseServiceInterface";
 import { schema } from "../../validations/user";
 import { StoreProps } from "@/interfaces/BaseServiceInterface";
 
+interface UserStoreProps extends StoreProps {
+    userCatalogueData: { value: string, label: string }[]
+}
 
-
-const UserStore = ({ id, action, refetch, closeSheet }: StoreProps) => {
+const UserStore = ({
+    id,
+    action,
+    refetch,
+    closeSheet,
+    userCatalogueData
+}: UserStoreProps) => {
 
 
     const {
@@ -50,13 +60,27 @@ const UserStore = ({ id, action, refetch, closeSheet }: StoreProps) => {
     const { images, handleImageChange } = useUpload(false)
     const { onSubmitHanler, loading } = useFormSubmit(save, refetch, closeSheet, { action: action, id: id })
 
+    // const { data: dataUserCatalogues, isLoading: isUserCatalogueLoading, isError: isUserCatalogueError } = useQuery(['user_catalogues'],
+    //     () => pagination('sort=name,asc'),
+    // )
+
+    // const [userCatalogues, setUserCatalogues] = useState([])
+
+
+    //QUERY
     const { data, isLoading, isError } = useQuery<User>(['user', id],
         () => getUserById(id),
         {
             enabled: action === 'update' && !!id,
         }
     )
+
+
+
+
     const [validationRules, setValidationRules] = useState(() => formField(action, undefined))
+
+
 
     //follow data seen update
     useEffect(() => {
@@ -77,9 +101,6 @@ const UserStore = ({ id, action, refetch, closeSheet }: StoreProps) => {
         }
     }, [data])
 
-    const [userCatalogues, setUserCatalogues] = useState([
-        { value: '1', label: 'Admin' }
-    ])
 
     const [defaultSelectValue, setDefaultSelectValue] = useState<Option | null>(null)
 
@@ -87,7 +108,7 @@ const UserStore = ({ id, action, refetch, closeSheet }: StoreProps) => {
         {
             title: 'Loại thành viên',
             placeholder: 'Chọn loại thành viên',
-            options: userCatalogues,
+            options: userCatalogueData,
             value: defaultSelectValue,
             name: 'user_catalogue_id',
             control: control,
@@ -123,17 +144,24 @@ const UserStore = ({ id, action, refetch, closeSheet }: StoreProps) => {
             control: control,
 
         },
-    ], [userCatalogues, defaultSelectValue, setProvinceId, setDistrictId])
+    ], [defaultSelectValue, setProvinceId, setDistrictId, control])
 
     const { selectBox, updateSelectBoxValue, updateSelectBoxOptions } = useSelectBox(initialSelectBoxs)
 
 
+
     //follow update value and option
     useEffect(() => {
-        if (data) {
-            updateSelectBoxValue('user_catalogue_id', userCatalogues, String(data?.user_catalogue_id))
+        if (userCatalogueData) {
+            updateSelectBoxOptions('user_catalogue_id', userCatalogueData)
+            if (data) {
+                updateSelectBoxValue('user_catalogue_id', userCatalogueData, String(data?.user_catalogue_id))
+            }
         }
-    }, [userCatalogues, data, updateSelectBoxValue, updateSelectBoxOptions])
+    }, [userCatalogueData, data, updateSelectBoxValue, updateSelectBoxOptions])
+
+
+
 
     useEffect(() => {
 

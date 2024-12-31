@@ -3,10 +3,9 @@ import { baseSave } from "./BaseService";
 import { baseDestroy } from "./BaseService";
 import { handleAxiosError } from "@/helper/axiosHelper";
 import { showToast } from "@/helper/myHelper";
-import { UserCatalogue } from "@/interfaces/types/UserCatalogueType";
-import { UserCataloguePayloadInput } from "@/interfaces/types/UserCatalogueType";
+import { UserCatalogue, UserCataloguePayloadInput } from "@/interfaces/types/UserCatalogueType";
 
-const pagination = async (queryString: string, action: string) => {
+const pagination = async (queryString: string) => {
     const response = await axios.get(`/user_catalogues?${queryString}`)
     return response.data
 }

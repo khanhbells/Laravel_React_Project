@@ -11,7 +11,7 @@ export interface Option {
 interface CustomSelectBoxProps {
     title: string | undefined,
     placeholder: string | undefined,
-    options: Option[],
+    options?: Option[],
     defaultValue?: Option,
     onSelectChange?: (value: string | undefined) => void,
     isLoading?: boolean,
@@ -65,7 +65,7 @@ const CustomSelectBox = ({
                                 field.onChange(selected?.value)
                                 onSelectChange && onSelectChange(selected?.value)
                             }}
-                            value={options.find(option => option.value === field.value) || null}
+                            value={options?.find(option => option.value === field.value) || null}
                             isLoading={isLoading}
                         />
                     )}

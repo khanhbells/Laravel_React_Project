@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\UserCatalogueController;
+use App\Http\Controllers\Api\V1\PostCatalogueController;
 use App\Http\Controllers\Api\V1\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -50,8 +51,16 @@ Route::group([
     Route::post('user_catalogues', [UserCatalogueController::class, 'create']);
     Route::put('user_catalogues/{id}', [UserCatalogueController::class, 'update']);
     Route::delete('user_catalogues/{id}', [UserCatalogueController::class, 'destroy']);
-
     Route::put('user_catalogues/{id}/status', [UserCatalogueController::class, 'updateStatusByField']);
+
+    // -------------------------------------------------------------------------------
+    // Post Catalogue
+    Route::get('post_catalogues', [PostCatalogueController::class, 'index']);
+    Route::get('post_catalogues/{id}', [PostCatalogueController::class, 'show']);
+    Route::post('post_catalogues', [PostCatalogueController::class, 'create']);
+    Route::put('post_catalogues/{id}', [PostCatalogueController::class, 'update']);
+    Route::delete('post_catalogues/{id}', [PostCatalogueController::class, 'destroy']);
+    Route::put('post_catalogues/{id}/status', [PostCatalogueController::class, 'updateStatusByField']);
 
     // -------------------------------------------------------------------------------
 

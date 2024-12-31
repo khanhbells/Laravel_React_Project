@@ -21,6 +21,7 @@ import Dashboard from './modules/Dashboard';
 import Login from './modules/Login';
 import UserIndex from '@/modules/User/screens/View'
 import UserCatalogueIndex from '@/modules/UserCatalogue/screens/View';
+import PostCatalogueIndex from '@/modules/PostCatalogue/screens/View';
 import './index.css';
 import { ReactQueryDevtools } from 'react-query/devtools'
 
@@ -49,6 +50,9 @@ const router = createBrowserRouter([
       },
       {
         path: "/user/catalogue/index", element: <UserCatalogueIndex />
+      },
+      {
+        path: "/post/catalogue/index", element: <PostCatalogueIndex />
       },
     ]
   },

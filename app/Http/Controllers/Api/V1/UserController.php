@@ -93,6 +93,15 @@ class UserController extends Controller
         if (empty($id) || $id < 0) {
             return $this->returnIfIdValidateFail();
         }
+        $user = $this->userRepository->findById($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Không tìm thấy bản ghi cần xóa',
+                'code' => Status::SUCCESS
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         if ($this->userService->delete($id)) {
             return response()->json([
                 'message' => 'Xóa bản ghi thành công',

@@ -1,28 +1,28 @@
 <?php
 
-namespace App\Services\User;
+namespace App\Services\Post;
 
 use App\Services\BaseService;
-use App\Repositories\User\UserRepository;
+use App\Repositories\Post\PostCatalogueRepository;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Status;
 
 
-class UserService extends BaseService
+class PostCatalogueService extends BaseService
 {
-    protected $userRepository;
+    protected $postCatalogueRepository;
     public function __construct(
-        UserRepository $userRepository,
+        PostCatalogueRepository $postCatalogueRepository,
     ) {
-        $this->userRepository = $userRepository;
+        $this->postCatalogueRepository = $postCatalogueRepository;
     }
 
     public function paginate($request)
     {
         $agrument = $this->paginateAgrument($request);
-
-        $users = $this->userRepository->pagination([...$agrument]);
-        return $users;
+        $postCatalogues = $this->postCatalogueRepository->pagination([...$agrument]);
+        // dd($postCatalogues);
+        return $postCatalogues;
     }
 
     private function paginateAgrument($request)
@@ -31,29 +31,28 @@ class UserService extends BaseService
             'perpage' => $request->input('perpage') ?? 10,
             'keyword' => [
                 'search' => $request->input('keyword') ?? '',
-                'field' => ['name', 'email', 'address', 'phone']
+                'field' => ['name', 'description', 'content']
             ],
             'condition' => [
                 'publish' => $request->integer('publish'),
-                'user_catalogue_id' => $request->integer('user_catalogue_id'),
             ],
+            // 'relations' => ['posts'],
             'select' => ['*'],
             'orderBy' => $request->input('sort') ? explode(',', $request->input('sort')) : ['id', 'desc'],
-            'relations' => ['user_catalogues']
         ];
     }
 
-    public function create($request, $auth)
+    public function create($request)
     {
         DB::beginTransaction();
         try {
-            $except = ['confirmPassword'];
-            $payload = $this->request($request, $auth, $except);
-            $user = $this->userRepository->create($payload);
+            $except = [];
+            $payload = $this->request($request);
+            $postCatalogue = $this->postCatalogueRepository->create($payload);
 
             DB::commit();
             return [
-                'user' => $user,
+                'postCatalogue' => $postCatalogue,
                 'code' => Status::SUCCESS
             ];
         } catch (\Exception $e) {
@@ -65,17 +64,17 @@ class UserService extends BaseService
         }
     }
 
-    public function update($request, $id, $auth)
+    public function update($request, $id)
     {
         DB::beginTransaction();
         try {
-            $except = ['confirmPassword'];
-            $payload = $this->request($request, $auth, $except);
-            $user = $this->userRepository->update($id, $payload);
-            // dd($user);
+            $except = ['post_counts'];
+            $payload = $this->request($request);
+            $postCatalogue = $this->postCatalogueRepository->update($id, $payload);
+            // dd($postCatalogue);
             DB::commit();
             return [
-                'user' => $user,
+                'postCatalogue' => $postCatalogue,
                 'code' => Status::SUCCESS
             ];
         } catch (\Exception $e) {
@@ -91,7 +90,7 @@ class UserService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $this->userRepository->delete($id);
+            $this->postCatalogueRepository->delete($id);
             DB::commit();
             return [
                 'code' => Status::SUCCESS

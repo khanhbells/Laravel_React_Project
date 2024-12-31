@@ -41,6 +41,7 @@ class BaseService
             } else {
                 if ($request->input('image')) {
                     $payload['image'] = str_replace(config('app.url') . 'storage', 'public', $payload['image']);
+                    // dd($payload['image']);
                 }
             }
         }

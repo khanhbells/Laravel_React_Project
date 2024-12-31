@@ -11,6 +11,7 @@ export type User = {
     district_id: string | null,
     ward_id: string | null,
     birthday: string | null,
+    user_catalogues?: string | null,
 }
 export type PayloadInput = {
     name: string,

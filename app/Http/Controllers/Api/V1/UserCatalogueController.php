@@ -32,12 +32,13 @@ class UserCatalogueController extends Controller
     {
         $userCatalogues = $this->userCatalogueService->paginate($request);
         return response()->json([
-            'user_catalogues' =>  UserCatalogueResource::collection($userCatalogues->items()),
-            'links' => $userCatalogues->linkCollection(),
-            'current_page' => $userCatalogues->currentPage(),
-            'last_page' => $userCatalogues->lastPage(),
+            'user_catalogues' =>  method_exists($userCatalogues, 'items') ? UserCatalogueResource::collection($userCatalogues->items()) : $userCatalogues,
+            'links' => method_exists($userCatalogues, 'items') ? $userCatalogues->linkCollection() : null,
+            'current_page' => method_exists($userCatalogues, 'items') ? $userCatalogues->currentPage() : null,
+            'last_page' => method_exists($userCatalogues, 'items') ? $userCatalogues->lastPage() : null,
         ], Response::HTTP_OK);
     }
+
     public function create(StoreUserCatalogueRequest $request)
     {
         $auth = auth()->user();
@@ -88,6 +89,16 @@ class UserCatalogueController extends Controller
         if (empty($id) || $id < 0) {
             return $this->returnIfIdValidateFail();
         }
+
+        $userCatalogue = $this->userCatalogueRepository->findById($id);
+
+        if (!$userCatalogue) {
+            return response()->json([
+                'message' => 'Không tìm thấy bản ghi cần xóa',
+                'code' => Status::SUCCESS
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         if ($this->userCatalogueService->delete($id)) {
             return response()->json([
                 'message' => 'Xóa bản ghi thành công',

@@ -38,7 +38,7 @@ class UserCatalogueService extends BaseService
                 // 'user_catalogue_id' => $request->integer('user_catalogue_id'),
             ],
             'relationCount' => ['users'],
-            // 'relation' => ['users'],
+            // 'relations' => ['users'],
             'select' => ['*'],
             'orderBy' => $request->input('sort') ? explode(',', $request->input('sort')) : ['id', 'desc'],
         ];

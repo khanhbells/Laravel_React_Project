@@ -29,6 +29,7 @@ class UserResource extends JsonResource
             'district_id' => $this->district_id,
             'ward_id' => $this->ward_id,
             'birthday' => Carbon::parse($this->birthday)->format('Y-m-d'),
+            'user_catalogues' => $this->user_catalogues->name,
         ];
     }
 }

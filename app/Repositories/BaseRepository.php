@@ -15,13 +15,19 @@ class BaseRepository
     }
     public function pagination($params = [])
     {
-        return $this->model
-            ->select($params['select'])
+        $query = $this->model->newQuery();
+        $query->select($params['select'])
             ->condition($params['condition'] ?? [])
             ->keyword($params['keyword'] ?? '')
             ->relationCount($params['relationCount'] ?? [])
-            ->orderBy($params['orderBy'][0], $params['orderBy'][1])
-            ->paginate($params['perpage']);
+            ->orderBy($params['orderBy'][0], $params['orderBy'][1]);
+        if (isset($params['relations']) && count($params['relations'])) {
+            $query->with($params['relations']);
+        }
+        if ($params['perpage']) {
+            return $query->paginate($params['perpage']);
+        }
+        return $query->get();
     }
 
     public function create($payload = [])
