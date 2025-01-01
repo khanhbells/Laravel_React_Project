@@ -41,7 +41,7 @@ const PostCatalogue = () => {
     //Checkbox
     const { checkedState, checkedAllState, handleCheckedChange, handleCheckedAllChange, isAnyChecked } = useCheckBoxState(data, model, isLoading)
     const somethingChecked = isAnyChecked()
-    const { isSheetOpen, openSheet, closeSheet } = useSheet()
+    // const { isSheetOpen, openSheet, closeSheet } = useSheet()
 
     const [customFilter, setCustomFilter] = useState<SelectConfig[]>([]);
 
@@ -61,9 +61,10 @@ const PostCatalogue = () => {
                             model={model}
                             refetch={refetch}
                             handleQueryString={(filters: any) => handleQueryString(filters)}
-                            openSheet={openSheet}
+                            // openSheet={openSheet}
                             items={filterItems}
                             buttonText="Thêm mới nhóm bài viết"
+                            to="/post/catalogue/create"
                         />
                         <CustomTable
                             isLoading={isLoading}
@@ -75,7 +76,7 @@ const PostCatalogue = () => {
                             checkedAllState={checkedAllState}
                             handleCheckedChange={handleCheckedChange}
                             handleCheckedAllChange={handleCheckedAllChange}
-                            openSheet={openSheet}
+                            // openSheet={openSheet}
                             destroy={destroy}
                             refetch={refetch}
                             buttonActions={buttonActions}
@@ -85,13 +86,13 @@ const PostCatalogue = () => {
                         {!isLoading && data[model] && data.links ? <Paginate links={data?.links} pageChange={handlePageChange} /> : null}
                     </CardFooter>
                 </Card>
-                {isSheetOpen && (
+                {/* {isSheetOpen && (
                     <CustomSheet
                         title={isSheetOpen.action === 'update' ? breadcrumb.update.title : breadcrumb.create.title}
                         description={breadcrumb.create.description}
                         isSheetOpen={isSheetOpen.open}
                         closeSheet={closeSheet}
-                        className="w-[400px] sm:w-[500px]"
+                        className="w-[1280px] sm:w-[1280px]"
                     >
                         <Store
                             refetch={refetch}
@@ -100,7 +101,7 @@ const PostCatalogue = () => {
                             action={isSheetOpen.action}
                         />
                     </CustomSheet>
-                )}
+                )} */}
             </div >
         </FilterProvider>
     )

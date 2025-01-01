@@ -19,11 +19,12 @@ const breadcrumb = {
 
     index: {
         title: 'Quản lý nhóm bài viết',
-        route: '/post/index'
+        route: '/post/catalogue/index'
     },
     create: {
         title: 'Thêm mới nhóm bài viết',
         description: 'Nhập đầy đủ các thông tin dưới đây. Các mục có dấu (*) là bắt buộc',
+        route: '/post/catalogue/create'
     },
     update: {
         title: 'Cập nhật thông tin',

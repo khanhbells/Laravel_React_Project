@@ -13,6 +13,7 @@ import { Input } from "../components/ui/input"
 import { Button } from "../components/ui/button"
 import CustomAlertDialog from "@/components/CustomAlertDialog";
 import CustomFilter from "./CustomFilter";
+import { Link } from "react-router-dom";
 //SETTINGS
 import { FilterProps } from "@/interfaces/BaseServiceInterface";
 import { perpages, publishs, sort } from "../constant/general";
@@ -29,7 +30,8 @@ const Filter = ({
     handleQueryString,
     openSheet,
     items,
-    buttonText
+    buttonText,
+    ...restProps
 }: FilterProps) => {
     //Delay keyword
     const { debounce } = useDebounce()
@@ -55,7 +57,9 @@ const Filter = ({
     }, [filters])
     //openSheet
     const detectButtonAction = () => {
-        openSheet({ open: true, action: '', id: null })
+        if (openSheet) {
+            openSheet({ open: true, action: '', id: null })
+        }
     }
 
 
@@ -151,20 +155,24 @@ const Filter = ({
                         </div>
                     </div>
                     <div>
-                        <Button
-                            className="p-0 bg-primary text-white px-[15px] flex justify-between items-center text-[12px]"
-                            onClick={() => detectButtonAction()}
-                        >
-                            <FiPlus
-                                className="mr-[5px]"
-                            />
-                            {buttonText}
-                        </Button>
+                        {
+                            openSheet
+                                ?
+                                <Button
+                                    className="p-0 bg-primary text-white px-[15px] flex justify-between items-center text-[12px]"
+                                    onClick={() => detectButtonAction()}>
+                                    <FiPlus className="mr-[5px]" />
+                                    {buttonText}
+                                </Button>
+                                :
+                                <Link to={restProps.to} className="p-0 bg-primary text-white px-[15px] flex justify-between items-center text-[12px] block p-[10px] rounded">
+                                    <FiPlus className="mr-[5px]" />
+                                    {buttonText}
+                                </Link>
+                        }
                     </div>
                 </div>
-                <CustomFilter
-                    handleFilter={handleFilter}
-                />
+                <CustomFilter handleFilter={handleFilter} />
             </div >
         </>
     )

@@ -1,7 +1,7 @@
-import { Input } from "@/components/ui/input"
+import { Textarea } from "./ui/textarea"
 import { Label } from "@/components/ui/label"
 
-interface CustomInputProps {
+interface CustomTextareaProps {
     label: string,
     name: string,
     type: string | undefined,
@@ -12,7 +12,7 @@ interface CustomInputProps {
     [key: string]: any
 }
 
-const CustomInput = ({
+const CustomTextarea = ({
     label,
     type,
     register,
@@ -20,14 +20,14 @@ const CustomInput = ({
     value,
     className,
     ...restProps
-}: CustomInputProps) => {
+}: CustomTextareaProps) => {
     return (
         <>
-            <div className={className ?? "grid grid-cols-4 items-center gap-4"}>
+            <div className={className ?? "grid grid-cols-4 items-center gap-4 mt-[10px]"}>
                 <Label htmlFor={name} className={restProps.labelClassName ?? 'text-right'}>
                     {label} {restProps.required ? <span className="text-[#f00] text-[12px]">(*)</span> : null}
                 </Label>
-                <Input
+                <Textarea
                     name={name}
                     type={type ?? 'text'}
                     id={name}
@@ -48,4 +48,4 @@ const CustomInput = ({
     )
 }
 
-export default CustomInput
+export default CustomTextarea

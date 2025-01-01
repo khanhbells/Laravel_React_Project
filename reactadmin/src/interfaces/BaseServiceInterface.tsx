@@ -2,7 +2,7 @@ import { Sheet } from "@/hook/useSheet"
 import { Option } from "@/components/CustomSelectBox"
 
 export interface SheetProps {
-    openSheet: (sheet: Sheet) => void
+    openSheet?: (sheet: Sheet) => void
 }
 
 export interface updateStatusByFieldParam {
@@ -22,7 +22,8 @@ export interface FilterProps extends CheckStateInterface, SheetProps {
     refetch: any,
     handleQueryString: any,
     items: BaseFilterItem[],
-    buttonText: string
+    buttonText: string,
+    [key: string]: any
 }
 
 export interface CustomTableProps extends SheetProps {
