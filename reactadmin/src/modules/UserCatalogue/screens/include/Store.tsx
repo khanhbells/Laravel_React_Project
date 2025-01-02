@@ -37,7 +37,7 @@ const UserCatalogueStore = ({ id, action, refetch, closeSheet }: UserCatalogueSt
         context: { action },
         resolver: yupResolver(schema)
     })
-    const { onSubmitHanler, loading } = useFormSubmit(save, refetch, closeSheet, { action: action, id: id })
+    const { onSubmitHanler, loading } = useFormSubmit(save, { action: action, id: id }, refetch, closeSheet)
 
     const { data, isLoading, isError } = useQuery<UserCatalogue>(['user_catalogue', id],
         () => getUserCatalogueById(id),

@@ -1,6 +1,11 @@
 export type PostCataloguePayloadInput = {
     name: string,
-    description?: string | undefined,
+    description?: string,
+    content?: string,
+    canonical: string,
+    meta_title?: string,
+    meta_keyword?: string,
+    meta_description?: string
 };
 export type PostCatalogue = {
     id: number,

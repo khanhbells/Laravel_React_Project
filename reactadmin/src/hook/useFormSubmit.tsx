@@ -9,17 +9,22 @@ type SubmitFunction<T extends FieldValues> = (
 
 const useFormSubmit = <T extends FieldValues, U extends Record<string, any>>(
     submitFn: SubmitFunction<T>,
-    refetch: any,
-    closeSheet: () => void,
-    updateParams: { action: string, id: string | null }
+    updateParams: { action: string, id: string | null },
+    refetch?: any | null,
+    closeSheet?: () => void | undefined,
+
 ) => {
 
     const mutation = useMutation<void, Error, T>({
         mutationFn: (payload) => submitFn(payload, updateParams),
         onSuccess: (response) => {
-            closeSheet()
             showToast('Cập nhật dữ liệu thành công', 'success');
-            refetch()
+            if (closeSheet) {
+                closeSheet()
+            }
+            if (refetch) {
+                refetch()
+            }
         },
         onError: (error: any) => {
             console.error('Lỗi: ', error);

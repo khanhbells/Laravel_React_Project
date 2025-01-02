@@ -58,7 +58,7 @@ const UserStore = ({
     //Location
     const { provinces, districts, wards, setProvinceId, setDistrictId, isProvinceLoading, isDistrictLoading, isWardLoading } = useLocationState()
     const { images, handleImageChange } = useUpload(false)
-    const { onSubmitHanler, loading } = useFormSubmit(save, refetch, closeSheet, { action: action, id: id })
+    const { onSubmitHanler, loading } = useFormSubmit(save, { action: action, id: id }, refetch, closeSheet)
 
     // const { data: dataUserCatalogues, isLoading: isUserCatalogueLoading, isError: isUserCatalogueError } = useQuery(['user_catalogues'],
     //     () => pagination('sort=name,asc'),

@@ -39,6 +39,7 @@ const CustomInput = ({
                         `}
                     {...register(name)}
                     defaultValue={value || ''}
+                    {...(restProps.onChange ? { onChange: restProps.onChange } : {})}
                 />
             </div>
             <div className="error-line text-right ">
