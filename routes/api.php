@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\UserCatalogueController;
 use App\Http\Controllers\Api\V1\PostCatalogueController;
+use App\Http\Controllers\Api\V1\UploadController;
 use App\Http\Controllers\Api\V1\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -70,6 +71,9 @@ Route::group([
 
     // Location
     Route::get('location', [DashboardController::class, 'location']);
+
+    //UPLOAD
+    Route::post('upload/tempotary', [UploadController::class, 'uploadToTempotary']);
 });
 
 Route::post('v1/auth/refresh', [AuthController::class, 'refresh']);

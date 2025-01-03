@@ -4,12 +4,14 @@ import { showToast } from "@/helper/myHelper"
 
 type SubmitFunction<T extends FieldValues> = (
     data: T,
-    updateParams: { action: string, id: string | null }
+    updateParams: { action: string, id: string | null },
+    album?: string[]
 ) => Promise<void>
 
 const useFormSubmit = <T extends FieldValues, U extends Record<string, any>>(
     submitFn: SubmitFunction<T>,
     updateParams: { action: string, id: string | null },
+    album?: string[] | null,
     refetch?: any | null,
     closeSheet?: () => void | undefined,
 
@@ -32,9 +34,13 @@ const useFormSubmit = <T extends FieldValues, U extends Record<string, any>>(
         }
     })
     const onSubmitHanler: SubmitHandler<T> = async (payload) => {
+        if (album) {
+            const formPayload = { ...payload, album }
+            mutation.mutate(formPayload)
+        } else {
+            mutation.mutate(payload)
+        }
 
-
-        mutation.mutate(payload)
     }
     return {
         onSubmitHanler,

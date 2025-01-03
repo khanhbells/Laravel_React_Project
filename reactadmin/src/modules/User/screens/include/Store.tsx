@@ -58,7 +58,7 @@ const UserStore = ({
     //Location
     const { provinces, districts, wards, setProvinceId, setDistrictId, isProvinceLoading, isDistrictLoading, isWardLoading } = useLocationState()
     const { images, handleImageChange } = useUpload(false)
-    const { onSubmitHanler, loading } = useFormSubmit(save, { action: action, id: id }, refetch, closeSheet)
+    const { onSubmitHanler, loading } = useFormSubmit(save, { action: action, id: id }, null, refetch, closeSheet)
 
     // const { data: dataUserCatalogues, isLoading: isUserCatalogueLoading, isError: isUserCatalogueError } = useQuery(['user_catalogues'],
     //     () => pagination('sort=name,asc'),
@@ -102,7 +102,7 @@ const UserStore = ({
     }, [data])
 
 
-    const [defaultSelectValue, setDefaultSelectValue] = useState<Option | null>(null)
+    const [defaultSelectValue, _] = useState<Option | null>(null)
 
     const initialSelectBoxs = useMemo<SelectBoxItem[]>(() => [
         {

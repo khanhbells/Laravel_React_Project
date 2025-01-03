@@ -1,4 +1,3 @@
-
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 
 export const baseUrl = 'http://localhost/laravelreact/public/api/v1/'

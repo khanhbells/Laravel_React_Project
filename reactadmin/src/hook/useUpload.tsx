@@ -21,10 +21,18 @@ const useUpload = (multiple: boolean = false) => {
 
         }
     }
+
+    //splice xóa phần tử trong mảng
+    const deleteImage = (index: number) => {
+        const newImages = [...images]
+        newImages.splice(index, 1)
+        setImages(newImages)
+    }
     return {
         images,
         setImages,
-        handleImageChange
+        handleImageChange,
+        deleteImage
     }
 }
 

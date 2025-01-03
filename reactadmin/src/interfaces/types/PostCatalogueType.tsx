@@ -5,7 +5,8 @@ export type PostCataloguePayloadInput = {
     canonical: string,
     meta_title?: string,
     meta_keyword?: string,
-    meta_description?: string
+    meta_description?: string,
+    parent_id?: string
 };
 export type PostCatalogue = {
     id: number,

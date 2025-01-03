@@ -1,5 +1,5 @@
 //CORE REACT
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import { useQuery } from "react-query";
 //COMPONENT
 import PageHeading from "@/components/heading"
@@ -18,6 +18,7 @@ import * as yup from 'yup';
 //INTERFACES
 import { PostCatalogueStoreProps } from "@/interfaces/PostCatalogueInterface";
 import { PostCatalogue, PostCataloguePayloadInput } from "@/interfaces/types/PostCatalogueType";
+import { ImageUpload } from "@/components/Album";
 //HOOK
 import { useForm } from "react-hook-form";
 import useFormSubmit from "@/hook/useFormSubmit";
@@ -30,12 +31,15 @@ import '@/assets/scss/Editor.scss'
 const Store = ({
 
 }) => {
+    const [album, setAlbum] = useState<string[]>([])
+
     const breadcrumbData: Breadcrumb = breadcrumb.create
     const schema = yup.object().shape({
         name: yup.string().required('Bạn chưa nhập vào tên nhóm bài viết'),
         canonical: yup.string().required('Bạn chưa nhập vào đường dẫn'),
         description: yup.string().optional(),
-        content: yup.string().optional()
+        content: yup.string().optional(),
+        parent_id: yup.string().optional(),
     })
     const {
         register,
@@ -48,7 +52,14 @@ const Store = ({
         // context: { action },
         resolver: yupResolver(schema)
     })
-    const { onSubmitHanler, loading } = useFormSubmit(save, { action: '', id: null })
+    const { onSubmitHanler, loading } = useFormSubmit(save, { action: '', id: null }, album)
+
+    const handleAlbum = useCallback(
+        (images: string[]) => {
+            console.log(images);
+            setAlbum(images)
+        }, []
+    )
 
     // const { data, isLoading, isError } = useQuery<PostCatalogue>(['post_catalogue', id],
     //     () => getPostCatalogueById(id),
@@ -64,6 +75,10 @@ const Store = ({
     //     action,
     //     setValue
     // })
+
+    const options = useMemo(() => [
+        { value: '0', label: 'Root' }
+    ], [])
     return (
         <>
             <div className="page-container " >
@@ -77,7 +92,12 @@ const Store = ({
                                     errors={errors}
                                     control={control}
                                 />
-                                <Album />
+                                <Album
+                                    register={register}
+                                    errors={errors}
+                                    control={control}
+                                    onAlbumChange={handleAlbum}
+                                />
                                 {/* -------------SEO------------------- */}
                                 <Seo
                                     register={register}
@@ -85,8 +105,18 @@ const Store = ({
                                 />
                             </div>
                             <div className="col-span-3">
-                                <Parent />
-                                <ImageIcon />
+                                <Parent
+                                    name="parent_id"
+                                    control={control}
+                                    register={register}
+                                    errors={errors}
+                                    options={options}
+                                />
+                                <ImageIcon
+                                    register={register}
+                                    errors={errors}
+                                    control={control}
+                                />
                                 <Advance />
                                 <div className="mt-[20px] text-right">
                                     <LoadingButton
@@ -101,7 +131,6 @@ const Store = ({
             </div>
         </>
     )
-
 }
 
 export default Store

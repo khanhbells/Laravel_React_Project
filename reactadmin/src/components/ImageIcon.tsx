@@ -1,3 +1,5 @@
+//REACT
+import { UseFormRegister, FieldValues, FieldErrors, Controller } from "react-hook-form";
 //COMPONENT
 import {
     Card,
@@ -5,9 +7,21 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import CustomUploadBox from "./CustomUploadBox";
 //IMAGE
 import UploadIcon from "@/assets/upload-image.jpg";
-const ImageIcon = () => {
+
+interface IImageIcon<T extends FieldValues> {
+    register: UseFormRegister<T>,
+    errors: FieldErrors<T>,
+    control: any
+}
+
+const ImageIcon = <T extends FieldValues>({
+    register,
+    errors,
+    control
+}: IImageIcon<T>) => {
     return (
         <>
             <Card className="rounded-[5px] mb-[20px]">
@@ -18,20 +32,20 @@ const ImageIcon = () => {
                 </CardHeader>
                 <CardContent className="p-[10px]">
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col items-center bg-gray-100 p-4 rounded-md shadow-inner">
-                            <label htmlFor="image" className="size-25 flex -items-center justify-center bg-gray-200 rounded-full cursor-pointer overflow-hidden relative">
-                                <input type="file" id="image" className="opacity-0 size-full absolute inset-0 cursor-pointer" />
-                                <img src={UploadIcon} alt="" />
-                            </label>
-                            <span className="text-gray-700 font-medium text-[13px] mt-[5px]">Ảnh đại diện</span>
-                        </div>
-                        <div className="flex flex-col items-center bg-gray-100 p-4 rounded-md shadow-inner">
-                            <label htmlFor="image" className="size-25 flex -items-center justify-center bg-gray-200 rounded-full cursor-pointer overflow-hidden relative">
-                                <input type="file" id="image" className="opacity-0 size-full absolute inset-0 cursor-pointer" />
-                                <img src={UploadIcon} alt="" />
-                            </label>
-                            <span className="text-gray-700 font-medium text-[13px] mt-[5px]">Icon</span>
-                        </div>
+                        <CustomUploadBox
+                            register={register}
+                            errors={errors}
+                            control={control}
+                            name="image"
+                            label="Ảnh đại diện"
+                        />
+                        <CustomUploadBox
+                            register={register}
+                            errors={errors}
+                            control={control}
+                            name="icon"
+                            label="Icon"
+                        />
                     </div>
                 </CardContent>
             </Card>
