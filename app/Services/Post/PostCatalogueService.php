@@ -42,14 +42,23 @@ class PostCatalogueService extends BaseService
         ];
     }
 
-    public function create($request)
+    private function imageAgrument()
+    {
+        return [
+            'customFolder' => ['post_catalogues'],
+            'imageType' => 'image'
+        ];
+    }
+
+    public function create($request, $auth)
     {
         DB::beginTransaction();
         try {
             $except = [];
-            $payload = $this->request($request);
+            $files = ['image', 'icon'];
+            $payload = $this->request($request, $auth, $except, $files, ...$this->imageAgrument());
+            $payload['album'] = explode(',', $payload['album']);
             $postCatalogue = $this->postCatalogueRepository->create($payload);
-
             DB::commit();
             return [
                 'postCatalogue' => $postCatalogue,

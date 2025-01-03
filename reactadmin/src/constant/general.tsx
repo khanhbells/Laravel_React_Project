@@ -22,6 +22,22 @@ export const publishs = [
         name: 'Xuất bản'
     }
 ]
+
+export const follows = [
+    {
+        id: 0,
+        name: 'Tất cả'
+    },
+    {
+        id: 1,
+        name: 'Không follow'
+    },
+    {
+        id: 2,
+        name: 'Follow'
+    }
+]
+
 export const sort = [
     {
         value: 'id,desc',

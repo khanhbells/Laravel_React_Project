@@ -19,6 +19,17 @@ class PostCatalogue extends Model
      */
     protected $guarded = [];
 
+    protected $casts = [
+        'album' => 'json'
+    ];
+
+    public $attributes = [
+        'order' => 0,
+        'lft' => 0,
+        'rgt' => 0,
+        'level' => 0
+    ];
+
     protected $table = 'post_catalogues';
 
     // public function users()
@@ -26,10 +37,4 @@ class PostCatalogue extends Model
     //     return $this->hasMany(User::class, 'user_catalogue_id', 'id');
     // }
 
-    public function attributes()
-    {
-        return [
-            'publish' == 1,
-        ];
-    }
 }

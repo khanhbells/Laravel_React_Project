@@ -31,7 +31,7 @@ const Aside = () => {
 
 
     return (
-        <aside className="app-aside w-60 bg-[#111c43] h-full fixed top-0">
+        <aside className="app-aside w-60 bg-[#111c43] h-full fixed top-0 z-20">
             <div className="main-sidebar-header w-60 p-3.5 fixed z-10 h-14 text-center border-solid border-b border-menu-border">
                 <a href="" className="inline-block">
                     <Logo />

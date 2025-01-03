@@ -14,9 +14,7 @@ const pagination = async (queryString: string) => {
 
 const save = async (payload: PostCataloguePayloadInput, updateParams: { action: string, id: string | null }) => {
 
-    console.log(payload);
-
-    // return baseSave(endpoint, payload, updateParams)
+    return baseSave(endpoint, payload, updateParams)
 }
 
 const update = async (payload: PostCataloguePayloadInput) => {

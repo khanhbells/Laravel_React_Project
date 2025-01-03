@@ -35,20 +35,21 @@ class PostCatalogueController extends Controller
         ], Response::HTTP_OK);
     }
 
-    // public function create(StorePostCatalogueRequest $request)
-    // {
-    //     $auth = auth()->user();
-    //     $data = $this->postCatalogueService->create($request);
-    //     if ($data['code'] == Status::SUCCESS) {
-    //         return response()->json([
-    //             'message' => 'Thêm mới bản ghi thành công',
-    //             'post_catalogues' => new PostCatalogueResource($data['postCatalogue'])
-    //         ], Response::HTTP_OK);
-    //     }
-    //     return response()->json([
-    //         'message' => $data['message']
-    //     ], Response::HTTP_INTERNAL_SERVER_ERROR);
-    // }
+    public function create(Request $request)
+    {
+        $auth = auth()->user();
+        $data = $this->postCatalogueService->create($request, $auth);
+        return $data;
+        if ($data['code'] == Status::SUCCESS) {
+            return response()->json([
+                'message' => 'Thêm mới bản ghi thành công',
+                'post_catalogues' => new PostCatalogueResource($data['postCatalogue'])
+            ], Response::HTTP_OK);
+        }
+        return response()->json([
+            'message' => $data['message']
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
 
     // public function update(StorePostCatalogueRequest $request, $id)
     // {

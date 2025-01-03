@@ -30,18 +30,25 @@ class BaseService
         $request,
         $auth = null,
         $except = [],
+        $files = ['image'],
         $customFolder = ['avatar'],
-        $imageType = 'image'
+        $imageType = 'image',
+
     ) {
         $payload = $request->except(['_method', 'created_at', ...$except]);
         if ($auth != null) {
-            if ($request->file('image')) {
-                $this->fileUploader = new FileUploader($auth->email);
-                $payload['image'] = $this->fileUploader->uploadFile($request->file('image'), $imageType, $customFolder);
-            } else {
-                if ($request->input('image')) {
-                    $payload['image'] = str_replace(config('app.url') . 'storage', 'public', $payload['image']);
-                    // dd($payload['image']);
+            if (count($files) && is_array($files)) {
+                foreach ($files as $keyFile => $file) {
+                    if ($request->file($file)) {
+
+                        $this->fileUploader = new FileUploader($auth->email);
+                        $payload[$file] = $this->fileUploader->uploadFile($request->file($file), $imageType, $customFolder);
+                    } else {
+                        if ($request->input($file)) {
+                            $payload[$file] = str_replace(config('app.url') . 'storage', 'public', $payload[$file]);
+                            // dd($payload['image']);
+                        }
+                    }
                 }
             }
         }

@@ -6,7 +6,13 @@ export type PostCataloguePayloadInput = {
     meta_title?: string,
     meta_keyword?: string,
     meta_description?: string,
-    parent_id?: string
+    parent_id?: string,
+    publish?: number,
+    follow?: number,
+    image?: any,
+    icon?: any,
+    // icon?: File
+
 };
 export type PostCatalogue = {
     id: number,

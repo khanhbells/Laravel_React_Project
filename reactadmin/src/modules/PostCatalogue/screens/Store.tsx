@@ -33,6 +33,19 @@ const Store = ({
 }) => {
     const [album, setAlbum] = useState<string[]>([])
 
+    const fileValidation = (fileTypes: string[], maxFileSize: number) => {
+        return yup.mixed().test('fileType', 'Loại tệp không hợp kệ', (value: any) => {
+            const file = value && value[0]
+            if (!file || !(file instanceof File)) {
+                return true
+            }
+            if (!fileTypes.includes(file.type)) {
+                return false
+            }
+            return true
+        })
+    }
+
     const breadcrumbData: Breadcrumb = breadcrumb.create
     const schema = yup.object().shape({
         name: yup.string().required('Bạn chưa nhập vào tên nhóm bài viết'),
@@ -40,6 +53,10 @@ const Store = ({
         description: yup.string().optional(),
         content: yup.string().optional(),
         parent_id: yup.string().optional(),
+        publish: yup.number().optional(),
+        follow: yup.number().optional(),
+        image: fileValidation(['image/jpeg', 'image/png', 'image/gif', 'image/jpg'], 2).optional().nullable(),
+        icon: fileValidation(['image/jpeg', 'image/png', 'image/gif', 'image/jpg'], 2).optional().nullable()
     })
     const {
         register,
@@ -52,11 +69,12 @@ const Store = ({
         // context: { action },
         resolver: yupResolver(schema)
     })
+
+    //Gui du lieu ve phia server
     const { onSubmitHanler, loading } = useFormSubmit(save, { action: '', id: null }, album)
 
     const handleAlbum = useCallback(
         (images: string[]) => {
-            console.log(images);
             setAlbum(images)
         }, []
     )
@@ -76,9 +94,12 @@ const Store = ({
     //     setValue
     // })
 
-    const options = useMemo(() => [
+    const postCatalogues = useMemo(() => [
         { value: '0', label: 'Root' }
     ], [])
+
+
+
     return (
         <>
             <div className="page-container " >
@@ -110,14 +131,17 @@ const Store = ({
                                     control={control}
                                     register={register}
                                     errors={errors}
-                                    options={options}
+                                    options={postCatalogues}
                                 />
                                 <ImageIcon
                                     register={register}
                                     errors={errors}
                                     control={control}
                                 />
-                                <Advance />
+                                <Advance
+                                    errors={errors}
+                                    control={control}
+                                />
                                 <div className="mt-[20px] text-right">
                                     <LoadingButton
                                         loading={false}

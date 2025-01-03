@@ -18,32 +18,38 @@ const CustomUploadBox = <T extends FieldValues>({
     control
 }: ICustomUploadBoxProps<T>) => {
 
-
+    const errorMessage = errors[name]?.message
     const { images, handleImageChange } = useUpload(false)
 
-    useEffect(() => {
-        console.log(images);
-    }, [images])
-
     return (
-        <div className="flex flex-col items-center bg-gray-100 p-4 rounded-md shadow-inner">
-            <label htmlFor={name} className="size-25 flex -items-center justify-center bg-gray-200 rounded-full cursor-pointer overflow-hidden relative">
-                <input
-                    type="file"
-                    id={name}
-                    className="opacity-0 size-full absolute inset-0 cursor-pointer"
-                    {...register(name as Path<T>, {
-                        onChange: handleImageChange
-                    })}
-                />
-                {images.length > 0 ? (
-                    <img src={images[0].preview} alt="" />
-                ) : (
-                    <img src={UploadIcon} alt="" />
-                )}
+        <div>
+            <div className="flex flex-col items-center bg-gray-100 p-4 rounded-md shadow-inner">
+                <label htmlFor={name} className="size-25 flex -items-center justify-center bg-gray-200 rounded-full cursor-pointer overflow-hidden relative">
+                    <input
+                        type="file"
+                        id={name}
+                        className="opacity-0 size-full absolute inset-0 cursor-pointer"
+                        {...register(name as Path<T>, {
+                            onChange: handleImageChange
+                        })}
+                    />
+                    {images.length > 0 ? (
+                        <img src={images[0].preview} alt="" />
+                    ) : (
+                        <img src={UploadIcon} alt="" />
+                    )}
 
-            </label>
-            <span className="text-gray-700 font-medium text-[13px] mt-[5px]">{label}</span>
+                </label>
+                <span className="text-gray-700 font-medium text-[13px] mt-[5px]">{label}</span>
+                {
+                    errorMessage &&
+                    <div className="error-line text-right mt-[-10px]" >
+                        {typeof errorMessage === 'string' && (
+                            <span className="text-red-500 text-xs">{errorMessage}</span>
+                        )}
+                    </div>
+                }
+            </div>
         </div>
     )
 }
