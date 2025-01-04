@@ -21,6 +21,11 @@ class PostCatalogueResource extends JsonResource
             'description' => $this->description,
             'posts_count' => 0,
             'publish' => $this->publish,
+            'order' => $this->order,
+            'level' => $this->level,
+            'lft' => $this->lft,
+            'rgt' => $this->rgt,
+
         ];
     }
 }

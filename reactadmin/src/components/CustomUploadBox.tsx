@@ -1,22 +1,18 @@
 import { useEffect, useState } from "react"
 import UploadIcon from "@/assets/upload-image.jpg";
 
-import { UseFormRegister, FieldValues, FieldErrors, Controller, Path } from "react-hook-form";
+import { UseFormRegister, FieldValues, FieldErrors, Controller, Path, useFormContext } from "react-hook-form";
 import useUpload from "@/hook/useUpload";
 interface ICustomUploadBoxProps<T extends FieldValues> {
     label: string,
     name: string,
-    register: UseFormRegister<T>,
-    errors: FieldErrors<T>,
-    control: any
 }
 const CustomUploadBox = <T extends FieldValues>({
     name,
     label,
-    register,
-    errors,
-    control
 }: ICustomUploadBoxProps<T>) => {
+
+    const { register, formState: { errors }, control } = useFormContext()
 
     const errorMessage = errors[name]?.message
     const { images, handleImageChange } = useUpload(false)

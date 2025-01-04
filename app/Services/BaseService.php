@@ -4,7 +4,9 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
 use App\Classes\FileUploader;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class BaseService
 {
@@ -51,11 +53,56 @@ class BaseService
                     }
                 }
             }
+            $payload['user_id'] = $auth->id;
         }
         if ($request->input('password') && !empty($request->input('password'))) {
             $payload['password'] = Hash::make($payload['password']);
         }
 
+        if ($request->input('canonical') && !empty($request->input('canonical'))) {
+            $payload['canonical'] = Str::slug($payload['canonical']);
+        }
+
+        $payload['album'] = $this->makeAlbum($request, $auth, $customFolder);
         return $payload;
+    }
+
+    private function makeAlbum($request, $auth, $customFolder)
+    {
+        if ($request->input('album') && !empty($request->input('album'))) {
+            $album = explode(',', $request->input('album'));
+            $temp = [];
+            if (isset($album) && count($album)) {
+                foreach ($album as $key => $val) {
+                    $imageName = basename($val);
+                    $emailPrefix = Str::before($auth->email, '@');
+                    $sourcePath = public_path('tempotary/' . $emailPrefix . '/', $imageName);
+                    $destinationPath = storage_path('app/public');
+
+                    if (isset($customFolder) && count($customFolder)) {
+                        $destinationPath .= '/' . $emailPrefix . '/' . 'image' . '/' . implode('/', $customFolder);
+                    }
+
+                    if (!File::exists($destinationPath)) {
+                        File::makeDirectory($destinationPath, 0755, true);
+                    }
+
+                    $destinationFile = $destinationPath . '/' . $imageName;
+                    if (File::exists($sourcePath)) {
+                        File::move($sourcePath, $destinationFile);
+                    }
+                    $temp[] = 'public/storage/' . $emailPrefix . '/' . 'image' . '/' . implode('/', $customFolder) . '/' . $imageName;
+                }
+            }
+
+            return $temp;
+        }
+    }
+
+    protected function nestedset($auth, $nested)
+    {
+        $nested->Get();
+        $nested->Recursive(0, $nested->Set());
+        $nested->Action($auth);
     }
 }

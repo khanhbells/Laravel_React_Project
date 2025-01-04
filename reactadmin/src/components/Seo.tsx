@@ -12,22 +12,21 @@ import CustomTextarea from "@/components/CustomTextarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 //REACT
-import { UseFormRegister, FieldValues, FieldErrors, Path } from "react-hook-form";
+import { FieldValues, Path, useFormContext } from "react-hook-form";
 import { PostCataloguePayloadInput } from "@/interfaces/types/PostCatalogueType";
 //HELPERS
 import { slug } from "@/helper/myHelper";
 
 interface SeoProps<T extends FieldValues> {
-    register: UseFormRegister<T>,
-    errors: FieldErrors<T>,
     data?: PostCataloguePayloadInput
 }
 
 const Seo = <T extends FieldValues>({
-    register,
-    errors,
     data
 }: SeoProps<T>) => {
+
+    const { register, formState: { errors }, control } = useFormContext()
+
     const canonicalErrorMessage = errors['canonical']?.message
 
     const [seo, setSeo] = useState<{ canonical: string, metaTitle: string, metaDescription: string }>({

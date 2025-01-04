@@ -4,8 +4,10 @@ import { Link } from "react-router-dom";
 //COMPONENTS
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { Input } from "@/components/ui/input";
 //SETTINGS
 import { PostCatalogue } from "@/interfaces/types/PostCatalogueType";
+import { formatCatalogueName } from "@/helper/myHelper";
 //INTERFACE & TYPE
 import { ButtonAction, ActionParam, OpenSheetFunction } from "@/interfaces/BaseServiceInterface";
 import { Select } from "@/interfaces/BaseServiceInterface";
@@ -13,7 +15,7 @@ import { Select } from "@/interfaces/BaseServiceInterface";
 
 
 const model = 'post_catalogues'
-
+export const redirectIfSucces = '/post/catalogue/index'
 
 const breadcrumb = {
 
@@ -41,7 +43,8 @@ interface tableColumn {
 const tableColumn: tableColumn[] = [
     {
         name: 'Tên nhóm bài viết',
-        render: (item: PostCatalogue) => <span><Link to={`/post/index?post_catalogue_id=${item.id}`}>{item.name}</Link></span>
+        render: (item: PostCatalogue) => <span><Link to={`/post/index?post_catalogue_id=${item.id}`}>
+            {formatCatalogueName(item)}</Link></span>
     },
 
     {
@@ -49,8 +52,8 @@ const tableColumn: tableColumn[] = [
         render: (item: PostCatalogue) => <span className="">{item.posts_count}</span>
     },
     {
-        name: 'Mô tả',
-        render: (item: PostCatalogue) => <span>{item.description}</span>
+        name: 'Sắp xếp',
+        render: (item: PostCatalogue) => <Input type="text" defaultValue={item.order} className="w-[50px] text-center" />
     },
 
 ]

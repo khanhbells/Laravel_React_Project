@@ -10,7 +10,7 @@ import {
 import UploadSvg from '@/assets/svg/upload.svg'
 import SortableItem from "./SortableItem";
 //HOOK
-import { UseFormRegister, FieldValues, FieldErrors, Path } from "react-hook-form";
+import { FieldValues, Path, useFormContext } from "react-hook-form";
 //INTERFACE
 import { useEffect, useState } from "react";
 //CONTEXT
@@ -28,19 +28,15 @@ export interface ImageUpload {
 
 
 interface AlbumProps<T extends FieldValues> {
-    register: UseFormRegister<T>,
-    errors: FieldErrors<T>,
-    control: any,
     onAlbumChange: (images: string[]) => void
 }
 
 
 const Album = <T extends FieldValues>({
-    register,
-    errors,
-    control,
     onAlbumChange
 }: AlbumProps<T>) => {
+
+    const { register, formState: { errors }, control } = useFormContext()
 
     const [images, setImages] = useState<ImageUpload[]>([])
 

@@ -69,3 +69,31 @@ export const slug = (str: string): string => {
     str = str.replace(/^\-+|\-+$/g, "");
     return str;
 };
+
+
+export const getDropdown = (data: { [key: string]: any }, params?: any) => {
+    if (Array.isArray(data)) {
+        const temp: { value: string, label: string }[] = []
+        temp.push({
+            value: '0',
+            label: (params && params.text) ? params.text : '[Root]'
+        })
+
+        if (Array.isArray(data)) {
+            data.forEach((item) => {
+                temp.push({
+                    value: item.id.toString(),
+                    label: formatCatalogueName(item)
+                })
+            })
+        }
+        return temp
+    }
+}
+
+// Sử dụng hàm repeat để lặp lại chuỗi "|----" dựa trên giá trị của catalogue.level
+export const formatCatalogueName = (catalogue: { [key: string]: any }) => {
+    const prefix = '|----'.repeat((catalogue.level > 0) ? catalogue.level - 1 : 0)
+
+    return `${prefix}${catalogue.name}`
+}

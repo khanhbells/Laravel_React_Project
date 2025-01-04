@@ -24,7 +24,6 @@ Route::group([
     'prefix' => 'v1/auth'
 
 ], function ($router) {
-
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
 });
@@ -74,6 +73,8 @@ Route::group([
 
     //UPLOAD
     Route::post('upload/tempotary', [UploadController::class, 'uploadToTempotary']);
+    Route::post('upload/ckeditor', [UploadController::class, 'uploadCkeditor']);
+    Route::post('delete/ckeditor', [UploadController::class, 'deleteCkeditor']);
 });
 
 Route::post('v1/auth/refresh', [AuthController::class, 'refresh']);

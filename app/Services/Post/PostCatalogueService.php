@@ -6,15 +6,24 @@ use App\Services\BaseService;
 use App\Repositories\Post\PostCatalogueRepository;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Status;
+use App\Classes\Nested;
 
 
 class PostCatalogueService extends BaseService
 {
     protected $postCatalogueRepository;
+    protected $fileUploader;
+    protected $files = ['image', 'icon'];
+    protected $except = [];
+    protected $nested;
+
     public function __construct(
         PostCatalogueRepository $postCatalogueRepository,
     ) {
         $this->postCatalogueRepository = $postCatalogueRepository;
+        $this->nested = new Nested([
+            'table' => 'post_catalogues'
+        ]);
     }
 
     public function paginate($request)
@@ -38,9 +47,10 @@ class PostCatalogueService extends BaseService
             ],
             // 'relations' => ['posts'],
             'select' => ['*'],
-            'orderBy' => $request->input('sort') ? explode(',', $request->input('sort')) : ['id', 'desc'],
+            'orderBy' => $request->input('sort') ? explode(',', $request->input('sort')) : ['lft', 'asc'],
         ];
     }
+
 
     private function imageAgrument()
     {
@@ -50,15 +60,17 @@ class PostCatalogueService extends BaseService
         ];
     }
 
+
     public function create($request, $auth)
     {
         DB::beginTransaction();
         try {
-            $except = [];
-            $files = ['image', 'icon'];
-            $payload = $this->request($request, $auth, $except, $files, ...$this->imageAgrument());
-            $payload['album'] = explode(',', $payload['album']);
+            $payload = $this->request($request, $auth, $this->except, $this->files, ...$this->imageAgrument());
             $postCatalogue = $this->postCatalogueRepository->create($payload);
+            if ($postCatalogue->id > 0) {
+                $nested = $this->nested;
+                $this->nestedset($auth, $nested);
+            }
             DB::commit();
             return [
                 'postCatalogue' => $postCatalogue,

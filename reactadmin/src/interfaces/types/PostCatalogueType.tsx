@@ -15,8 +15,5 @@ export type PostCataloguePayloadInput = {
 
 };
 export type PostCatalogue = {
-    id: number,
-    name: string,
-    description: string,
-    posts_count: string,
+    [key: string]: string
 }

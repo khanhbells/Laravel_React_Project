@@ -1,6 +1,6 @@
 //REACT
-import { useState } from "react";
-import { UseFormRegister, FieldValues, FieldErrors, Controller } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { FieldValues, Controller, useFormContext } from "react-hook-form";
 //COMPONENT
 import {
     Card,
@@ -14,23 +14,26 @@ import { Option } from "@/components/CustomSelectBox";
 import { PostCataloguePayloadInput } from "@/interfaces/types/PostCatalogueType";
 
 
-interface IParentProps<T extends FieldValues> {
+interface IParentProps {
     name: string,
     options?: Option[],
-    control: any,
-    register: UseFormRegister<T>,
-    errors: FieldErrors<T>,
 }
 
-const Parent = <T extends FieldValues>({
+const Parent = ({
     name,
-    control,
-    register,
-    errors,
     options
-}: IParentProps<T>) => {
+}: IParentProps) => {
+
+    const { register, formState: { errors }, control, setValue } = useFormContext()
 
     const [defaultSelectValue, _] = useState<Option | null>(null)
+
+    useEffect(() => {
+        const rootOption = options?.find(option => option.value === "0");
+        if (rootOption) {
+            setValue(name, rootOption.value);
+        }
+    }, [options, name, setValue]);
 
     return (
         <>
@@ -53,7 +56,6 @@ const Parent = <T extends FieldValues>({
                                 onChange={(selected) => {
                                     field.onChange(selected?.value)
                                     // console.log(selected);
-
                                 }}
                                 value={options?.find(option => option.value === field.value) || null}
                             />

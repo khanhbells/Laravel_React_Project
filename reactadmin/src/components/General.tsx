@@ -10,20 +10,18 @@ import CustomInput from "./CustomInput";
 //INTERFACE
 import { UseFormRegister, FieldValues, FieldErrors } from "react-hook-form";
 import { PostCataloguePayloadInput } from "@/interfaces/types/PostCatalogueType";
+import { useFormContext } from "react-hook-form";
+
 
 interface GeneralProps<T extends FieldValues> {
-    register: UseFormRegister<T>,
-    errors: FieldErrors<T>,
     data?: PostCataloguePayloadInput,
-    control: any
 }
 
 const General = <T extends FieldValues>({
-    register,
-    errors,
     data,
-    control
 }: GeneralProps<T>) => {
+
+    const { register, formState: { errors }, control } = useFormContext()
 
     return (
         <>

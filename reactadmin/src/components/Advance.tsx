@@ -6,18 +6,17 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import Select from "react-select"
-import { UseFormRegister, FieldValues, FieldErrors, Controller } from "react-hook-form";
+import { FieldValues, useFormContext, Controller } from "react-hook-form";
 import { publishs, follows } from "@/constant/general"
 
 interface IAdvance<T extends FieldValues> {
-    control: any,
-    errors: FieldErrors<T>,
 }
 
 const Advance = <T extends FieldValues>({
-    control,
-    errors
 }: IAdvance<T>) => {
+
+    const { register, formState: { errors }, control } = useFormContext()
+
 
     const publishOptions = publishs.filter(item => item.id !== 0).map(item => ({
         value: item.id,

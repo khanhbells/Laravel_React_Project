@@ -39,7 +39,6 @@ class PostCatalogueController extends Controller
     {
         $auth = auth()->user();
         $data = $this->postCatalogueService->create($request, $auth);
-        return $data;
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
                 'message' => 'Thêm mới bản ghi thành công',
