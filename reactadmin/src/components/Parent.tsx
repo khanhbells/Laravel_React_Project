@@ -28,12 +28,7 @@ const Parent = ({
 
     const [defaultSelectValue, _] = useState<Option | null>(null)
 
-    useEffect(() => {
-        const rootOption = options?.find(option => option.value === "0");
-        if (rootOption) {
-            setValue(name, rootOption.value);
-        }
-    }, [options, name, setValue]);
+    const defaultParentValue = options?.find(option => option.value === '0')
 
     return (
         <>
@@ -48,6 +43,7 @@ const Parent = ({
                     <Controller
                         name={name}
                         control={control}
+                        defaultValue={defaultParentValue?.value || null}
                         render={({ field }) => (
                             <Select
                                 options={options}
@@ -55,9 +51,8 @@ const Parent = ({
                                 placeholder="Chọn danh mục cha"
                                 onChange={(selected) => {
                                     field.onChange(selected?.value)
-                                    // console.log(selected);
                                 }}
-                                value={options?.find(option => option.value === field.value) || null}
+                                value={options?.find(option => option.value === field.value) || options?.find(option => option.value === '0')}
                             />
                         )}
                     />

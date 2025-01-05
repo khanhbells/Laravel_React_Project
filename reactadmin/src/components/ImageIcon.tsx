@@ -10,10 +10,21 @@ import {
 import CustomUploadBox from "./CustomUploadBox";
 //IMAGE
 import UploadIcon from "@/assets/upload-image.jpg";
+import { PostCatalogue } from "@/interfaces/types/PostCatalogueType";
+import { useEffect } from "react";
 
+interface IImageIcon {
+    data?: PostCatalogue
+}
 
-const ImageIcon = () => {
+const ImageIcon = ({
+    data
+}: IImageIcon) => {
 
+    useEffect(() => {
+        console.log(data);
+
+    }, [data])
 
     return (
         <>
@@ -28,10 +39,12 @@ const ImageIcon = () => {
                         <CustomUploadBox
                             name="image"
                             label="Ảnh đại diện"
+                            data={data?.image}
                         />
                         <CustomUploadBox
                             name="icon"
                             label="Icon"
+                            data={data?.icon}
                         />
                     </div>
                 </CardContent>

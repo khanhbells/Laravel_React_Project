@@ -51,7 +51,7 @@ export interface PayloadInput<T> {
     [key: string]: T
 }
 
-const baseSave = async<T,>(apiUrl: string, payload: PayloadInput<T>, updateParams: { action: string, id: string | null }) => {
+const baseSave = async<T,>(apiUrl: string, payload: PayloadInput<T>, updateParams: { action: string, id: string | undefined }) => {
     console.log(payload);
 
     const formData = new FormData()

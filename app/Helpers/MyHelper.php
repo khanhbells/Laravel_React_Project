@@ -10,6 +10,6 @@ if (!function_exists('getImages')) {
         $thumbName = (($thumb) ? $thumb . '_' : '') . $basename;
         $newImage = str_replace($basename, $thumbName, $newImage);
 
-        return (!empty($newImage)) ? asset($newImage) : null;
+        return (!empty($newImage)) ? config('app.url') . $newImage : null;
     }
 }

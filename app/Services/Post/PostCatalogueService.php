@@ -85,14 +85,16 @@ class PostCatalogueService extends BaseService
         }
     }
 
-    public function update($request, $id)
+    public function update($request, $id, $auth)
     {
         DB::beginTransaction();
         try {
             $except = ['post_counts'];
-            $payload = $this->request($request);
+            $payload = $this->request($request, $auth, $this->except, $this->files, ...$this->imageAgrument());
+            // return $payload;
             $postCatalogue = $this->postCatalogueRepository->update($id, $payload);
-            // dd($postCatalogue);
+            $nested = $this->nested;
+            $this->nestedset($auth, $nested);
             DB::commit();
             return [
                 'postCatalogue' => $postCatalogue,

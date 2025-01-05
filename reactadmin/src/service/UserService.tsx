@@ -10,7 +10,7 @@ const pagination = async (queryString: string, action: string) => {
     return response.data
 }
 
-const save = async (payload: PayloadInput, updateParams: { action: string, id: string | null }) => {
+const save = async (payload: PayloadInput, updateParams: { action: string, id: string | undefined }) => {
     return baseSave('/users', payload, updateParams)
 }
 
@@ -28,7 +28,7 @@ const destroy = async (id: string) => {
 
 }
 
-const getUserById = async (userId: string | null): Promise<User> => {
+const getUserById = async (userId: string | undefined): Promise<User> => {
     const response = await axios.get(`users/${userId}`)
     return response.data
 }

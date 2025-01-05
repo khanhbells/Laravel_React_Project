@@ -97,3 +97,7 @@ export const formatCatalogueName = (catalogue: { [key: string]: any }) => {
 
     return `${prefix}${catalogue.name}`
 }
+
+export const removeHtmlTags = (input: any) => {
+    return input.replace(/<[^>]*>/g, '')
+}

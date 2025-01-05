@@ -12,8 +12,7 @@ const pagination = async (queryString: string) => {
     return response.data
 }
 
-const save = async (payload: PostCataloguePayloadInput, updateParams: { action: string, id: string | null }) => {
-
+const save = async (payload: PostCataloguePayloadInput, updateParams: { action: string, id: string | undefined }) => {
     return baseSave(endpoint, payload, updateParams)
 }
 
@@ -27,7 +26,7 @@ const destroy = async (id: string) => {
     return baseDestroy(id, endpoint)
 }
 
-const getPostCatalogueById = async (id: string | null): Promise<PostCatalogue> => {
+const getPostCatalogueById = async (id: string | undefined): Promise<PostCatalogue> => {
     const response = await axios.get(`${endpoint}/${id}`)
     return response.data
 }

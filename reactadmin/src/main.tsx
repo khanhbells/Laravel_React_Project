@@ -43,21 +43,12 @@ const router = createBrowserRouter([
       </AuthMiddleware>
     ),
     children: [
-      {
-        path: "/dashboard", element: <Dashboard />
-      },
-      {
-        path: "/user/index", element: <UserIndex />
-      },
-      {
-        path: "/user/catalogue/index", element: <UserCatalogueIndex />
-      },
-      {
-        path: "/post/catalogue/index", element: <PostCatalogueIndex />
-      },
-      {
-        path: "/post/catalogue/create", element: <PostCatalogueStore />
-      },
+      { path: "/dashboard", element: <Dashboard /> },
+      { path: "/user/index", element: <UserIndex /> },
+      { path: "/user/catalogue/index", element: <UserCatalogueIndex /> },
+      { path: "/post/catalogue/index", element: <PostCatalogueIndex /> },
+      { path: "/post/catalogue/create", element: <PostCatalogueStore /> },
+      { path: "/post/catalogue/update/:id", element: <PostCatalogueStore /> },
     ]
   },
 ]);

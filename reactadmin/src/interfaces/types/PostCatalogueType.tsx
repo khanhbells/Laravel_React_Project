@@ -6,9 +6,9 @@ export type PostCataloguePayloadInput = {
     meta_title?: string,
     meta_keyword?: string,
     meta_description?: string,
-    parent_id?: string,
-    publish?: number,
-    follow?: number,
+    parent_id?: string | undefined,
+    publish?: string | undefined,
+    follow?: string | undefined,
     image?: any,
     icon?: any,
     // icon?: File

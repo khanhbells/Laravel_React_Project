@@ -1,5 +1,5 @@
 //REACT
-import { useState } from "react";
+import { useEffect, useState } from "react";
 //COMPONENT
 import {
     Card,
@@ -13,12 +13,12 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 //REACT
 import { FieldValues, Path, useFormContext } from "react-hook-form";
-import { PostCataloguePayloadInput } from "@/interfaces/types/PostCatalogueType";
+import { PostCatalogue } from "@/interfaces/types/PostCatalogueType";
 //HELPERS
-import { slug } from "@/helper/myHelper";
+import { slug, removeHtmlTags } from "@/helper/myHelper";
 
 interface SeoProps<T extends FieldValues> {
-    data?: PostCataloguePayloadInput
+    data?: PostCatalogue
 }
 
 const Seo = <T extends FieldValues>({
@@ -41,6 +41,16 @@ const Seo = <T extends FieldValues>({
             [field]: field === 'canonical' ? `${import.meta.env.VITE_BASE_URL}/${slug(e.target.value)}${import.meta.env.VITE_SUFFIX}` : e.target.value
         }))
     }
+
+    useEffect(() => {
+        if (data) {
+            setSeo({
+                canonical: `${import.meta.env.VITE_BASE_URL}/${slug(data.canonical)}${import.meta.env.VITE_SUFFIX}`,
+                metaTitle: data.meta_title !== '' && removeHtmlTags(data.meta_title) || '',
+                metaDescription: data.meta_description !== '' && removeHtmlTags(data.meta_description) || ''
+            })
+        }
+    }, [data])
     return (
         <>
             <Card className="rounded-[5px] mt-[15px]">

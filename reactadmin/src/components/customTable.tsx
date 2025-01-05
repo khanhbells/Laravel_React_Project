@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from "react"
+import React, { act, ReactNode, useEffect, useState } from "react"
 import { Link, useSearchParams, useNavigate } from "react-router-dom"
 
 import { Checkbox } from "../components/ui/checkbox"
@@ -134,34 +134,41 @@ const CustomTable = ({
                             </TableCell>
                             <TableCell className="flex justify-center">
                                 {buttonActions && buttonActions.map((action: any, index: number) => (
-                                    <Button
-                                        key={index} className={`${action.className} p-[15px]`}
-                                        onClick={
-                                            action.onClick && action.params ? (e: React.
-                                                MouseEvent<HTMLButtonElement>) => {
-                                                const args = action.params?.map((param: any) => {
-                                                    if (typeof param === 'string' && (param.endsWith(':f') || param.endsWith(':pf') || param.endsWith(':c'))) {
-                                                        if (param.endsWith(':f')) {
-                                                            return eval(param.slice(0, -2))
-                                                        } else if (param.endsWith(':pf')) {
-                                                            const functionName = param.slice(0, -3)
-                                                            return restProps[functionName]
-                                                        } else if (param.endsWith(':c')) {
-                                                            return action.component
+                                    action.path ? (
+                                        <Link key={index} to={`${action.path}${row.id}`} className={`p-0 py-[11px] bg-primary text-white rounded ${action.className} p-[15px]`}>
+                                            {action.icon}
+                                        </Link>
+                                    ) : (
+                                        <Button
+                                            key={index} className={`${action.className} p-[15px]`}
+                                            onClick={
+                                                action.onClick && action.params ? (e: React.
+                                                    MouseEvent<HTMLButtonElement>) => {
+                                                    const args = action.params?.map((param: any) => {
+                                                        if (typeof param === 'string' && (param.endsWith(':f') || param.endsWith(':pf') || param.endsWith(':c'))) {
+                                                            if (param.endsWith(':f')) {
+                                                                return eval(param.slice(0, -2))
+                                                            } else if (param.endsWith(':pf')) {
+                                                                const functionName = param.slice(0, -3)
+                                                                return restProps[functionName]
+                                                            } else if (param.endsWith(':c')) {
+                                                                return action.component
+                                                            }
                                                         }
+                                                        else {
+                                                            return row[param as keyof Row]
+                                                        }
+                                                    }) as ParamsToTuple<typeof action.params>
+                                                    if (action.onClick) {
+                                                        action.onClick(...args)
                                                     }
-                                                    else {
-                                                        return row[param as keyof Row]
-                                                    }
-                                                }) as ParamsToTuple<typeof action.params>
-                                                if (action.onClick) {
-                                                    action.onClick(...args)
-                                                }
-                                            } : undefined
-                                        }
-                                    >
-                                        {action.icon}
-                                    </Button>
+                                                } : undefined
+                                            }
+                                        >
+                                            {action.icon}
+                                        </Button>
+                                    )
+
                                 ))}
                             </TableCell>
                         </TableRow>

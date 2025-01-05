@@ -16,11 +16,12 @@ import { useEffect, useState } from "react";
 //CONTEXT
 import { closestCenter, DndContext, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, } from '@dnd-kit/sortable';
+import { PostCatalogue } from "@/interfaces/types/PostCatalogueType";
 
 
 
 export interface ImageUpload {
-    file: File,
+    file: File | null,
     preview: string,
     progress: number,
     uploaded: boolean
@@ -28,19 +29,20 @@ export interface ImageUpload {
 
 
 interface AlbumProps<T extends FieldValues> {
-    onAlbumChange: (images: string[]) => void
+    onAlbumChange: (images: string[]) => void,
+    data?: PostCatalogue
 }
 
 
 const Album = <T extends FieldValues>({
-    onAlbumChange
+    onAlbumChange,
+    data
 }: AlbumProps<T>) => {
 
     const { register, formState: { errors }, control } = useFormContext()
 
     const [images, setImages] = useState<ImageUpload[]>([])
 
-    const [items] = useState([1, 2, 3]);
 
     //every duyệt qua tất cả phần tử và phải tuân theo điều kiện
     useEffect(() => {
@@ -50,6 +52,20 @@ const Album = <T extends FieldValues>({
             onAlbumChange(album)
         }
     }, [images, onAlbumChange])
+
+    useEffect(() => {
+        console.log(data?.album);
+
+        if (data && data.album.length && Array.isArray(data.album)) {
+            const updateAlbum = data.album.map(imageUrl => ({
+                file: null,
+                preview: `${import.meta.env.VITE_API_URL}/${imageUrl}`,
+                progress: 100,
+                uploaded: true
+            }))
+            setImages(updateAlbum)
+        }
+    }, [data?.album])
 
     //gui du lieu den backend de luu vao tempotary
     const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,36 +87,44 @@ const Album = <T extends FieldValues>({
 
     //Xu ly du lieu gui va tra ve
     const uploadImage = async (image: ImageUpload) => {
-        // console.log(345);
-        const formData = new FormData()
-        formData.append('image', image.file)
         try {
-            const response = await axios.post('/upload/tempotary', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                },
-                onUploadProgress: (progressEvent) => {
-                    if (progressEvent.total) {
-                        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                        setImages(prev => prev.map(img =>
-                            img.file === image.file ? { ...img, progress: percentCompleted } : img
-                        ))
-                    } else {
-                        console.log('Không thể tính toán quá trình tải hình ảnh');
+            if (!image.file) {
+                console.log('File không đúng định dạng');
+                return
+            }
+            const formData = new FormData()
+            formData.append('image', image.file)
+            try {
+                const response = await axios.post('/upload/tempotary', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    onUploadProgress: (progressEvent) => {
+                        if (progressEvent.total) {
+                            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                            setImages(prev => prev.map(img =>
+                                img.file === image.file ? { ...img, progress: percentCompleted } : img
+                            ))
+                        } else {
+                            console.log('Không thể tính toán quá trình tải hình ảnh');
+                        }
                     }
-                }
-            })
+                })
 
-            const imageUrl = response.data.url
+                const imageUrl = response.data.url
 
-            setImages(prev => prev.map(img =>
-                img.file === image.file ? { ...img, uploaded: true, preview: imageUrl } : img
-            ))
-        } catch (error) {
-            setImages(prev => prev.map(img =>
-                img.file === image.file ? { ...img, uploaded: false, progress: 0 } : img
-            ))
+                setImages(prev => prev.map(img =>
+                    img.file === image.file ? { ...img, uploaded: true, preview: imageUrl } : img
+                ))
+            } catch (error) {
+                setImages(prev => prev.map(img =>
+                    img.file === image.file ? { ...img, uploaded: false, progress: 0 } : img
+                ))
+            }
+        } catch {
+
         }
+
     }
 
     //Xoa anh trong album

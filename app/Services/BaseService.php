@@ -76,7 +76,7 @@ class BaseService
                 foreach ($album as $key => $val) {
                     $imageName = basename($val);
                     $emailPrefix = Str::before($auth->email, '@');
-                    $sourcePath = public_path('tempotary/' . $emailPrefix . '/', $imageName);
+                    $sourcePath = public_path('tempotary/' . $emailPrefix . '/' . $imageName);
                     $destinationPath = storage_path('app/public');
 
                     if (isset($customFolder) && count($customFolder)) {
@@ -91,7 +91,7 @@ class BaseService
                     if (File::exists($sourcePath)) {
                         File::move($sourcePath, $destinationFile);
                     }
-                    $temp[] = 'public/storage/' . $emailPrefix . '/' . 'image' . '/' . implode('/', $customFolder) . '/' . $imageName;
+                    $temp[] = 'storage/' . $emailPrefix . '/' . 'image' . '/' . implode('/', $customFolder) . '/' . $imageName;
                 }
             }
 

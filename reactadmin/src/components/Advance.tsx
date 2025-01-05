@@ -19,15 +19,15 @@ const Advance = <T extends FieldValues>({
 
 
     const publishOptions = publishs.filter(item => item.id !== 0).map(item => ({
-        value: item.id,
+        value: String(item.id),
         label: item.name
     }))
     const followOptions = follows.filter(item => item.id !== 0).map(item => ({
-        value: item.id,
+        value: String(item.id),
         label: item.name
     }))
-    const defaultPublishValue = publishOptions.find(option => option.value === 2)
-    const defaultFollowValue = publishOptions.find(option => option.value === 2)
+    const defaultPublishValue = publishOptions.find(option => option.value === '2')
+    const defaultFollowValue = followOptions.find(option => option.value === '2')
     return (
         <>
             <Card className="rounded-[5px] mb-[20px]">
@@ -40,7 +40,7 @@ const Advance = <T extends FieldValues>({
                     <Controller
                         name="publish"
                         control={control}
-                        defaultValue={2}
+                        defaultValue={defaultPublishValue?.value || null}
                         render={({ field }) => (
                             <Select
                                 options={publishOptions}
@@ -50,14 +50,13 @@ const Advance = <T extends FieldValues>({
                                     field.onChange(selected?.value)
                                 }}
                                 value={publishOptions?.find(option => option.value === field.value) || defaultPublishValue}
-                            // isLoading={isLoading}
                             />
                         )}
                     />
                     <Controller
                         name="follow"
                         control={control}
-                        defaultValue={2}
+                        defaultValue={defaultFollowValue?.value || null}
                         render={({ field }) => (
                             <Select
                                 options={followOptions}

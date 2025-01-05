@@ -19,13 +19,22 @@ class PostCatalogueResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'posts_count' => 0,
+            'content' => $this->content,
+            'album' => $this->album,
+            'meta_title' => $this->meta_title ?? '',
+            'meta_keyword' => $this->meta_keyword ?? '',
+            'meta_description' => $this->meta_description ?? '',
+            'canonical' => $this->canonical,
+            'parent_id' => (string)$this->parent_id,
+            'image' => getImages($this->image),
+            'icon' => getImages($this->icon),
             'publish' => $this->publish,
+            'follow' => $this->follow,
             'order' => $this->order,
             'level' => $this->level,
             'lft' => $this->lft,
             'rgt' => $this->rgt,
-
+            'post_count' => 0
         ];
     }
 }

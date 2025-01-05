@@ -9,12 +9,12 @@ import CustomCKEditor from "@/components/CustomCKEditor";
 import CustomInput from "./CustomInput";
 //INTERFACE
 import { UseFormRegister, FieldValues, FieldErrors } from "react-hook-form";
-import { PostCataloguePayloadInput } from "@/interfaces/types/PostCatalogueType";
+import { PostCatalogue } from "@/interfaces/types/PostCatalogueType";
 import { useFormContext } from "react-hook-form";
 
 
 interface GeneralProps<T extends FieldValues> {
-    data?: PostCataloguePayloadInput,
+    data?: PostCatalogue,
 }
 
 const General = <T extends FieldValues>({
@@ -45,15 +45,11 @@ const General = <T extends FieldValues>({
                         label="Mô tả ngắn"
                         className="ckeditor-description mb-[20px] mt-[20px]"
                         name="description"
-                        control={control}
-                        errors={errors}
                     />
                     <CustomCKEditor
                         label="Nội dung"
                         className="ckeditor-content"
                         name="content"
-                        control={control}
-                        errors={errors}
                     />
                 </CardContent>
             </Card>

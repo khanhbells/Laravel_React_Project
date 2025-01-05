@@ -5,13 +5,12 @@ import { Controller, FieldErrors, FieldValues } from "react-hook-form"
 import { resolve } from "path";
 import axios from "../configs/axios";
 import { useEffect, useRef, useState } from "react";
+import { useFormContext } from "react-hook-form";
 
 interface CustomCKEditorProps<T extends FieldValues> {
     label: string,
     className?: string,
     name: string,
-    control?: any,
-    errors: FieldErrors<T>
 }
 
 class CustomUploadPlugin {
@@ -55,9 +54,10 @@ const CustomCKEditor = <T extends FieldValues>({
     label,
     className,
     name,
-    control,
-    errors
 }: CustomCKEditorProps<T>) => {
+
+    const { register, formState: { errors }, control } = useFormContext()
+
 
     const errorMessage = errors[name]?.message
     const editorRef = useRef<any>(null)
@@ -88,6 +88,7 @@ const CustomCKEditor = <T extends FieldValues>({
             .catch((err) => console.error('Xóa ảnh bị lỗi', err))
     }
 
+
     return (
         <div className={`gap-4 ${className ?? null}`}>
             <Label className="mb-[10px] block mt-[10px]">
@@ -100,7 +101,7 @@ const CustomCKEditor = <T extends FieldValues>({
                 render={({ field }) => (
                     <CKEditor
                         editor={ClassicEditor}
-                        data=""
+                        data={field.value ?? ''}
                         config={
                             {
                                 extraPlugins: [CustomUploadPlugin]

@@ -5,13 +5,13 @@ import { useState } from "react"
 
 type SubmitFunction<T extends FieldValues> = (
     data: T,
-    updateParams: { action: string, id: string | null },
+    updateParams: { action: string, id: string | undefined },
     album?: string[]
 ) => Promise<void>
 
 const useFormSubmit = <T extends FieldValues, U extends Record<string, any>>(
     submitFn: SubmitFunction<T>,
-    updateParams: { action: string, id: string | null },
+    updateParams: { action: string, id: string | undefined },
     album?: string[] | null,
     refetch?: any | null,
     closeSheet?: () => void | undefined,

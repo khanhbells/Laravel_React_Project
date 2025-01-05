@@ -1,7 +1,7 @@
 //CORE REACT
 import { useCallback, useEffect, useState, useMemo } from "react";
 import { useQueries } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 //COMPONENT
 import PageHeading from "@/components/heading"
 import LoadingButton from "@/components/LoadingButton"
@@ -23,16 +23,23 @@ import { PostCataloguePayloadInput } from "@/interfaces/types/PostCatalogueType"
 import { useForm, FormProvider } from "react-hook-form";
 import useFormSubmit from "@/hook/useFormSubmit";
 //SERVICE
-import { save } from "@/service/PostCatalogueService";
+import { save, getPostCatalogueById } from "@/service/PostCatalogueService";
 import { pagination } from "@/service/PostCatalogueService";
 //SCSS
 import '@/assets/scss/Editor.scss'
+import { error } from "console";
+
+
 
 const Store = ({
 
 }) => {
     const navigate = useNavigate()
     const [album, setAlbum] = useState<string[]>([])
+    const { id } = useParams()
+    const currentAction = id ? 'update' : ''
+
+
 
     const fileValidation = (fileTypes: string[], maxFileSize: number) => {
         return yup.mixed().test('fileType', 'Loại tệp không hợp kệ', (value: any) => {
@@ -54,8 +61,8 @@ const Store = ({
         description: yup.string().optional(),
         content: yup.string().optional(),
         parent_id: yup.string().optional(),
-        publish: yup.number().optional(),
-        follow: yup.number().optional(),
+        publish: yup.string().optional(),
+        follow: yup.string().optional(),
         image: fileValidation(['image/jpeg', 'image/png', 'image/gif', 'image/jpg'], 2).optional().nullable(),
         icon: fileValidation(['image/jpeg', 'image/png', 'image/gif', 'image/jpg'], 2).optional().nullable()
     })
@@ -65,10 +72,10 @@ const Store = ({
         resolver: yupResolver(schema)
     })
 
-    const { handleSubmit } = methods
+    const { handleSubmit, reset, formState: { errors } } = methods
 
     //Gui du lieu ve phia server
-    const { onSubmitHanler, loading, isSuccess } = useFormSubmit(save, { action: '', id: null }, album)
+    const { onSubmitHanler, loading, isSuccess } = useFormSubmit(save, { action: currentAction, id: id }, album)
 
     const handleAlbum = useCallback(
         (images: string[]) => {
@@ -78,44 +85,57 @@ const Store = ({
 
 
     //Root catalogue
-
     const queries = useQueries([
         {
             queryKey: [model],
             queryFn: () => pagination('')
+        },
+        {
+            queryKey: [model, id],
+            queryFn: () => getPostCatalogueById(id),
+            enabled: !!id
         }
     ]);
 
 
-    const [dropdown] = queries
 
 
-    // const { data, isLoading, isError } = useQuery<PostCatalogue>(['post_catalogue', id],
-    //     () => getPostCatalogueById(id),
-    //     {
-    //         enabled: action === 'update' && !!id,
-    //     }
-    // )
-    //follow data seen update
-    //Set value cho input update để gửi dữ liệu
-    // useSetFormValue({
-    //     isLoading,
-    //     data,
-    //     action,
-    //     setValue
-    // })
+    const [dropdown, postCatalogue] = queries
+
 
     const postCatalogues = useMemo(() => {
         if (!dropdown.isLoading && dropdown.data) {
             return dropdown.data[model] ? getDropdown(dropdown.data[model]) : []
         }
         return []
-
     }, [dropdown])
 
     useEffect(() => {
-        isSuccess === true && navigate(redirectIfSucces)
-    }, [isSuccess])
+
+    }, [errors])
+
+    // useEffect(() => {
+    //     isSuccess === true && navigate(redirectIfSucces)
+    // }, [isSuccess])
+
+    useEffect(() => {
+        if (id && postCatalogue.data && !postCatalogue.isLoading) {
+            reset({
+                name: postCatalogue.data.name,
+                description: postCatalogue.data.description,
+                content: postCatalogue.data.content,
+                meta_title: postCatalogue.data.meta_title,
+                meta_keyword: postCatalogue.data.meta_keyword,
+                meta_description: postCatalogue.data.meta_description,
+                canonical: postCatalogue.data.canonical,
+                parent_id: postCatalogue.data.parent_id,
+                publish: String(postCatalogue.data.publish),
+                follow: String(postCatalogue.data.follow),
+                image: postCatalogue.data.image,
+                icon: postCatalogue.data.icon
+            })
+        }
+    }, [postCatalogue.data])
 
     return (
         <>
@@ -126,12 +146,17 @@ const Store = ({
                         <form onSubmit={handleSubmit(onSubmitHanler)}>
                             <div className="grid grid-cols-12 gap-4 ">
                                 <div className="col-span-9">
-                                    <General />
+                                    <General
+                                    // data={postCatalogue.data}
+                                    />
                                     <Album
                                         onAlbumChange={handleAlbum}
+                                        data={postCatalogue.data}
                                     />
                                     {/* -------------SEO------------------- */}
-                                    <Seo />
+                                    <Seo
+                                        data={postCatalogue.data}
+                                    />
                                 </div>
                                 <div className="col-span-3">
                                     <Parent
@@ -139,6 +164,7 @@ const Store = ({
                                         options={postCatalogues}
                                     />
                                     <ImageIcon
+                                        data={postCatalogue.data}
                                     />
                                     <Advance
                                     />

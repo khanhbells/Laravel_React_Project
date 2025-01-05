@@ -68,7 +68,8 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
         params: ['id', 'openSheet:f'],
         onClick: (id: string, openSheet: OpenSheetFunction) => {
             openSheet({ open: true, action: 'update', id: id })
-        }
+        },
+        path: '/post/catalogue/update/'
     },
     {
         icon: <RiDeleteBin6Line className="text-white" />,

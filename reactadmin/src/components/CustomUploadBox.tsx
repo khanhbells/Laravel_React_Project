@@ -6,10 +6,12 @@ import useUpload from "@/hook/useUpload";
 interface ICustomUploadBoxProps<T extends FieldValues> {
     label: string,
     name: string,
+    data?: string,
 }
 const CustomUploadBox = <T extends FieldValues>({
     name,
     label,
+    data
 }: ICustomUploadBoxProps<T>) => {
 
     const { register, formState: { errors }, control } = useFormContext()
@@ -31,6 +33,8 @@ const CustomUploadBox = <T extends FieldValues>({
                     />
                     {images.length > 0 ? (
                         <img src={images[0].preview} alt="" />
+                    ) : data && data.length ? (
+                        <img src={data} alt="" />
                     ) : (
                         <img src={UploadIcon} alt="" />
                     )}

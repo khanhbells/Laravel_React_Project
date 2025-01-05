@@ -50,35 +50,41 @@ class PostCatalogueController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    // public function update(StorePostCatalogueRequest $request, $id)
-    // {
-    //     $data = $this->postCatalogueService->update($request, $id);
-    //     if ($data['code'] == Status::SUCCESS) {
-    //         return response()->json([
-    //             'message' => 'Cập nhật bản ghi thành công',
-    //             'post_catalogues' => new PostCatalogueResource($data['postCatalogue']),
-    //             'code' => Response::HTTP_OK
-    //         ], Response::HTTP_OK);
-    //     }
-    // }
+    public function update(Request $request, $id)
+    {
+        $auth = auth()->user();
+        $data = $this->postCatalogueService->update($request, $id, $auth);
+        // return $data;
+        if ($data['code'] == Status::SUCCESS) {
+            return response()->json([
+                'message' => 'Cập nhật bản ghi thành công',
+                'post_catalogues' => new PostCatalogueResource($data['postCatalogue']),
+                'code' => Response::HTTP_OK
+            ], Response::HTTP_OK);
+        }
+    }
 
-    // public function show(Request $request, $id)
-    // {
-    //     if (empty($id) || $id < 0) {
-    //         return $this->returnIfIdValidateFail();
-    //     }
-    //     $postCatalogue = $this->postCatalogueRepository->findById($id);
-    //     if (!$postCatalogue) {
-    //         return response()->json([
-    //             'code' => Status::ERROR,
-    //             'message' => 'Không có dữ liệu phù hợp'
-    //         ], Response::HTTP_NOT_FOUND);
-    //     } else {
-    //         return response()->json(
-    //             new PostCatalogueResource($postCatalogue)
-    //         );
-    //     }
-    // }
+    public function show(Request $request, $id)
+    {
+
+        try {
+            if (!$id) {
+                return response()->json([
+                    'code' => Status::ERROR,
+                    'message' => 'Không tìm thấy dữ liệu phù hợp'
+                ], Response::HTTP_NOT_FOUND);
+            }
+            $postCatalogue = $this->postCatalogueRepository->findById($id);
+            return response()->json(
+                new PostCatalogueResource($postCatalogue)
+            );
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => Status::ERROR,
+                'message' => 'Network Error'
+            ], Response::HTTP_NOT_FOUND);
+        }
+    }
 
     // public function destroy($id, Request $request)
     // {
@@ -121,11 +127,11 @@ class PostCatalogueController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    // private function returnIfIdValidateFail()
-    // {
-    //     return response()->json([
-    //         'message' => 'Mã ID không hợp lệ',
-    //         'code' => Status::ERROR
-    //     ], Response::HTTP_INTERNAL_SERVER_ERROR);
-    // }
+    private function returnIfIdValidateFail()
+    {
+        return response()->json([
+            'message' => 'Mã ID không hợp lệ',
+            'code' => Status::ERROR
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
 }

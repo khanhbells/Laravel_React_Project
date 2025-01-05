@@ -107,6 +107,6 @@ export interface ButtonAction<T extends ActionParam[]> {
 export interface StoreProps {
     refetch: any;
     closeSheet: () => void,
-    id: string | null,
+    id: string | undefined,
     action: string
 }
