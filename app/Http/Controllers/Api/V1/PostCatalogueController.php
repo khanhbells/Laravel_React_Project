@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Post\DeletePostCatalogueRequest;
 use Illuminate\Http\Request;
 use App\Http\Resources\PostCatalogueResource;
 use App\Services\Post\PostCatalogueService;
@@ -16,12 +17,15 @@ class PostCatalogueController extends Controller
 {
     protected $postCatalogueService;
     protected $postCatalogueRepository;
+    protected $auth;
+
     public function __construct(
         PostCatalogueService $postCatalogueService,
         PostCatalogueRepository $postCatalogueRepository,
     ) {
         $this->postCatalogueService = $postCatalogueService;
         $this->postCatalogueRepository = $postCatalogueRepository;
+        $this->auth = auth()->user();
     }
 
     public function index(Request $request)
@@ -39,6 +43,7 @@ class PostCatalogueController extends Controller
     {
         $auth = auth()->user();
         $data = $this->postCatalogueService->create($request, $auth);
+
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
                 'message' => 'Thêm mới bản ghi thành công',
@@ -86,32 +91,27 @@ class PostCatalogueController extends Controller
         }
     }
 
-    // public function destroy($id, Request $request)
-    // {
-    //     if (empty($id) || $id < 0) {
-    //         return $this->returnIfIdValidateFail();
-    //     }
+    public function destroy($id, DeletePostCatalogueRequest $request)
+    {
+        $postCatalogue = $this->postCatalogueRepository->findById($id);
+        if (!$postCatalogue) {
+            return response()->json([
+                'message' => 'Không tìm thấy bản ghi cần xóa',
+                'code' => Status::SUCCESS
+            ], Response::HTTP_NOT_FOUND);
+        }
 
-    //     $postCatalogue = $this->postCatalogueRepository->findById($id);
-
-    //     if (!$postCatalogue) {
-    //         return response()->json([
-    //             'message' => 'Không tìm thấy bản ghi cần xóa',
-    //             'code' => Status::SUCCESS
-    //         ], Response::HTTP_NOT_FOUND);
-    //     }
-
-    //     if ($this->postCatalogueService->delete($id)) {
-    //         return response()->json([
-    //             'message' => 'Xóa bản ghi thành công',
-    //             'code' => Status::SUCCESS
-    //         ], Response::HTTP_OK);
-    //     }
-    //     return response()->json([
-    //         'message' => 'Network Error',
-    //         'code' => Status::ERROR
-    //     ], Response::HTTP_INTERNAL_SERVER_ERROR);
-    // }
+        if ($this->postCatalogueService->delete($id, $this->auth)) {
+            return response()->json([
+                'message' => 'Xóa bản ghi thành công',
+                'code' => Status::SUCCESS
+            ], Response::HTTP_OK);
+        }
+        return response()->json([
+            'message' => 'Network Error',
+            'code' => Status::ERROR
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
 
     public function updateStatusByField(UpdateByFieldRequest $request, $id)
     {

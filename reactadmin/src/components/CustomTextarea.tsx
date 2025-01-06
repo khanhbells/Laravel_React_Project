@@ -1,12 +1,10 @@
 import { Textarea } from "./ui/textarea"
 import { Label } from "@/components/ui/label"
-
+import { useFormContext } from "react-hook-form"
 interface CustomTextareaProps {
     label: string,
     name: string,
     type: string | undefined,
-    register: any,
-    errors: any,
     value?: string | null | undefined,
     className?: string,
     [key: string]: any
@@ -15,12 +13,13 @@ interface CustomTextareaProps {
 const CustomTextarea = ({
     label,
     type,
-    register,
-    name, errors,
+    name,
     value,
     className,
     ...restProps
 }: CustomTextareaProps) => {
+    const { register, formState: { errors } } = useFormContext()
+    const errorMessage = errors[name]?.message
     return (
         <>
             <div className={className ?? "grid grid-cols-4 items-center gap-4 mt-[10px]"}>
@@ -28,8 +27,6 @@ const CustomTextarea = ({
                     {label} {restProps.required ? <span className="text-[#f00] text-[12px]">(*)</span> : null}
                 </Label>
                 <Textarea
-                    name={name}
-                    type={type ?? 'text'}
                     id={name}
                     className={` 
                         ${restProps.inputClassName ?? null} 
@@ -38,12 +35,14 @@ const CustomTextarea = ({
                         focus:outline-none focus:border-sky-500 focus:ring-2
                         `}
                     {...register(name)}
-                    defaultValue={value || ''}
                     {...(restProps.onChange ? { onChange: restProps.onChange } : {})}
+                    defaultValue={value || ''}
                 />
             </div>
             <div className="error-line text-right ">
-                {errors[name] && <span className="text-red-500 text-xs">{errors[name].message}</span>}
+                {typeof errorMessage === 'string' && (
+                    <span className="text-red-500 text-xs">{errorMessage}</span>
+                )}
             </div>
         </>
     )

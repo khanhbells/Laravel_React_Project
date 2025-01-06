@@ -51,7 +51,6 @@ class PostCatalogueService extends BaseService
         ];
     }
 
-
     private function imageAgrument()
     {
         return [
@@ -60,12 +59,23 @@ class PostCatalogueService extends BaseService
         ];
     }
 
+    private function initializeRequest($request, $auth, $except)
+    {
+        return $this->initializePayload($request, $except)
+            ->handleUserId($auth)
+            ->processFiles($request, $auth, $this->files, ...$this->imageAgrument())
+            ->processCanonical()
+            ->processAlbum($request, $auth, $this->imageAgrument()['customFolder'])
+            ->getPayload();
+    }
+
 
     public function create($request, $auth)
     {
         DB::beginTransaction();
         try {
-            $payload = $this->request($request, $auth, $this->except, $this->files, ...$this->imageAgrument());
+            $except = [];
+            $payload = $this->initializeRequest($request, $auth, $except);
             $postCatalogue = $this->postCatalogueRepository->create($payload);
             if ($postCatalogue->id > 0) {
                 $nested = $this->nested;
@@ -90,8 +100,7 @@ class PostCatalogueService extends BaseService
         DB::beginTransaction();
         try {
             $except = ['post_counts'];
-            $payload = $this->request($request, $auth, $this->except, $this->files, ...$this->imageAgrument());
-            // return $payload;
+            $payload = $this->initializeRequest($request, $auth, $except);
             $postCatalogue = $this->postCatalogueRepository->update($id, $payload);
             $nested = $this->nested;
             $this->nestedset($auth, $nested);
@@ -109,11 +118,13 @@ class PostCatalogueService extends BaseService
         }
     }
 
-    public function delete($id)
+    public function delete($id, $auth)
     {
         DB::beginTransaction();
         try {
             $this->postCatalogueRepository->delete($id);
+            $nested = $this->nested;
+            $this->nestedset($auth, $nested);
             DB::commit();
             return [
                 'code' => Status::SUCCESS

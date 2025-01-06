@@ -71,24 +71,22 @@ export const slug = (str: string): string => {
 };
 
 
-export const getDropdown = (data: { [key: string]: any }, params?: any) => {
-    if (Array.isArray(data)) {
-        const temp: { value: string, label: string }[] = []
-        temp.push({
-            value: '0',
-            label: (params && params.text) ? params.text : '[Root]'
-        })
+export const getDropdown = (data: { [key: string]: any }, params?: any): { value: string, label: string }[] => {
+    const temp: { value: string, label: string }[] = []
+    temp.push({
+        value: '0',
+        label: (params && params.text) ? params.text : '[Root]'
+    })
 
-        if (Array.isArray(data)) {
-            data.forEach((item) => {
-                temp.push({
-                    value: item.id.toString(),
-                    label: formatCatalogueName(item)
-                })
+    if (Array.isArray(data)) {
+        data.forEach((item) => {
+            temp.push({
+                value: item.id.toString(),
+                label: formatCatalogueName(item)
             })
-        }
-        return temp
+        })
     }
+    return temp
 }
 
 // Sử dụng hàm repeat để lặp lại chuỗi "|----" dựa trên giá trị của catalogue.level

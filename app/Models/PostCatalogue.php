@@ -6,11 +6,11 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\QueryTrait;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PostCatalogue extends Model
 {
-    use  Notifiable, QueryTrait;
+    use  Notifiable, QueryTrait, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -31,6 +31,16 @@ class PostCatalogue extends Model
     ];
 
     protected $table = 'post_catalogues';
+
+    public static function hasChildren($id = 0)
+    {
+        $postCatalogue = PostCatalogue::find($id);
+        if ($postCatalogue->rgt - $postCatalogue->lft !== 1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     // public function users()
     // {

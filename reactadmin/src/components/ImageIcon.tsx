@@ -1,5 +1,5 @@
 //REACT
-import { FieldValues, useFormContext, Controller } from "react-hook-form";
+import { useEffect, useRef, memo } from "react";
 //COMPONENT
 import {
     Card,
@@ -8,10 +8,8 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import CustomUploadBox from "./CustomUploadBox";
-//IMAGE
-import UploadIcon from "@/assets/upload-image.jpg";
+//Interface
 import { PostCatalogue } from "@/interfaces/types/PostCatalogueType";
-import { useEffect } from "react";
 
 interface IImageIcon {
     data?: PostCatalogue
@@ -21,10 +19,10 @@ const ImageIcon = ({
     data
 }: IImageIcon) => {
 
+    const countAlbumComponentRender = useRef(1);
     useEffect(() => {
-        console.log(data);
-
-    }, [data])
+        countAlbumComponentRender.current += 1
+    })
 
     return (
         <>
@@ -53,4 +51,4 @@ const ImageIcon = ({
     )
 }
 
-export default ImageIcon
+export default memo(ImageIcon)

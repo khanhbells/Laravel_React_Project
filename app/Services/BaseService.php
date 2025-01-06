@@ -5,12 +5,12 @@ namespace App\Services;
 use Illuminate\Support\Facades\DB;
 use App\Classes\FileUploader;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class BaseService
 {
     protected $fileUploader;
+    protected $payload = [];
     public function __construct() {}
     public function updateByField($request, $id, $respository)
     {
@@ -28,46 +28,60 @@ class BaseService
             return false;
         }
     }
-    protected function request(
+
+    protected function getPayload()
+    {
+        return $this->payload;
+    }
+
+    //Xử lý nhận và loại bỏ dữ liệu 
+    protected function initializePayload($request, $except = [])
+    {
+        $this->payload = $request->except(['_method', 'created_at', ...$except]);
+        return $this;
+    }
+
+    //Xử lý thông tin user_id
+    protected function handleUserId($auth = null)
+    {
+        if ($auth) {
+            $this->payload['user_id'] = $auth->id;
+        }
+        return $this;
+    }
+
+    //Xử lý upload imageFile
+    protected function processFiles(
         $request,
-        $auth = null,
-        $except = [],
-        $files = ['image'],
+        $auth,
+        $files = ['images'],
         $customFolder = ['avatar'],
-        $imageType = 'image',
-
+        $imageType = 'image'
     ) {
-        $payload = $request->except(['_method', 'created_at', ...$except]);
-        if ($auth != null) {
-            if (count($files) && is_array($files)) {
-                foreach ($files as $keyFile => $file) {
-                    if ($request->file($file)) {
-
-                        $this->fileUploader = new FileUploader($auth->email);
-                        $payload[$file] = $this->fileUploader->uploadFile($request->file($file), $imageType, $customFolder);
-                    } else {
-                        if ($request->input($file)) {
-                            $payload[$file] = str_replace(config('app.url') . 'storage', 'public', $payload[$file]);
-                            // dd($payload['image']);
-                        }
+        if ($auth && count($files) && is_array($files)) {
+            $this->fileUploader = new FileUploader($auth->email);
+            foreach ($files as $keyFile => $file) {
+                if ($request->file($file)) {
+                    $this->payload[$file] = $this->fileUploader->uploadFile($request->file($file), $imageType, $customFolder);
+                } else {
+                    if ($request->input($file)) {
+                        $this->payload[$file] = str_replace(config('app.url') . 'storage', 'public', $this->payload[$file]);
                     }
                 }
             }
-            $payload['user_id'] = $auth->id;
         }
-        if ($request->input('password') && !empty($request->input('password'))) {
-            $payload['password'] = Hash::make($payload['password']);
-        }
-
-        if ($request->input('canonical') && !empty($request->input('canonical'))) {
-            $payload['canonical'] = Str::slug($payload['canonical']);
-        }
-
-        $payload['album'] = $this->makeAlbum($request, $auth, $customFolder);
-        return $payload;
+        return $this;
     }
 
-    private function makeAlbum($request, $auth, $customFolder)
+    //Xử lý đường dẫn
+    protected function processCanonical()
+    {
+        $this->payload['canonical'] = Str::slug($this->payload['canonical']);
+        return $this;
+    }
+
+    //Xử lý album
+    protected function processAlbum($request, $auth, $customFolder)
     {
         if ($request->input('album') && !empty($request->input('album'))) {
             $album = explode(',', $request->input('album'));
@@ -94,10 +108,13 @@ class BaseService
                     $temp[] = 'storage/' . $emailPrefix . '/' . 'image' . '/' . implode('/', $customFolder) . '/' . $imageName;
                 }
             }
-
-            return $temp;
+            $this->payload['album'] = $temp;
         }
+        return $this;
     }
+
+
+
 
     protected function nestedset($auth, $nested)
     {

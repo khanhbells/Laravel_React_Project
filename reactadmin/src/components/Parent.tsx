@@ -1,5 +1,5 @@
 //REACT
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, memo } from "react";
 import { FieldValues, Controller, useFormContext } from "react-hook-form";
 //COMPONENT
 import {
@@ -11,25 +11,22 @@ import {
 import Select from "react-select"
 //INTERFACE
 import { Option } from "@/components/CustomSelectBox";
-import { PostCataloguePayloadInput } from "@/interfaces/types/PostCatalogueType";
 
 
 interface IParentProps {
     name: string,
-    options?: Option[],
+    options: Option[],
 }
 
 const Parent = ({
     name,
-    options
+    options = [],
 }: IParentProps) => {
 
-    const { register, formState: { errors }, control, setValue } = useFormContext()
 
     const [defaultSelectValue, _] = useState<Option | null>(null)
 
     const defaultParentValue = options?.find(option => option.value === '0')
-
     return (
         <>
             <Card className="rounded-[5px] mb-[20px]">
@@ -42,7 +39,7 @@ const Parent = ({
                     <span className="text-[#f00] text-[12px] mb-[10px] block">*Chọn Root nếu không có danh mục cha</span>
                     <Controller
                         name={name}
-                        control={control}
+                        // control={control}
                         defaultValue={defaultParentValue?.value || null}
                         render={({ field }) => (
                             <Select
@@ -63,4 +60,4 @@ const Parent = ({
     )
 }
 
-export default Parent
+export default memo(Parent)

@@ -17,7 +17,10 @@ class UserCatalogue extends Model
      *
      * @var array<int, string>
      */
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'description',
+    ];
 
     protected $table = 'user_catalogues';
 

@@ -3,7 +3,7 @@ import { useState } from "react";
 //COMPONENT
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import LoadingButton from "@/components/LoadingButton"
 import CustomInput from "@/components/CustomInput";
 //HELPERS
@@ -36,14 +36,13 @@ const Recovery = ({
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-    } = useForm<Inputs>({
-        resolver: yupResolver(schema)
-    })
+
+
+    const methods = useForm<Inputs>({
+        resolver: yupResolver(schema),
+        mode: 'onSubmit'
+    });
+    const { register, handleSubmit, reset, formState: { errors }, setValue, control } = methods
 
     const changePasswordHanler: SubmitHandler<Inputs> = async (payload) => {
 
@@ -61,27 +60,25 @@ const Recovery = ({
     };
 
     return (
-        <form onSubmit={handleSubmit(changePasswordHanler)}>
-            <div className="grid gap-4 py-4">
-                <CustomInput
-                    register={register}
-                    errors={errors}
-                    label="Mật khẩu mới"
-                    name="password"
-                    type="password"
-                    value=""
-                />
-                <CustomInput
-                    register={register}
-                    errors={errors}
-                    label="Nhập lại"
-                    name="confirmPassword"
-                    type="password"
-                    value=""
-                />
-                <LoadingButton loading={isLoading} text="Thực hiện" />
-            </div>
-        </form>
+        <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(changePasswordHanler)}>
+                <div className="grid gap-4 py-4">
+                    <CustomInput
+                        label="Mật khẩu mới"
+                        name="password"
+                        type="password"
+                        value=""
+                    />
+                    <CustomInput
+                        label="Nhập lại"
+                        name="confirmPassword"
+                        type="password"
+                        value=""
+                    />
+                    <LoadingButton loading={isLoading} text="Thực hiện" />
+                </div>
+            </form>
+        </FormProvider>
     )
 }
 

@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import LoadingButton from "@/components/LoadingButton"
 import CustomSelectBox from "@/components/CustomSelectBox"
 //HOOK
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import useLocationState from "@/hook/useLocationState";
 import useUpload from "@/hook/useUpload";
 import useFormSubmit from "@/hook/useFormSubmit";
@@ -40,17 +40,6 @@ const UserStore = ({
 }: UserStoreProps) => {
 
 
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-        control,
-        setValue
-    } = useForm<PayloadInput>({
-        context: { action },
-        resolver: yupResolver(schema)
-    })
 
 
     // const password = useRef({})
@@ -58,13 +47,18 @@ const UserStore = ({
     //Location
     const { provinces, districts, wards, setProvinceId, setDistrictId, isProvinceLoading, isDistrictLoading, isWardLoading } = useLocationState()
     const { images, handleImageChange } = useUpload(false)
+
+
+    const methods = useForm<PayloadInput>({
+        context: { action },
+        resolver: yupResolver(schema),
+        mode: 'onSubmit'
+    });
+
+    //useForm
+    const { register, handleSubmit, reset, formState: { errors }, setValue, control } = methods
     const { onSubmitHanler, loading } = useFormSubmit(save, { action: action, id: id }, null, refetch, closeSheet)
 
-    // const { data: dataUserCatalogues, isLoading: isUserCatalogueLoading, isError: isUserCatalogueError } = useQuery(['user_catalogues'],
-    //     () => pagination('sort=name,asc'),
-    // )
-
-    // const [userCatalogues, setUserCatalogues] = useState([])
 
 
     //QUERY
@@ -194,64 +188,70 @@ const UserStore = ({
         }
     }, [wards.data, data, updateSelectBoxValue, updateSelectBoxOptions])
 
-    return (
-        <form onSubmit={handleSubmit(onSubmitHanler)}>
-            <div className="grid gap-4 py-4">
-                {validationRules && validationRules.map((item, index) => (
-                    <CustomInput
-                        key={index}
-                        register={register}
-                        errors={errors}
-                        {...item}
-                    />
-                ))}
-                {selectBox && selectBox.map((item, index) => (
-                    <CustomSelectBox
-                        key={index}
-                        {...item}
-                        register={register}
-                        errors={errors}
-                    />
-                ))}
 
-                <CustomInput
-                    label="Địa chỉ"
-                    name="address"
-                    type="text"
-                    register={register}
-                    errors={errors}
-                    value={data && data.address}
-                />
-                <input
-                    type="file"
-                    accept="image/"
-                    id="upload-image"
-                    className="hidden"
-                    {...register('image', {
-                        onChange: handleImageChange
-                    })}
-                />
-                <div className="text-center">
-                    <label htmlFor="upload-image">
-                        <Avatar className="w-[100px] h-[100px] inline-block cursor-pointer shadow-md border">
-                            {images.length > 0 ? (
-                                <AvatarImage src={images[0].preview} />
-                            ) : data && data.image ? (
-                                <AvatarImage src={data.image} />
-                            ) : (
-                                <AvatarImage src='https://github.com/shadcn.png' />
-                            )}
-                        </Avatar>
-                    </label>
+
+    // const { data: dataUserCatalogues, isLoading: isUserCatalogueLoading, isError: isUserCatalogueError } = useQuery(['user_catalogues'],
+    //     () => pagination('sort=name,asc'),
+    // )
+
+    // const [userCatalogues, setUserCatalogues] = useState([])
+
+    return (
+        <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmitHanler)}>
+                <div className="grid gap-4 py-4">
+                    {validationRules && validationRules.map((item, index) => (
+                        <CustomInput
+                            key={index}
+                            {...item}
+                        />
+                    ))}
+                    {selectBox && selectBox.map((item, index) => (
+                        <CustomSelectBox
+                            key={index}
+                            {...item}
+                            register={register}
+                            errors={errors}
+                        />
+                    ))}
+
+                    <CustomInput
+                        label="Địa chỉ"
+                        name="address"
+                        type="text"
+                        value={data && data.address}
+                    />
+                    <input
+                        type="file"
+                        accept="image/"
+                        id="upload-image"
+                        className="hidden"
+                        {...register('image', {
+                            onChange: handleImageChange
+                        })}
+                    />
+                    <div className="text-center">
+                        <label htmlFor="upload-image">
+                            <Avatar className="w-[100px] h-[100px] inline-block cursor-pointer shadow-md border">
+                                {images.length > 0 ? (
+                                    <AvatarImage src={images[0].preview} />
+                                ) : data && data.image ? (
+                                    <AvatarImage src={data.image} />
+                                ) : (
+                                    <AvatarImage src='https://github.com/shadcn.png' />
+                                )}
+                            </Avatar>
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <div className="text-right">
-                <LoadingButton
-                    loading={loading}
-                    text="Lưu thông tin"
-                />
-            </div>
-        </form>
+                <div className="text-right">
+                    <LoadingButton
+                        loading={loading}
+                        text="Lưu thông tin"
+                    />
+                </div>
+            </form>
+        </FormProvider>
     )
 }
 

@@ -39,7 +39,6 @@ class BaseRepository
     {
         $model = $this->findById($id);
         $model->fill($payload);
-
         $model->save();
         return $model;
     }
@@ -54,6 +53,7 @@ class BaseRepository
         $column = ['*'],
         $relation = []
     ) {
+
         return $this->model->select($column)->with($relation)->find($modelId);
     }
 

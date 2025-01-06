@@ -31,6 +31,7 @@ const breadcrumb = {
     update: {
         title: 'Cập nhật thông tin',
         description: 'Nhập đầy đủ các thông tin dưới đây. Các mục có dấu (*) là bắt buộc',
+        route: '/post/catalogue/update/:id'
     },
 
 }
@@ -78,7 +79,6 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
         params: ['id', 'handleAlertDialog:f', 'destroy:f'],
         onClick: (id: string, handleAlertDialog: any, destroy: any) => {
             handleAlertDialog(id, destroy)
-            // confirmAction(destroy)
         }
     },
 ]

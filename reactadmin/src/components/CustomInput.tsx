@@ -1,12 +1,11 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useFormContext } from "react-hook-form"
 
 interface CustomInputProps {
     label: string,
     name: string,
     type: string | undefined,
-    register: any,
-    errors: any,
     value?: string | null | undefined,
     className?: string,
     [key: string]: any
@@ -15,12 +14,14 @@ interface CustomInputProps {
 const CustomInput = ({
     label,
     type,
-    register,
-    name, errors,
+    name,
     value,
     className,
     ...restProps
 }: CustomInputProps) => {
+
+    const { register, formState: { errors } } = useFormContext()
+    const errorMessage = errors[name]?.message
     return (
         <>
             <div className={className ?? "grid grid-cols-4 items-center gap-4"}>
@@ -28,7 +29,6 @@ const CustomInput = ({
                     {label} {restProps.required ? <span className="text-[#f00] text-[12px]">(*)</span> : null}
                 </Label>
                 <Input
-                    name={name}
                     type={type ?? 'text'}
                     id={name}
                     className={` 
@@ -43,7 +43,9 @@ const CustomInput = ({
                 />
             </div>
             <div className="error-line text-right ">
-                {errors[name] && <span className="text-red-500 text-xs">{errors[name].message}</span>}
+                {typeof errorMessage === 'string' && (
+                    <span className="text-red-500 text-xs">{errorMessage}</span>
+                )}
             </div>
         </>
     )

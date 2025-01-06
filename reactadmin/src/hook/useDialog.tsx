@@ -26,7 +26,9 @@ const useDialog = (refetch: any) => {
             refetch()
         },
         onError: (error: any) => {
-            console.log(error);
+            showToast(error.response.data.message, 'error');
+            closeAlertDialog()
+            setCurrentAction(null)
         }
     })
 

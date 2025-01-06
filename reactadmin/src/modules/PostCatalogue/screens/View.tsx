@@ -1,5 +1,3 @@
-//Create User
-import Store from "./include/Store"
 //pagination
 import { pagination, destroy } from "@/service/PostCatalogueService"
 import Paginate from "@/components/paginate"

@@ -44,12 +44,18 @@ class UserCatalogueService extends BaseService
         ];
     }
 
+    private function initializeRequest($request, $except)
+    {
+        return $this->initializePayload($request, $except)
+            ->getPayload();
+    }
+
     public function create($request)
     {
         DB::beginTransaction();
         try {
-            $except = [];
-            $payload = $this->request($request);
+            $except = ['id'];
+            $payload = $this->initializeRequest($request, $except);
             $userCatalogue = $this->userCatalogueRepository->create($payload);
 
             DB::commit();
@@ -70,8 +76,8 @@ class UserCatalogueService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $except = ['user_counts'];
-            $payload = $this->request($request);
+            $except = ['user_counts', 'id'];
+            $payload = $this->initializeRequest($request, $except);
             $userCatalogue = $this->userCatalogueRepository->update($id, $payload);
             // dd($userCatalogue);
             DB::commit();

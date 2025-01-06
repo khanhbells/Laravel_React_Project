@@ -75,7 +75,6 @@ const tableColumn: tableColumn[] = [
 
 const buttonActions: ButtonAction<ActionParam[]>[] = [
     {
-        path: '/user/update',
         icon: <FaRegEdit className="text-white" />,
         className: 'flex mr-[5px]',
         method: 'create',
@@ -85,7 +84,6 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
         }
     },
     {
-        path: '/user/delete',
         icon: <RiDeleteBin6Line className="text-white" />,
         className: 'bg-[#ec4758] mr-[5px]',
         method: 'delete',
@@ -96,7 +94,6 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
         }
     },
     {
-        path: '/user/recovery',
         icon: <MdOutlineLockReset className="text-white text-[20px]" />,
         className: 'bg-[#f8ac59]',
         method: 'reset',

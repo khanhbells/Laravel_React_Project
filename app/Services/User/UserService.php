@@ -6,11 +6,13 @@ use App\Services\BaseService;
 use App\Repositories\User\UserRepository;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Status;
-
+use Illuminate\Support\Facades\Hash;
 
 class UserService extends BaseService
 {
     protected $userRepository;
+    protected $files = ['image'];
+
     public function __construct(
         UserRepository $userRepository,
     ) {
@@ -43,12 +45,29 @@ class UserService extends BaseService
         ];
     }
 
+    protected function hashPassword($request)
+    {
+        if ($request->input('password')) {
+            $this->payload['password'] = Hash::make($this->payload['password']);
+        }
+        return $this;
+    }
+
+    private function initializeRequest($request, $except, $auth)
+    {
+        return $this->initializePayload($request, $except)
+            ->processFiles($request, $auth, $this->files)
+            ->hashPassword($request)
+            ->getPayload();
+    }
+
     public function create($request, $auth)
     {
         DB::beginTransaction();
         try {
-            $except = ['confirmPassword'];
-            $payload = $this->request($request, $auth, $except);
+            $except = ['confirmPassword', 'id'];
+            $payload = $this->initializeRequest($request, $except, $auth);
+
             $user = $this->userRepository->create($payload);
 
             DB::commit();
@@ -69,8 +88,9 @@ class UserService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $except = ['confirmPassword'];
-            $payload = $this->request($request, $auth, $except);
+            $except = ['confirmPassword', 'id'];
+            $payload = $this->initializeRequest($request, $except, $auth);
+
             $user = $this->userRepository->update($id, $payload);
             // dd($user);
             DB::commit();

@@ -7,21 +7,10 @@ import {
 } from "@/components/ui/card"
 import CustomCKEditor from "@/components/CustomCKEditor";
 import CustomInput from "./CustomInput";
-//INTERFACE
-import { UseFormRegister, FieldValues, FieldErrors } from "react-hook-form";
-import { PostCatalogue } from "@/interfaces/types/PostCatalogueType";
-import { useFormContext } from "react-hook-form";
+import { useEffect, useRef, memo } from "react";
 
 
-interface GeneralProps<T extends FieldValues> {
-    data?: PostCatalogue,
-}
-
-const General = <T extends FieldValues>({
-    data,
-}: GeneralProps<T>) => {
-
-    const { register, formState: { errors }, control } = useFormContext()
+const General = () => {
 
     return (
         <>
@@ -31,12 +20,10 @@ const General = <T extends FieldValues>({
                 </CardHeader>
                 <CardContent className="pt-[15px]">
                     <CustomInput
-                        register={register}
-                        errors={errors}
                         label="Tiêu đề nhóm bài viết"
                         name="name"
                         type="text"
-                        value={data && data.name}
+                        value=""
                         className="gap-4"
                         labelClassName="mb-[10px] block"
                         required={true}
@@ -56,4 +43,4 @@ const General = <T extends FieldValues>({
         </>
     )
 }
-export default General
+export default memo(General)
