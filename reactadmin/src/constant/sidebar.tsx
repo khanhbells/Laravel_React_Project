@@ -48,10 +48,10 @@ export const sidebarItem = [
                         title: 'Nhóm bài viết',
                         to: '/post/catalogue/index'
                     },
-                    // {
-                    //     title: 'Thành viên',
-                    //     to: '/user/index'
-                    // }
+                    {
+                        title: 'Bài viết',
+                        to: '/post/index'
+                    }
                 ]
             },
         ],

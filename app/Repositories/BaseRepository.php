@@ -37,7 +37,9 @@ class BaseRepository
 
     public function update($id, $payload)
     {
+
         $model = $this->findById($id);
+
         $model->fill($payload);
         $model->save();
         return $model;

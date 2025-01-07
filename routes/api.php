@@ -6,9 +6,10 @@ use App\Http\Controllers\Api\V1\UserCatalogueController;
 use App\Http\Controllers\Api\V1\PostCatalogueController;
 use App\Http\Controllers\Api\V1\UploadController;
 use App\Http\Controllers\Api\V1\DashboardController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\PostController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+use Illuminate\Http\Request;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -63,6 +64,15 @@ Route::group([
     Route::put('post_catalogues/{id}/status', [PostCatalogueController::class, 'updateStatusByField']);
 
     // -------------------------------------------------------------------------------
+    // Post
+    Route::get('posts', [PostController::class, 'index']);
+    Route::get('posts/{id}', [PostController::class, 'show']);
+    Route::post('posts', [PostController::class, 'create']);
+    Route::put('posts/{id}', [PostController::class, 'update']);
+    Route::delete('posts/{id}', [PostController::class, 'destroy']);
+    Route::put('posts/{id}/status', [PostController::class, 'updateStatusByField']);
+
+    // -------------------------------------------------------------------------------
 
     Route::delete('records/delete/batch', [DashboardController::class, 'deleteBatch']);
     Route::put('records/update/batch', [DashboardController::class, 'updateBatch']);
@@ -75,6 +85,9 @@ Route::group([
     Route::post('upload/tempotary', [UploadController::class, 'uploadToTempotary']);
     Route::post('upload/ckeditor', [UploadController::class, 'uploadCkeditor']);
     Route::post('delete/ckeditor', [UploadController::class, 'deleteCkeditor']);
+
+    // COMMON REQUEST
+    Route::post('sort', [DashboardController::class, 'sort']);
 });
 
 Route::post('v1/auth/refresh', [AuthController::class, 'refresh']);

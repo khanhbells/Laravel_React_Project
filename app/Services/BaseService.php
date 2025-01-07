@@ -29,10 +29,7 @@ class BaseService
         }
     }
 
-    protected function getPayload()
-    {
-        return $this->payload;
-    }
+
 
     //Xử lý nhận và loại bỏ dữ liệu 
     protected function initializePayload($request, $except = [])
@@ -113,7 +110,29 @@ class BaseService
         return $this;
     }
 
+    protected function getPayload()
+    {
+        return $this->payload;
+    }
 
+    //array_unique loại bỏ phần tử bị trùng
+    protected function createCatRelation($request, $instance, $model = 'post'): array
+    {
+        $catalogue = explode(',', $request->input('catalogues'));
+        $foreignKey = $model . '_catalogue_id';
+        $newCatArray = array_unique([...$catalogue, ...[$instance->{$foreignKey}]]);
+
+        // $relation = [];
+        // if (count($newCatArray)) {
+        //     foreach ($newCatArray as $key => $val) {
+        //         $relation[] = [
+        //             $model . '_catalogue_id' => $val,
+        //             $model . '_id' => $instance->id
+        //         ];
+        //     }
+        // }
+        return $newCatArray;
+    }
 
 
     protected function nestedset($auth, $nested)

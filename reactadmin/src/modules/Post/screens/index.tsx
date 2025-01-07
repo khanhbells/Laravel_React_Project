@@ -1,5 +1,5 @@
 //pagination
-import { pagination, destroy } from "@/service/PostCatalogueService"
+import { pagination, destroy } from "@/service/PostService"
 import Paginate from "@/components/paginate"
 //breadcrumb
 import PageHeading from "@/components/heading"
@@ -20,15 +20,15 @@ import Filter from "@/components/Filter"
 //Checkbox
 import useCheckBoxState from "@/hook/useCheckBoxState"
 //settings
-import { breadcrumb, tableColumn, buttonActions } from "@/modules/PostCatalogue/settings/PostCatalogueSettings"
+import { breadcrumb, tableColumn, buttonActions } from "../settings"
 import { filterItems } from "@/settings/globalSettings"
 import { SelectConfig } from "@/components/CustomFilter"
 //contexts
 import { FilterProvider } from "@/contexts/FilterContext"
-//
+//react
 import { useState } from "react"
-const PostCatalogue = () => {
-    const model = 'post_catalogues'
+const Post = () => {
+    const model = 'posts'
     const breadcrumbData: Breadcrumb = breadcrumb.index
 
     //REACT QUERY
@@ -36,7 +36,6 @@ const PostCatalogue = () => {
     //Checkbox
     const { checkedState, checkedAllState, handleCheckedChange, handleCheckedAllChange, isAnyChecked } = useCheckBoxState(data, model, isLoading)
     const somethingChecked = isAnyChecked()
-    // const { isSheetOpen, openSheet, closeSheet } = useSheet()
 
     const [customFilter, setCustomFilter] = useState<SelectConfig[]>([]);
 
@@ -46,8 +45,8 @@ const PostCatalogue = () => {
             <div className="container">
                 <Card className="rounded-[5px] mt-[15px] ">
                     <CardHeader className="border-b border-solid border-[#f3f3f3] p-[20px]">
-                        <CardTitle className="uppercase">Quản lý danh sách nhóm bài viết</CardTitle>
-                        <CardDescription className="text-xs text-[#f00000]">Hiển thị danh sách nhóm bài viết, sử dụng các chức năng bên dưới để lọc theo mong muốn</CardDescription>
+                        <CardTitle className="uppercase">Quản lý danh sách bài viết</CardTitle>
+                        <CardDescription className="text-xs text-[#f00000]">Hiển thị danh sách bài viết, sử dụng các chức năng bên dưới để lọc theo mong muốn</CardDescription>
                     </CardHeader>
                     <CardContent className="p-[15px]">
                         <Filter
@@ -56,10 +55,9 @@ const PostCatalogue = () => {
                             model={model}
                             refetch={refetch}
                             handleQueryString={(filters: any) => handleQueryString(filters)}
-                            // openSheet={openSheet}
                             items={filterItems}
-                            buttonText="Thêm mới nhóm bài viết"
-                            to="/post/catalogue/create"
+                            buttonText="Thêm mới bài viết"
+                            to="/post/create"
                         />
                         <CustomTable
                             isLoading={isLoading}
@@ -71,7 +69,6 @@ const PostCatalogue = () => {
                             checkedAllState={checkedAllState}
                             handleCheckedChange={handleCheckedChange}
                             handleCheckedAllChange={handleCheckedAllChange}
-                            // openSheet={openSheet}
                             destroy={destroy}
                             refetch={refetch}
                             buttonActions={buttonActions}
@@ -85,4 +82,4 @@ const PostCatalogue = () => {
         </FilterProvider>
     )
 }
-export default PostCatalogue
+export default Post

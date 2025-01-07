@@ -61,7 +61,7 @@ const Header = () => {
                                         <AvatarFallback>CN</AvatarFallback>
                                     </Avatar>
                                     <div className="profile-content text-left">
-                                        <div className="font-semibold">Nam Hoàng Văn</div>
+                                        <div className="font-semibold">Vũ Bảo Khánh</div>
                                         <div className="role text-xs text-[#536485]">Administrator</div>
                                     </div>
                                 </DropdownMenuTrigger>

@@ -5,7 +5,7 @@ import { handleAxiosError } from "@/helper/axiosHelper";
 import { showToast } from "@/helper/myHelper";
 import { PostCataloguePayloadInput, PostCatalogue } from "@/interfaces/types/PostCatalogueType";
 
-const endpoint = 'post_catalogues'
+const endpoint = 'posts'
 
 const pagination = async (queryString: string) => {
     const response = await axios.get(`/${endpoint}?${queryString}`)
@@ -26,7 +26,7 @@ const destroy = async (id: string) => {
     return baseDestroy(id, endpoint)
 }
 
-const getPostCatalogueById = async (id: string | undefined): Promise<PostCatalogue> => {
+const findById = async (id: string | undefined): Promise<PostCatalogue> => {
     const response = await axios.get(`${endpoint}/${id}`)
     return response.data
 }
@@ -35,6 +35,6 @@ const getPostCatalogueById = async (id: string | undefined): Promise<PostCatalog
 export {
     pagination,
     save,
-    getPostCatalogueById,
+    findById,
     destroy,
 }

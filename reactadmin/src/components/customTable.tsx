@@ -117,7 +117,7 @@ const CustomTable = ({
                                 Có lỗi xảy ra trong quá trình truy xuất dữ liệu. Hãy thử lại sau
                             </TableCell>
                         </TableRow>
-                    ) : data[model] ? (data[model] && data[model].map((row: any, index: number) => (
+                    ) : (data?.[model] ?? []).length > 0 ? (data[model] && data[model].map((row: any, index: number) => (
                         <TableRow key={index} className={checkedState[row.id] ? 'bg-[#ffc]' : ''}>
                             <TableCell className="font-medium">
                                 <Checkbox id="checkAll"

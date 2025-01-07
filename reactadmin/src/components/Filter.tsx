@@ -58,10 +58,9 @@ const Filter = ({
     //openSheet
     const detectButtonAction = () => {
         if (openSheet) {
-            openSheet({ open: true, action: '', id: null })
+            openSheet({ open: true, action: '', id: undefined })
         }
     }
-
 
     return (
         <>

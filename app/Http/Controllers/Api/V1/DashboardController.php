@@ -2,17 +2,26 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SortRequest;
 use App\Http\Resources\LocationResource;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Str;
+use App\Services\DashboardService;
 
 class DashboardController extends Controller
 {
 
-    public function __construct() {}
+    protected $dashboardService;
+
+    public function __construct(DashboardService $dashboardService)
+    {
+        $this->dashboardService = $dashboardService;
+    }
 
     public function deleteBatch(Request $request)
     {
@@ -126,5 +135,20 @@ class DashboardController extends Controller
                 'message' => $e->getMessage()
             ], 400);
         }
+    }
+
+    public function sort(SortRequest $request)
+    {
+        $sort = $this->dashboardService->sort($request);
+        if ($sort['code'] == Status::SUCCESS) {
+            return response()->json([
+                'message' => 'Sắp xếp thành công!'
+            ], Response::HTTP_OK);
+        };
+
+        return response()->json([
+            'code' => Status::ERROR,
+            'message' => 'Error!'
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

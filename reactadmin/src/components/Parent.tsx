@@ -16,11 +16,15 @@ import { Option } from "@/components/CustomSelectBox";
 interface IParentProps {
     name: string,
     options: Option[],
+    showMultiple?: boolean,
+    showMultipleName?: string
 }
 
 const Parent = ({
     name,
     options = [],
+    showMultiple = false,
+    showMultipleName
 }: IParentProps) => {
 
 
@@ -40,19 +44,41 @@ const Parent = ({
                     <Controller
                         name={name}
                         // control={control}
-                        defaultValue={defaultParentValue?.value || null}
+                        // defaultValue={defaultParentValue?.value || null}
                         render={({ field }) => (
                             <Select
-                                options={options}
+                                options={options.filter(option => option.value !== '0')}
                                 className="w-full text-[12px]"
-                                placeholder="Chọn danh mục cha"
+                                placeholder="Chọn danh mục chính"
                                 onChange={(selected) => {
                                     field.onChange(selected?.value)
                                 }}
-                                value={options?.find(option => option.value === field.value) || options?.find(option => option.value === '0')}
+                                value={options?.find(option => option.value === field.value) || null}
                             />
                         )}
                     />
+                    {(showMultiple && showMultipleName) && (
+                        <div className="mt-[10px]">
+                            <Controller
+                                name={showMultipleName}
+                                // control={control}
+                                defaultValue={defaultParentValue?.value || null}
+                                render={({ field }) => (
+                                    <Select
+                                        options={options.filter(option => option.value !== '0')}
+                                        className="w-full text-[12px]"
+                                        placeholder="Chọn danh mục phụ"
+                                        onChange={(selected) => {
+                                            const selectedValues = selected ? selected.map(option => option.value) : []
+                                            field.onChange(selectedValues)
+                                        }}
+                                        isMulti={true}
+                                    // value={options?.filter(option => field.value.includes(option.value))}
+                                    />
+                                )}
+                            />
+                        </div>
+                    )}
 
                 </CardContent>
             </Card>

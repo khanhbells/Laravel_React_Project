@@ -19,10 +19,15 @@ import NoAuthMiddleware from './middleware/NoAuthMiddleware';
 import Layout from './components/layout';
 import Dashboard from './modules/Dashboard';
 import Login from './modules/Login';
+//User
 import UserIndex from '@/modules/User/screens/View'
+//PostCatalogue
 import UserCatalogueIndex from '@/modules/UserCatalogue/screens/View';
 import PostCatalogueIndex from '@/modules/PostCatalogue/screens/View';
 import PostCatalogueStore from '@/modules/PostCatalogue/screens/Store';
+//Post
+import PostIndex from '@/modules/Post/screens/index';
+import PostStore from '@/modules/Post/screens/Store';
 import './index.css';
 import { ReactQueryDevtools } from 'react-query/devtools'
 
@@ -49,6 +54,8 @@ const router = createBrowserRouter([
       { path: "/post/catalogue/index", element: <PostCatalogueIndex /> },
       { path: "/post/catalogue/create", element: <PostCatalogueStore /> },
       { path: "/post/catalogue/update/:id", element: <PostCatalogueStore /> },
+      { path: "/post/index", element: <PostIndex /> },
+      { path: "/post/create", element: <PostStore /> },
     ]
   },
 ]);

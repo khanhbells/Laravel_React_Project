@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\QueryTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PostCatalogue extends Model
@@ -42,9 +43,8 @@ class PostCatalogue extends Model
         }
     }
 
-    // public function users()
-    // {
-    //     return $this->hasMany(User::class, 'user_catalogue_id', 'id');
-    // }
-
+    public function posts(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'post_catalogue_post', 'post_catalogue_id', 'post_id');
+    }
 }

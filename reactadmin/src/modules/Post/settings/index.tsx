@@ -17,24 +17,24 @@ import { sort } from "@/service/BaseService";
 import useDebounce from "@/hook/useDebounce";
 
 
-const model = 'post_catalogues'
-export const redirectIfSucces = '/post/catalogue/index'
+const model = 'posts'
+export const redirectIfSucces = '/post/index'
 
 const breadcrumb = {
 
     index: {
-        title: 'Quản lý nhóm bài viết',
-        route: '/post/catalogue/index'
+        title: 'Quản lý bài viết',
+        route: '/post/index'
     },
     create: {
-        title: 'Thêm mới nhóm bài viết',
+        title: 'Thêm mới bài viết',
         description: 'Nhập đầy đủ các thông tin dưới đây. Các mục có dấu (*) là bắt buộc',
-        route: '/post/catalogue/create'
+        route: '/post/create'
     },
     update: {
         title: 'Cập nhật thông tin',
         description: 'Nhập đầy đủ các thông tin dưới đây. Các mục có dấu (*) là bắt buộc',
-        route: '/post/catalogue/update/:id'
+        route: '/post/update/:id'
     },
 
 }
@@ -46,14 +46,26 @@ interface tableColumn {
 }
 const tableColumn: tableColumn[] = [
     {
-        name: 'Tên nhóm bài viết',
-        render: (item: PostCatalogue) => <span><Link to={`/post/index?post_catalogue_id=${item.id}`}>
-            {formatCatalogueName(item)}</Link></span>
-    },
-
-    {
-        name: 'Số lượng',
-        render: (item: PostCatalogue) => <span className="">{item.posts_count ?? 0}</span>
+        name: 'Bài viết',
+        render: (item: PostCatalogue) => (
+            <div className="flex items-center">
+                <div className="block mr-[10px]">
+                    <img className=" object-cover h-[60px] w-[100px] rounded cursor-pointer" src={item.image} alt="" />
+                </div>
+                <div>
+                    <div className="name">
+                        <span><Link to={`/post/index?post_id=${item.id}`}>
+                            {item.name}</Link></span>
+                        <div className="catalogues-name">
+                            <span className="mr-[5px] text-[blue] text-[12px]">Danh mục:</span>
+                            {Array.isArray(item.catalogues) && item.catalogues.map((catItem: string) =>
+                                <span key={catItem} className="cat-item-name mr-[10px] text-[#f00] text-[12px]">{catItem}</span>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
     },
     {
         name: 'Sắp xếp',
@@ -86,7 +98,7 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
         onClick: (id: string, openSheet: OpenSheetFunction) => {
             openSheet({ open: true, action: 'update', id: id })
         },
-        path: '/post/catalogue/update/'
+        path: '/post/update/'
     },
     {
         icon: <RiDeleteBin6Line className="text-white" />,
@@ -105,11 +117,11 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
 const extraFilterItems: Select[] = [
     {
         id: 'post_catalogue_Id',
-        placeholder: 'Chọn Nhóm bài viết',
+        placeholder: 'Chọn bài viết',
         items: [
             {
                 value: '0',
-                label: 'Tất cả các nhóm'
+                label: 'Tất cả'
             },
             {
                 value: '1',

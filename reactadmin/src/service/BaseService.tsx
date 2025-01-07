@@ -103,11 +103,22 @@ const baseDestroy = async (id: string, model: string) => {
     return response.data
 }
 
+const sort = async (id: string, model: string, value: string) => {
+
+    // console.log(id, model, value);
+
+    const response = await axios.post('/sort', {
+        id, model, value
+    })
+    return response.data
+}
+
 export {
     updateStatusByField,
     updateFieldByParams,
     deleteAll,
     getLocationData,
     baseSave,
-    baseDestroy
+    baseDestroy,
+    sort
 }

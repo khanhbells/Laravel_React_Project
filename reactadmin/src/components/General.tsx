@@ -20,7 +20,7 @@ const General = () => {
                 </CardHeader>
                 <CardContent className="pt-[15px]">
                     <CustomInput
-                        label="Tiêu đề nhóm bài viết"
+                        label="Tiêu đề"
                         name="name"
                         type="text"
                         value=""
