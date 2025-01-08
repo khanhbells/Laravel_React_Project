@@ -20,14 +20,25 @@ class PostService extends BaseService
         PostRepository $postRepository,
     ) {
         $this->postRepository = $postRepository;
+        parent::__construct('post');
     }
 
     public function paginate($request)
     {
         $agrument = $this->paginateAgrument($request);
         $posts = $this->postRepository->pagination([...$agrument]);
-        // dd($posts);
         return $posts;
+    }
+
+    //Where đến relations
+    private function whereHas($request)
+    {
+        $model = $this->model;
+        return [
+            $model . '_catalogues' => [
+                $this->whereHasCatalogueId($request)
+            ],
+        ];
     }
 
     private function paginateAgrument($request)
@@ -41,7 +52,7 @@ class PostService extends BaseService
             'condition' => [
                 'publish' => $request->integer('publish'),
             ],
-            // 'relations' => ['posts'],
+            'whereHas' => $this->whereHas($request),
             'select' => ['*'],
             'orderBy' => $request->input('sort') ? explode(',', $request->input('sort')) : ['id', 'desc'],
         ];
@@ -96,9 +107,14 @@ class PostService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $except = ['post_counts'];
+            $except = ['post_counts', 'catalogues', 'cats'];
             $payload = $this->initializeRequest($request, $auth, $except);
             $post = $this->postRepository->update($id, $payload);
+            if ($post) {
+                $catRelation =  $this->createCatRelation($request, $post, 'post');
+                $post->post_catalogues()->detach();
+                $post->post_catalogues()->attach($catRelation);
+            }
             DB::commit();
             return [
                 'post' => $post,

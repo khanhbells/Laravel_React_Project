@@ -40,10 +40,26 @@ trait QueryTrait
         }
         return $query;
     }
-    public function relation($query, $relation)
+    public function scopeRelation($query, $relation)
     {
         if (isset($relation) && is_array($relation) && count($relation)) {
             $query->with($relation);
+        }
+        return $query;
+    }
+
+    public function scopeRelationWhereHas($query, $whereHas)
+    {
+        if (isset($whereHas) && is_array($whereHas) && count($whereHas)) {
+            foreach ($whereHas as $relation => $conditions) {
+                if (is_array($conditions)) {
+                    foreach ($conditions as $callback) {
+                        $query->whereHas($relation, $callback);
+                    }
+                } else if (is_callable($conditions)) {
+                    $query->whereHas($relation, $conditions);
+                }
+            }
         }
         return $query;
     }

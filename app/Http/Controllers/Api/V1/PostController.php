@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Post\DeletePostRequest;
 use Illuminate\Http\Request;
 use App\Http\Resources\PostResource;
 use App\Services\Post\PostService;
@@ -12,6 +11,7 @@ use App\Repositories\Post\PostRepository;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UpdateByFieldRequest;
 use App\Http\Requests\Post\StorePostRequest;
+use App\Http\Requests\Post\UpdatePostRequest;
 
 class PostController extends Controller
 {
@@ -39,11 +39,10 @@ class PostController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function create(Request $request)
+    public function create(StorePostRequest $request)
     {
         $auth = auth()->user();
         $data = $this->postService->create($request, $auth);
-        return $data;
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
                 'message' => 'Thêm mới bản ghi thành công',
@@ -55,11 +54,10 @@ class PostController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdatePostRequest $request, $id)
     {
         $auth = auth()->user();
         $data = $this->postService->update($request, $id, $auth);
-        // return $data;
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
                 'message' => 'Cập nhật bản ghi thành công',
@@ -91,7 +89,7 @@ class PostController extends Controller
         }
     }
 
-    public function destroy($id, DeletePostRequest $request)
+    public function destroy($id, Request $request)
     {
         $post = $this->postRepository->findById($id);
         if (!$post) {

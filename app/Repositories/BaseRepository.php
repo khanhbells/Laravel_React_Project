@@ -19,11 +19,13 @@ class BaseRepository
         $query->select($params['select'])
             ->condition($params['condition'] ?? [])
             ->keyword($params['keyword'] ?? '')
+            ->relationWhereHas($params['whereHas'] ?? [])
             ->relationCount($params['relationCount'] ?? [])
             ->orderBy($params['orderBy'][0], $params['orderBy'][1]);
         if (isset($params['relations']) && count($params['relations'])) {
             $query->with($params['relations']);
         }
+        // return $query->toSql();
         if ($params['perpage']) {
             return $query->paginate($params['perpage']);
         }

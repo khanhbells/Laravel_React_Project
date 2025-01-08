@@ -90,10 +90,10 @@ export const getDropdown = (data: { [key: string]: any }, params?: any): { value
 }
 
 // Sử dụng hàm repeat để lặp lại chuỗi "|----" dựa trên giá trị của catalogue.level
-export const formatCatalogueName = (catalogue: { [key: string]: any }) => {
+export const formatCatalogueName = (catalogue: { [key: string]: any }, labelKey: string = 'name') => {
     const prefix = '|----'.repeat((catalogue.level > 0) ? catalogue.level - 1 : 0)
 
-    return `${prefix}${catalogue.name}`
+    return `${prefix}${catalogue[labelKey]}`
 }
 
 export const removeHtmlTags = (input: any) => {

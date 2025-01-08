@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('canonical');
             $table->text('description')->nullable();
             $table->longText('content')->nullable();
-            $table->string('meta_title');
+            $table->string('meta_title')->nullable();
             $table->string('meta_keyword');
             $table->text('meta_description');
             $table->string('image')->nullable();

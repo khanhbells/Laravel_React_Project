@@ -11,7 +11,12 @@ class BaseService
 {
     protected $fileUploader;
     protected $payload = [];
-    public function __construct() {}
+    protected $model;
+
+    public function __construct($model = null)
+    {
+        $this->model = $model;
+    }
     public function updateByField($request, $id, $respository)
     {
         DB::beginTransaction();
@@ -119,19 +124,41 @@ class BaseService
     protected function createCatRelation($request, $instance, $model = 'post'): array
     {
         $catalogue = explode(',', $request->input('catalogues'));
+        $catalogue = array_filter($catalogue, function ($item) {
+            return !empty(trim($item));
+        });
         $foreignKey = $model . '_catalogue_id';
         $newCatArray = array_unique([...$catalogue, ...[$instance->{$foreignKey}]]);
-
-        // $relation = [];
-        // if (count($newCatArray)) {
-        //     foreach ($newCatArray as $key => $val) {
-        //         $relation[] = [
-        //             $model . '_catalogue_id' => $val,
-        //             $model . '_id' => $instance->id
-        //         ];
-        //     }
-        // }
         return $newCatArray;
+    }
+
+    protected function whereHasCatalogueId($request)
+    {
+        $catId = $request->integer($this->model . '_catalogue_id');
+        $table = $this->model . '_catalogues';
+        $callback = null;
+        if ($catId > 0) {
+            //Closure
+            $callback = function ($query) use ($catId, $table) {
+                if ($catId > 0) {
+                    $query->whereIn($this->model . '_catalogue_id', function ($subQuery) use ($catId, $table) {
+                        $subQuery->select('id')
+                            ->from($table)
+                            ->where('lft', '>=', function ($innerQuery) use ($catId, $table) {
+                                $innerQuery->select('lft')
+                                    ->from($table)
+                                    ->where('id', $catId);
+                            })
+                            ->where('rgt', '<=', function ($innerQuery) use ($catId, $table) {
+                                $innerQuery->select('rgt')
+                                    ->from($table)
+                                    ->where('id', $catId);
+                            });
+                    });
+                }
+            };
+        }
+        return $callback;
     }
 
 
@@ -142,3 +169,14 @@ class BaseService
         $nested->Action($auth);
     }
 }
+
+// Pure SQL
+/*
+post_catalogue_post.post_catalogue_id IN (
+    SELECT id
+    FROM post_catalogues
+    WHERE 
+    lft >= (SELECT lft FROM post_catalogues WHERE id = ?)
+    rgt <= (SELECT rgt FROM post_catalogues WHERE id = ?)
+)
+*/

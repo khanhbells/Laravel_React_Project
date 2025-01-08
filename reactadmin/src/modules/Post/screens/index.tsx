@@ -22,11 +22,17 @@ import useCheckBoxState from "@/hook/useCheckBoxState"
 //settings
 import { breadcrumb, tableColumn, buttonActions } from "../settings"
 import { filterItems } from "@/settings/globalSettings"
-import { SelectConfig } from "@/components/CustomFilter"
+import { queryKey } from "@/constant/query"
 //contexts
 import { FilterProvider } from "@/contexts/FilterContext"
 //react
-import { useState } from "react"
+import { useState, useMemo, useEffect } from "react"
+import Placeholder from "react-select/dist/declarations/src/components/Placeholder"
+import { useCustomFilter } from "@/hook/useCustomFilter"
+import { useQuery } from "react-query"
+//Service
+import { pagination as postCataloguesPagination } from "@/service/PostCatalogueService"
+import { pagination as userPagination } from "@/service/UserService"
 const Post = () => {
     const model = 'posts'
     const breadcrumbData: Breadcrumb = breadcrumb.index
@@ -36,8 +42,27 @@ const Post = () => {
     //Checkbox
     const { checkedState, checkedAllState, handleCheckedChange, handleCheckedAllChange, isAnyChecked } = useCheckBoxState(data, model, isLoading)
     const somethingChecked = isAnyChecked()
+    const { data: postCatalogues, isLoading: isPostCatalogueLoading, isError: isPostCatalogueError } = useQuery([queryKey.postCatalogues], () => postCataloguesPagination(''))
 
-    const [customFilter, setCustomFilter] = useState<SelectConfig[]>([]);
+    const filterInitial = useMemo(() => [
+        {
+            name: 'post_catalogue_id',
+            placeholder: 'Chọn nhóm bài viết',
+            data: postCatalogues?.['post_catalogues'],
+            isLoading: isPostCatalogueLoading,
+            isNested: true,
+            valueKey: 'id',
+            labelKey: 'name'
+        }
+    ], [postCatalogues])
+
+    /* 
+       - Phân loại được là kiểu hiện có hiển thị theo kiểu danh mục cha con không: isNested:true/ false --> false
+       - Key và label thì phải custom được vì có thể là nó sẽ không theo cái tiêu chí là id và name
+       - Trạng thái của dữ liệu: Loading vv...
+    */
+
+    const customFilter = useCustomFilter(filterInitial);
 
     return (
         <FilterProvider customFilters={customFilter}>

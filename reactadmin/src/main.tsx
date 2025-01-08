@@ -56,6 +56,7 @@ const router = createBrowserRouter([
       { path: "/post/catalogue/update/:id", element: <PostCatalogueStore /> },
       { path: "/post/index", element: <PostIndex /> },
       { path: "/post/create", element: <PostStore /> },
+      { path: "/post/update/:id", element: <PostStore /> },
     ]
   },
 ]);

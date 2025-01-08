@@ -73,7 +73,7 @@ const Parent = ({
                                             field.onChange(selectedValues)
                                         }}
                                         isMulti={true}
-                                    // value={options?.filter(option => field.value.includes(option.value))}
+                                        value={options?.filter(option => field.value.includes(option.value) && option.value !== '0') || []}
                                     />
                                 )}
                             />

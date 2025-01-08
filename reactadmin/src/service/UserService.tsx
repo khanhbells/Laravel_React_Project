@@ -5,7 +5,7 @@ import { baseDestroy } from "./BaseService";
 import { handleAxiosError } from "@/helper/axiosHelper";
 import { showToast } from "@/helper/myHelper";
 
-const pagination = async (queryString: string, action: string) => {
+const pagination = async (queryString: string) => {
     const response = await axios.get(`/users?${queryString}`)
     return response.data
 }

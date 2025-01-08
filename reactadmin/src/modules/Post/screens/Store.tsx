@@ -13,12 +13,11 @@ import Advance from "@/components/Advance";
 import Parent from "@/components/Parent";
 //SETTINGS
 import { breadcrumb, model, redirectIfSucces } from "../settings";
-import { Breadcrumb } from "@/types/Breadcrumb"
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup';
-import { formatCatalogueName, getDropdown } from "@/helper/myHelper";
+import { getDropdown } from "@/helper/myHelper";
 //INTERFACES
-import { PostCataloguePayloadInput } from "@/interfaces/types/PostCatalogueType";
+import { PostPayloadInput } from "@/interfaces/types/PostType";
 //HOOK
 import { useForm, FormProvider } from "react-hook-form";
 import useFormSubmit from "@/hook/useFormSubmit";
@@ -27,7 +26,6 @@ import { save, findById } from "@/service/PostService";
 import { pagination } from "@/service/PostCatalogueService";
 //SCSS
 import '@/assets/scss/Editor.scss'
-import { error } from "console";
 
 const fileValidation = (fileTypes: string[], maxFileSize: number) => {
     return yup.mixed().test('fileType', 'Loại tệp không hợp kệ', (value: any) => {
@@ -72,7 +70,7 @@ const Store = ({
     }, [currentAction, id, breadcrumb]);
 
     //------------------------------------------------
-    const methods = useForm<PostCataloguePayloadInput>({
+    const methods = useForm<PostPayloadInput>({
         resolver: yupResolver(schema),
         mode: 'onSubmit'
     })
@@ -87,25 +85,20 @@ const Store = ({
     )
 
     //useQuery
-    const { data: dropdown, isLoading: isDropdownLoading, isError: isDropDownError } = useQuery(['post_catalogues'], () => pagination(''))
+    const { data: dropdown, isLoading: isDropdownLoading, isError: isDropDownError } = useQuery(['post_catalogues'], () => pagination(''), {
+        staleTime: 6000
+    })
     const { data: postCatalogue, isLoading, isError } = useQuery([model, id], () => findById(id), {
         enabled: !!id,
         onSuccess: (data) => {
             reset({
-                name: data.name,
-                description: data.description,
-                content: data.content,
-                meta_title: data.meta_title,
-                meta_keyword: data.meta_keyword,
-                meta_description: data.meta_description,
-                canonical: data.canonical,
-                parent_id: data.parent_id,
+                ...data,
                 publish: String(data.publish),
                 follow: String(data.follow),
-                image: data.image,
-                icon: data.icon
+                catalogues: String(data.catalogues)
             })
-        }
+        },
+        staleTime: 6000
     })
 
     //Dropdown Select Parent

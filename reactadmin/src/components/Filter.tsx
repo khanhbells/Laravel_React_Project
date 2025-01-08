@@ -1,5 +1,5 @@
 //REACT
-import { useEffect } from "react";
+import { useEffect, memo } from "react";
 //COMPONENT
 import {
     Select,
@@ -177,4 +177,4 @@ const Filter = ({
     )
 }
 
-export default Filter
+export default memo(Filter)

@@ -58,7 +58,7 @@ const tableColumn: tableColumn[] = [
                             {item.name}</Link></span>
                         <div className="catalogues-name">
                             <span className="mr-[5px] text-[blue] text-[12px]">Danh mục:</span>
-                            {Array.isArray(item.catalogues) && item.catalogues.map((catItem: string) =>
+                            {Array.isArray(item.cats) && item.cats.map((catItem: string) =>
                                 <span key={catItem} className="cat-item-name mr-[10px] text-[#f00] text-[12px]">{catItem}</span>
                             )}
                         </div>
