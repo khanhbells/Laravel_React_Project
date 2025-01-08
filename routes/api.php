@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\PostCatalogueController;
 use App\Http\Controllers\Api\V1\UploadController;
 use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\PostController;
+use App\Http\Controllers\Api\V1\TagController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Illuminate\Http\Request;
@@ -73,6 +74,20 @@ Route::group([
     Route::put('posts/{id}/status', [PostController::class, 'updateStatusByField']);
 
     // -------------------------------------------------------------------------------
+    // Tag
+    Route::get('tags', [TagController::class, 'index']);
+    Route::get('tags/{id}', [TagController::class, 'show']);
+    Route::post('tags', [TagController::class, 'create']);
+    Route::put('tags/{id}', [TagController::class, 'update']);
+    Route::delete('tags/{id}', [TagController::class, 'destroy']);
+    Route::put('tags/{id}/status', [TagController::class, 'updateStatusByField']);
+
+    // -------------------------------------------------------------------------------
+
+
+
+
+
 
     Route::delete('records/delete/batch', [DashboardController::class, 'deleteBatch']);
     Route::put('records/update/batch', [DashboardController::class, 'updateBatch']);

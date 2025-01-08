@@ -1,31 +1,34 @@
 //CORE REACT
-import { useCallback, useEffect, useState, useMemo, useRef } from "react";
-import { useQueries, useQuery } from "react-query";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 //COMPONENT
-import PageHeading from "@/components/heading"
-import LoadingButton from "@/components/LoadingButton"
-import General from "@/components/General";
-import Album from "@/components/Album";
-import Seo from "@/components/Seo";
-import ImageIcon from "@/components/ImageIcon";
 import Advance from "@/components/Advance";
+import Album from "@/components/Album";
+import General from "@/components/General";
+import PageHeading from "@/components/heading";
+import ImageIcon from "@/components/ImageIcon";
+import LoadingButton from "@/components/LoadingButton";
 import Parent from "@/components/Parent";
+import Seo from "@/components/Seo";
+import Tag from "@/components/Tag";
 //SETTINGS
-import { breadcrumb, model, redirectIfSucces } from "../settings";
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup';
 import { getDropdown } from "@/helper/myHelper";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { breadcrumb, model, redirectIfSucces } from "../settings";
+import { queryKey } from "@/constant/query";
 //INTERFACES
 import { PostPayloadInput } from "@/interfaces/types/PostType";
 //HOOK
-import { useForm, FormProvider } from "react-hook-form";
 import useFormSubmit from "@/hook/useFormSubmit";
+import { FormProvider, useForm } from "react-hook-form";
 //SERVICE
-import { save, findById } from "@/service/PostService";
 import { pagination } from "@/service/PostCatalogueService";
+import { pagination as tagPagination } from "@/service/TagService";
+import { findById, save } from "@/service/PostService";
 //SCSS
-import '@/assets/scss/Editor.scss'
+import '@/assets/scss/Editor.scss';
 
 const fileValidation = (fileTypes: string[], maxFileSize: number) => {
     return yup.mixed().test('fileType', 'Loại tệp không hợp kệ', (value: any) => {
@@ -85,9 +88,8 @@ const Store = ({
     )
 
     //useQuery
-    const { data: dropdown, isLoading: isDropdownLoading, isError: isDropDownError } = useQuery(['post_catalogues'], () => pagination(''), {
-        staleTime: 6000
-    })
+    const { data: dropdown, isLoading: isDropdownLoading, isError: isDropDownError } = useQuery([queryKey.postCatalogues], () => pagination(''))
+    const { data: tags, isLoading: isTagLoading, isError: isTagError } = useQuery([queryKey.tags], () => pagination(''))
     const { data: postCatalogue, isLoading, isError } = useQuery([model, id], () => findById(id), {
         enabled: !!id,
         onSuccess: (data) => {
@@ -98,7 +100,7 @@ const Store = ({
                 catalogues: String(data.catalogues)
             })
         },
-        staleTime: 6000
+        // staleTime: 6000
     })
 
     //Dropdown Select Parent
@@ -134,6 +136,7 @@ const Store = ({
                                     {id ? postCatalogue && <Seo data={postCatalogue} /> : <Seo />}
                                 </div>
                                 <div className="col-span-3">
+
                                     {dropdown &&
                                         < Parent
                                             name="post_catalogue_id"
@@ -143,6 +146,7 @@ const Store = ({
                                         />
                                     }
                                     {id ? postCatalogue && <ImageIcon data={postCatalogue} /> : <ImageIcon />}
+                                    <Tag />
                                     <Advance />
                                     <div className="mt-[20px] text-right">
                                         <LoadingButton

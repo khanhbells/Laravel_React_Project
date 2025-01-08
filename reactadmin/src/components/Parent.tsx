@@ -1,14 +1,14 @@
 //REACT
-import { useEffect, useRef, useState, memo } from "react";
-import { FieldValues, Controller, useFormContext } from "react-hook-form";
+import { memo, useState } from "react";
+import { Controller } from "react-hook-form";
 //COMPONENT
 import {
     Card,
     CardContent,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import Select from "react-select"
+} from "@/components/ui/card";
+import Select from "react-select";
 //INTERFACE
 import { Option } from "@/components/CustomSelectBox";
 
