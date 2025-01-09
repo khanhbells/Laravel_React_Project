@@ -1,17 +1,10 @@
 import axios from "@/configs/axios";
-import { baseSave } from "./BaseService";
 import { baseDestroy } from "./BaseService";
-import { handleAxiosError } from "@/helper/axiosHelper";
-import { showToast } from "@/helper/myHelper";
-import { UserCatalogue, UserCataloguePayloadInput } from "@/interfaces/types/UserCatalogueType";
-
-interface ITag {
+import { baseSave } from "./BaseService";
+export interface ITag {
     name: string,
     canonical: string,
-    meta_title: string,
-    meta_keyword: string,
-    meta_description: string
-
+    [key: string]: string | undefined
 }
 
 const endpoint = 'tags'
@@ -22,7 +15,9 @@ const pagination = async (queryString: string) => {
 }
 
 const save = async (payload: ITag, updateParams: { action: string, id: string | undefined }) => {
-    // return baseSave(`/${endpoint}`, payload, updateParams)
+
+
+    return baseSave(`/${endpoint}`, payload, updateParams)
 }
 
 const update = async (payload: ITag) => {
@@ -44,8 +39,6 @@ const getTagById = async (id: string | undefined): Promise<ITag> => {
 }
 
 export {
-    pagination,
-    save,
-    getTagById,
-    destroy,
-}
+    destroy, getTagById, pagination,
+    save
+};

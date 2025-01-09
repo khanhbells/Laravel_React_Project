@@ -1,16 +1,16 @@
 import { SubmitHandler, FieldValues } from "react-hook-form"
-import { useMutation } from "react-query"
+import { useMutation, useQueryClient } from "react-query"
 import { showToast } from "@/helper/myHelper"
 import { useState } from "react"
 
-type SubmitFunction<T extends FieldValues> = (
+type SubmitFunction<T extends FieldValues, R> = (
     data: T,
     updateParams: { action: string, id: string | undefined },
     album?: string[]
-) => Promise<void>
+) => Promise<R>
 
-const useFormSubmit = <T extends FieldValues, U extends Record<string, any>>(
-    submitFn: SubmitFunction<T>,
+const useFormSubmit = <T extends FieldValues, R>(
+    submitFn: SubmitFunction<T, R>,
     updateParams: { action: string, id: string | undefined },
     album?: string[] | null,
     refetch?: any | null,
@@ -19,8 +19,9 @@ const useFormSubmit = <T extends FieldValues, U extends Record<string, any>>(
 ) => {
 
     const [isSuccess, setIsSuccess] = useState(false);
+    const queryClient = useQueryClient()
 
-    const mutation = useMutation<void, Error, T>({
+    const mutation = useMutation<R, Error, T>({
         mutationFn: (payload) => submitFn(payload, updateParams),
         onSuccess: (response) => {
             showToast('Cập nhật dữ liệu thành công', 'success');
@@ -28,7 +29,7 @@ const useFormSubmit = <T extends FieldValues, U extends Record<string, any>>(
                 closeSheet()
             }
             if (refetch) {
-                refetch()
+                queryClient.invalidateQueries(refetch)
             }
             setIsSuccess(true);
         },
@@ -51,7 +52,8 @@ const useFormSubmit = <T extends FieldValues, U extends Record<string, any>>(
         success: mutation.isSuccess,
         error: mutation.isError,
         loading: mutation.isLoading,
-        isSuccess
+        isSuccess,
+        data: mutation.data
     }
 }
 

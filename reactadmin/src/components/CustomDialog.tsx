@@ -1,16 +1,12 @@
 //REACT
-import React, { ReactNode, useState } from "react"
+import { memo, ReactNode } from "react"
 //COMPONENT
-import LoadingButton from "@/components/LoadingButton"
-import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
-    DialogTitle,
-    DialogClose
+    DialogTitle
 } from "@/components/ui/dialog"
 
 
@@ -48,4 +44,4 @@ const CustomDialog = ({
     )
 }
 
-export default CustomDialog
+export default memo(CustomDialog)

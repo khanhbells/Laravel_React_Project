@@ -28,8 +28,6 @@ const mapDataToOptions = <T extends Record<string, any>>(
 }
 
 export const useCustomFilter = <T extends Record<string, any>>(filters: IFilterConfig<T>[]): SelectConfig[] => {
-    console.log(filters);
-
     const initialFilters = useMemo(() => filters.map(filter => ({
         name: filter.name,
         placeholder: filter.placeholder,

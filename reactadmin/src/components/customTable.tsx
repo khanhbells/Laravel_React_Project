@@ -18,14 +18,8 @@ import {
     TableHeader,
     TableRow,
 } from "../components/ui/table"
-
-
-// import { buttonActions } from "@/modules/User/settings/userSettings"
-
 import CustomAlertDialog from "@/components/CustomAlertDialog";
 import useDialog from "@/hook/useDialog"
-
-
 import { CustomTableProps, Row, ParamsToTuple } from "@/interfaces/BaseServiceInterface"
 import { changePassword } from "@/service/UserService"
 

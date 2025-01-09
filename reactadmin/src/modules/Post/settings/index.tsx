@@ -62,6 +62,12 @@ const tableColumn: tableColumn[] = [
                                 <span key={catItem} className="cat-item-name mr-[10px] text-[#f00] text-[12px]">{catItem}</span>
                             )}
                         </div>
+                        <div className="catalogues-name">
+                            <span className="mr-[5px] text-[blue] text-[12px]">Tags:</span>
+                            {Array.isArray(item.tags) && item.tags.map((tag: { label: string, value: string }) =>
+                                <span key={tag.value} className="cursor-pointer cat-item-name mr-[10px] text-[#fff] inline-block rounded px-[5px] py-[0px] bg-[gray] text-[10px]">{tag.label}</span>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -11,7 +11,9 @@ import ImageIcon from "@/components/ImageIcon";
 import LoadingButton from "@/components/LoadingButton";
 import Parent from "@/components/Parent";
 import Seo from "@/components/Seo";
+import CustomDialog from "@/components/CustomDialog"
 import Tag from "@/components/Tag";
+import CreateTag from "@/components/CreateTag";
 //SETTINGS
 import { getDropdown } from "@/helper/myHelper";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -25,7 +27,6 @@ import useFormSubmit from "@/hook/useFormSubmit";
 import { FormProvider, useForm } from "react-hook-form";
 //SERVICE
 import { pagination } from "@/service/PostCatalogueService";
-import { pagination as tagPagination } from "@/service/TagService";
 import { findById, save } from "@/service/PostService";
 //SCSS
 import '@/assets/scss/Editor.scss';
@@ -58,8 +59,11 @@ const schema = yup.object().shape({
 const Store = ({
 
 }) => {
-
+    //--------------STATE--------------------
     const [album, setAlbum] = useState<string[]>([])
+    const [openDialog, setOpenDialog] = useState<boolean>()
+    const [newTags, setNewTag] = useState<{ value: string, label: string }[]>([])
+
 
     //--------------------------------------
     const navigate = useNavigate()
@@ -72,7 +76,7 @@ const Store = ({
         return { ...actionData, route }; // Trả về dữ liệu breadcrumb với route đã được thay thế
     }, [currentAction, id, breadcrumb]);
 
-    //------------------------------------------------
+    //-------------------FormSubmit------------------
     const methods = useForm<PostPayloadInput>({
         resolver: yupResolver(schema),
         mode: 'onSubmit'
@@ -89,7 +93,6 @@ const Store = ({
 
     //useQuery
     const { data: dropdown, isLoading: isDropdownLoading, isError: isDropDownError } = useQuery([queryKey.postCatalogues], () => pagination(''))
-    const { data: tags, isLoading: isTagLoading, isError: isTagError } = useQuery([queryKey.tags], () => pagination(''))
     const { data: postCatalogue, isLoading, isError } = useQuery([model, id], () => findById(id), {
         enabled: !!id,
         onSuccess: (data) => {
@@ -97,10 +100,10 @@ const Store = ({
                 ...data,
                 publish: String(data.publish),
                 follow: String(data.follow),
-                catalogues: String(data.catalogues)
+                catalogues: String(data.catalogues),
             })
         },
-        // staleTime: 6000
+        staleTime: 3000
     })
 
     //Dropdown Select Parent
@@ -111,9 +114,19 @@ const Store = ({
         return []
     }, [dropdown])
 
+
+    //Tra ve view
     useEffect(() => {
         isSuccess === true && navigate(redirectIfSucces)
     }, [isSuccess])
+
+    //Tag dialog create
+    const handleOpenDialog = useCallback(() => {
+        setOpenDialog(true)
+    }, [])
+    const handleNewTag = useCallback((tag: { value: string, label: string }) => {
+        setNewTag(prev => [...prev, tag])
+    }, [])
 
 
     return (
@@ -132,7 +145,6 @@ const Store = ({
                                         data={postCatalogue}
                                     />
                                     {/* -------------SEO------------------- */}
-
                                     {id ? postCatalogue && <Seo data={postCatalogue} /> : <Seo />}
                                 </div>
                                 <div className="col-span-3">
@@ -146,7 +158,11 @@ const Store = ({
                                         />
                                     }
                                     {id ? postCatalogue && <ImageIcon data={postCatalogue} /> : <ImageIcon />}
-                                    <Tag />
+                                    <Tag
+                                        onOpenDialog={handleOpenDialog}
+                                        newTags={newTags}
+                                        setNewTags={setNewTag}
+                                    />
                                     <Advance />
                                     <div className="mt-[20px] text-right">
                                         <LoadingButton
@@ -160,6 +176,20 @@ const Store = ({
                     </div>
                 </div>
             </FormProvider>
+            {openDialog && (
+                <CustomDialog
+                    heading="Thêm tag mới"
+                    description="Nhập đầy đủ thông tin dưới đây. Các mục có dấu (*) là bắt buộc"
+                    buttonLoading={false}
+                    open={openDialog}
+                    close={() => setOpenDialog(false)}
+                >
+                    <CreateTag
+                        close={() => setOpenDialog(false)}
+                        onNewTag={handleNewTag}
+                    />
+                </CustomDialog>
+            )}
         </>
     )
 }

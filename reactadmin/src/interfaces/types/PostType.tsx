@@ -1,3 +1,8 @@
+export interface Tag {
+    value: string,
+    label: string
+}
+
 export type PostPayloadInput = {
     name: string,
     description?: string,
@@ -11,8 +16,14 @@ export type PostPayloadInput = {
     follow?: string | undefined,
     image?: any,
     icon?: any,
-    catalogues?: string
+    catalogues?: string,
+    tags?: Tag[]
 };
+
+export type PostPayloadForSubmit = Omit<PostPayloadInput, 'tags'> & {
+    tags?: string[]
+}
+
 export type Post = {
     [key: string]: string
 }

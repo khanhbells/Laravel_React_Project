@@ -5,6 +5,8 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
+use App\Http\Resources\TagResource;
+
 
 class PostResource extends JsonResource
 {
@@ -39,6 +41,12 @@ class PostResource extends JsonResource
             'publish' => $this->publish,
             'follow' => $this->follow,
             'order' => $this->order,
+            'tags' => $this->tags->map(function ($tag) {
+                return [
+                    'label' => $tag->name,
+                    'value' => $tag->id,
+                ];
+            })
         ];
     }
 }

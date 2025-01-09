@@ -47,12 +47,13 @@ const Aside = () => {
                                         >
                                             <div className={`menu-label flex flex-1 items-center text-[#a3aed1] ${item.active.includes(segment) ? 'text-white' : ''}`}>
                                                 {item.icon}
-                                                <span>{item.label}</span>
+                                                {item.links ? <span>{item.label}</span> : <Link to={item.path}>{item.label}</Link>}
+
                                             </div>
                                         </AccordionTrigger>
                                         <AccordionContent className="border-0 mt-2">
                                             <ul>
-                                                {item.links.map((link, linkIndex) => (
+                                                {item.links && item.links.map((link, linkIndex) => (
                                                     <li className="pl-6" key={linkIndex}>
                                                         <Link
                                                             className="

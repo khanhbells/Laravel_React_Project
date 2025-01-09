@@ -3,7 +3,7 @@ import { baseSave } from "./BaseService";
 import { baseDestroy } from "./BaseService";
 import { handleAxiosError } from "@/helper/axiosHelper";
 import { showToast } from "@/helper/myHelper";
-import { PostCataloguePayloadInput, PostCatalogue } from "@/interfaces/types/PostCatalogueType";
+import { PostPayloadInput, Post, Tag, PostPayloadForSubmit } from "@/interfaces/types/PostType";
 
 const endpoint = 'posts'
 
@@ -12,11 +12,17 @@ const pagination = async (queryString: string) => {
     return response.data
 }
 
-const save = async (payload: PostCataloguePayloadInput, updateParams: { action: string, id: string | undefined }) => {
-    return baseSave(endpoint, payload, updateParams)
+const save = async (payload: PostPayloadInput, updateParams: { action: string, id: string | undefined }) => {
+
+    const payloadSubmit: PostPayloadForSubmit = {
+        ...payload,
+        tags: payload.tags ? payload.tags.map((tag: Tag) => tag.value) : undefined
+    }
+
+    return baseSave(endpoint, payloadSubmit, updateParams)
 }
 
-const update = async (payload: PostCataloguePayloadInput) => {
+const update = async (payload: PostPayloadInput) => {
     //     header: {
     //         'Content-Type': 'multipart/form-data'
     //     }
@@ -26,7 +32,7 @@ const destroy = async (id: string) => {
     return baseDestroy(id, endpoint)
 }
 
-const findById = async (id: string | undefined): Promise<PostCatalogue> => {
+const findById = async (id: string | undefined): Promise<Post> => {
     const response = await axios.get(`${endpoint}/${id}`)
     return response.data
 }

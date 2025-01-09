@@ -28,6 +28,8 @@ import PostCatalogueStore from '@/modules/PostCatalogue/screens/Store';
 //Post
 import PostIndex from '@/modules/Post/screens/index';
 import PostStore from '@/modules/Post/screens/Store';
+//Tag
+import TagIndex from '@/modules/tag/screens';
 import './index.css';
 import { ReactQueryDevtools } from 'react-query/devtools'
 
@@ -57,6 +59,7 @@ const router = createBrowserRouter([
       { path: "/post/index", element: <PostIndex /> },
       { path: "/post/create", element: <PostStore /> },
       { path: "/post/update/:id", element: <PostStore /> },
+      { path: "/tag/index", element: <TagIndex /> },
     ]
   },
 ]);

@@ -43,7 +43,7 @@ class TagController extends Controller
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
                 'message' => 'Thêm mới bản ghi thành công',
-                'user_catalogues' => new TagResource($data['tag'])
+                'tag' => new TagResource($data['tag'])
             ], Response::HTTP_OK);
         }
         return response()->json([
@@ -57,7 +57,7 @@ class TagController extends Controller
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
                 'message' => 'Cập nhật bản ghi thành công',
-                'user_catalogues' => new TagResource($data['tag']),
+                'tag' => new TagResource($data['tag']),
                 'code' => Response::HTTP_OK
             ], Response::HTTP_OK);
         }

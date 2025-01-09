@@ -17,10 +17,25 @@ class Tag extends Model
      *
      * @var array<int, string>
      */
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'canonical',
+        'meta_title',
+        'meta_keyword',
+        'meta_description',
+        'publish',
+        'user_id',
+    ];
 
 
     protected $table = 'tags';
+
+    public function attributes()
+    {
+        return [
+            'publish' == 2,
+        ];
+    }
 
     public function posts()
     {

@@ -81,13 +81,12 @@ class PostService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $except = ['catalogues'];
+            $except = ['catalogues', 'tags'];
             $payload = $this->initializeRequest($request, $auth, $except);
             $post = $this->postRepository->create($payload);
-
             if ($post->id > 0) {
-                $catRelation = $this->createCatRelation($request, $post, 'post');
-                $post->post_catalogues()->attach($catRelation);
+                $this->createCatRelation($request, $post, 'post');
+                $this->createTagRelation($request, $post);
             }
             DB::commit();
             return [
@@ -107,13 +106,14 @@ class PostService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $except = ['post_counts', 'catalogues', 'cats'];
+            $except = ['post_counts', 'catalogues', 'cats', 'tags'];
             $payload = $this->initializeRequest($request, $auth, $except);
             $post = $this->postRepository->update($id, $payload);
             if ($post) {
-                $catRelation =  $this->createCatRelation($request, $post, 'post');
-                $post->post_catalogues()->detach();
-                $post->post_catalogues()->attach($catRelation);
+                $detachArray = ['post_catalogues', 'tags'];
+                $this->detachRelation($post, $detachArray);
+                $this->createCatRelation($request, $post, 'post');
+                $this->createTagRelation($request, $post);
             }
             DB::commit();
             return [

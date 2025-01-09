@@ -120,8 +120,7 @@ class BaseService
         return $this->payload;
     }
 
-    //array_unique loại bỏ phần tử bị trùng
-    protected function createCatRelation($request, $instance, $model = 'post'): array
+    protected function catRelationArray($request, $instance, $model)
     {
         $catalogue = explode(',', $request->input('catalogues'));
         $catalogue = array_filter($catalogue, function ($item) {
@@ -132,6 +131,35 @@ class BaseService
         return $newCatArray;
     }
 
+
+
+    //array_unique loại bỏ phần tử bị trùng
+    protected function createCatRelation($request, $instance, $model = 'post')
+    {
+        $relation = $model . '_catalogues';
+        $cataDataArray = $this->catRelationArray($request, $instance, $model);
+        $instance->{$relation}()->attach($cataDataArray);
+    }
+
+    protected function createTagRelation($request, $instance)
+    {
+        if ($request->input('tags') && $request->input('tags') !== null) {
+            $tagId = explode(',', $request->input('tags'));
+            $instance->tags()->attach($tagId);
+        }
+    }
+
+    public function detachRelation($instance, $relation = [])
+    {
+        if (isset($relation) && count($relation)) {
+            foreach ($relation as $key => $val) {
+                $instance->{$val}()->detach();
+            }
+        }
+    }
+
+
+    //Truy van nang cao
     protected function whereHasCatalogueId($request)
     {
         $catId = $request->integer($this->model . '_catalogue_id');
