@@ -1,7 +1,7 @@
 //Create Store
 import Store from "./include/Store"
 //pagination
-import { pagination, destroy } from "@/service/TagService"
+import { pagination, destroy } from "@/service/PermissionService"
 import Paginate from "@/components/paginate"
 //breadcrumb
 import PageHeading from "@/components/heading"
@@ -31,11 +31,9 @@ import { SelectConfig } from "@/components/CustomFilter"
 //contexts
 import { FilterProvider } from "@/contexts/FilterContext"
 //
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-const Tag = () => {
+import { useState } from "react"
+const Permission = () => {
     const breadcrumbData: Breadcrumb = breadcrumb.index
-    const navigate = useNavigate()
 
     //REACT QUERY
     const { isLoading, data, isError, refetch, handlePageChange, handleQueryString } = useTable({ model, pagination })
@@ -52,8 +50,8 @@ const Tag = () => {
             <div className="container">
                 <Card className="rounded-[5px] mt-[15px] ">
                     <CardHeader className="border-b border-solid border-[#f3f3f3] p-[20px]">
-                        <CardTitle className="uppercase">Quản lý danh sách tag</CardTitle>
-                        <CardDescription className="text-xs text-[#f00000]">Hiển thị danh sách tag, sử dụng các chức năng bên dưới để lọc theo mong muốn</CardDescription>
+                        <CardTitle className="uppercase">Quản lý danh sách phân quyền</CardTitle>
+                        <CardDescription className="text-xs text-[#f00000]">Hiển thị danh sách phân quyền, sử dụng các chức năng bên dưới để lọc theo mong muốn</CardDescription>
                     </CardHeader>
                     <CardContent className="p-[15px]">
                         <Filter
@@ -64,7 +62,7 @@ const Tag = () => {
                             handleQueryString={(filters: any) => handleQueryString(filters)}
                             openSheet={openSheet}
                             items={filterItems}
-                            buttonText="Thêm mới tag"
+                            buttonText="Thêm mới phân quyền"
                         />
                         <CustomTable
                             isLoading={isLoading}
@@ -106,4 +104,4 @@ const Tag = () => {
         </FilterProvider>
     )
 }
-export default Tag
+export default Permission

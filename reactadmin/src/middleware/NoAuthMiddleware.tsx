@@ -11,26 +11,28 @@ const NoAuthMiddleware = ({ children }: ProtectedRouteProps) => {
     const navigate = useNavigate()
     const { isAuthenticated, user } = useSelector((state: RootState) => state.auth)
     const [checkedAuth, setCheckedAuth] = useState<boolean>(false)
-
-    useEffect(() => {
-        const checkAuthenticate = async () => {
-            try {
-                const userData = await fetchUser()
-                if (userData !== null) {
-                    navigate('/dashboard')
-                } else {
-                    setCheckedAuth(true)
-                }
-            } catch (error) {
-                setCheckedAuth(true)
+    const checkAuthenticate = async () => {
+        try {
+            const userData = await fetchUser();
+            if (userData !== null) {
+                console.log(456);
+                navigate('/dashboard');
+            } else {
+                setCheckedAuth(true);
             }
+        } catch (error) {
+            setCheckedAuth(true);
         }
+    };
+    useEffect(() => {
         if (!isAuthenticated || user === null) {
-            checkAuthenticate()
+            // console.log(789);
+            // checkAuthenticate();
+            setCheckedAuth(true);
         } else {
-            navigate('/dashboard')
+            checkAuthenticate();
         }
-    }, [isAuthenticated, user])
+    }, [checkedAuth, isAuthenticated, user]);
 
     return checkedAuth ? children : null
 }

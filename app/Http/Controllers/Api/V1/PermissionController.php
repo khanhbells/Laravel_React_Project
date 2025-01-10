@@ -4,57 +4,46 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
-use App\Http\Resources\TagResource;
-use App\Services\Tag\TagService;
-use App\Repositories\Tag\TagRepository;
+use App\Http\Resources\PermissionResource;
+use App\Services\Permission\PermissionService;
+use App\Repositories\Permission\PermissionRepository;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UpdateByFieldRequest;
-use App\Http\Requests\Tag\StoreTagRequest;
-use App\Http\Requests\Tag\UpdateTagRequest;
+use App\Http\Requests\Permission\StorePermissionRequest;
+use App\Http\Requests\Permission\UpdatePermissionRequest;
 
-class TagController extends Controller
+class PermissionController extends Controller
 {
-    use AuthorizesRequests;
-    protected $tagService;
-    protected $tagRepository;
+    protected $permissionService;
+    protected $permissionRepository;
     public function __construct(
-        TagService $tagService,
-        TagRepository $tagRepository,
+        PermissionService $permissionService,
+        PermissionRepository $permissionRepository,
     ) {
-        $this->tagService = $tagService;
-        $this->tagRepository = $tagRepository;
+        $this->permissionService = $permissionService;
+        $this->permissionRepository = $permissionRepository;
     }
 
     public function index(Request $request)
     {
-        try {
-            $this->authorize('modules', '/tag/index');
-            $tags = $this->tagService->paginate($request);
-            return response()->json([
-                'tags' =>  method_exists($tags, 'items') ? TagResource::collection($tags->items()) : $tags,
-                'links' => method_exists($tags, 'items') ? $tags->linkCollection() : null,
-                'current_page' => method_exists($tags, 'items') ? $tags->currentPage() : null,
-                'last_page' => method_exists($tags, 'items') ? $tags->lastPage() : null,
-            ], Response::HTTP_OK);
-        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
-            return response()->json([
-                'message' => 'Không có quyền truy cập',
-                'tags' => [],
-                'code' => Status::ERROR
-            ], Response::HTTP_FORBIDDEN);
-        }
+        $permissions = $this->permissionService->paginate($request);
+        return response()->json([
+            'permissions' =>  method_exists($permissions, 'items') ? PermissionResource::collection($permissions->items()) : $permissions,
+            'links' => method_exists($permissions, 'items') ? $permissions->linkCollection() : null,
+            'current_page' => method_exists($permissions, 'items') ? $permissions->currentPage() : null,
+            'last_page' => method_exists($permissions, 'items') ? $permissions->lastPage() : null,
+        ], Response::HTTP_OK);
     }
 
-    public function create(StoreTagRequest $request)
+    public function create(StorePermissionRequest $request)
     {
         $auth = auth()->user();
-        $data = $this->tagService->create($request);
+        $data = $this->permissionService->create($request);
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
                 'message' => 'Thêm mới bản ghi thành công',
-                'tag' => new TagResource($data['tag'])
+                'permission' => new PermissionResource($data['permission'])
             ], Response::HTTP_OK);
         }
         return response()->json([
@@ -62,13 +51,13 @@ class TagController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function update(UpdateTagRequest $request, $id)
+    public function update(UpdatePermissionRequest $request, $id)
     {
-        $data = $this->tagService->update($request, $id);
+        $data = $this->permissionService->update($request, $id);
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
                 'message' => 'Cập nhật bản ghi thành công',
-                'tag' => new TagResource($data['tag']),
+                'permission' => new PermissionResource($data['permission']),
                 'code' => Response::HTTP_OK
             ], Response::HTTP_OK);
         }
@@ -79,15 +68,15 @@ class TagController extends Controller
         if (empty($id) || $id < 0) {
             return $this->returnIfIdValidateFail();
         }
-        $tag = $this->tagRepository->findById($id);
-        if (!$tag) {
+        $permission = $this->permissionRepository->findById($id);
+        if (!$permission) {
             return response()->json([
                 'code' => Status::ERROR,
                 'message' => 'Không có dữ liệu phù hợp'
             ], Response::HTTP_NOT_FOUND);
         } else {
             return response()->json(
-                new TagResource($tag)
+                new PermissionResource($permission)
             );
         }
     }
@@ -98,16 +87,16 @@ class TagController extends Controller
             return $this->returnIfIdValidateFail();
         }
 
-        $tag = $this->tagRepository->findById($id);
+        $permission = $this->permissionRepository->findById($id);
 
-        if (!$tag) {
+        if (!$permission) {
             return response()->json([
                 'message' => 'Không tìm thấy bản ghi cần xóa',
                 'code' => Status::SUCCESS
             ], Response::HTTP_NOT_FOUND);
         }
 
-        if ($this->tagService->delete($id)) {
+        if ($this->permissionService->delete($id)) {
             return response()->json([
                 'message' => 'Xóa bản ghi thành công',
                 'code' => Status::SUCCESS
@@ -121,8 +110,8 @@ class TagController extends Controller
 
     public function updateStatusByField(UpdateByFieldRequest $request, $id)
     {
-        $respository = 'App\Repositories\Tag\TagRepository';
-        if ($this->tagService->updateByField($request, $id, $respository)) {
+        $respository = 'App\Repositories\Permission\PermissionRepository';
+        if ($this->permissionService->updateByField($request, $id, $respository)) {
 
             return response()->json([
                 'message' =>  'Cập nhật dữ liệu thành công',

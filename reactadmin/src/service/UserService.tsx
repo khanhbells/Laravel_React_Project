@@ -5,9 +5,19 @@ import { baseDestroy } from "./BaseService";
 import { handleAxiosError } from "@/helper/axiosHelper";
 import { showToast } from "@/helper/myHelper";
 
+const endpoint = 'users'
+
 const pagination = async (queryString: string) => {
-    const response = await axios.get(`/users?${queryString}`)
-    return response.data
+    try {
+        const response = await axios.get(`/${endpoint}?${queryString}`)
+        return response.data
+    } catch (error: any) {
+        handleAxiosError(error)
+        return {
+            code: error?.response.status,
+            message: 'Không có quyền truy cập',
+        };
+    }
 }
 
 const save = async (payload: PayloadInput, updateParams: { action: string, id: string | undefined }) => {

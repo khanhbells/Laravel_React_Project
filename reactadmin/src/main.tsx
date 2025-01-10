@@ -21,15 +21,19 @@ import Dashboard from './modules/Dashboard';
 import Login from './modules/Login';
 //User
 import UserIndex from '@/modules/User/screens/View'
-//PostCatalogue
+//UserCatalogue
 import UserCatalogueIndex from '@/modules/UserCatalogue/screens/View';
+import Permission from '@/modules/UserCatalogue/screens/Permission';
+//PostCatalogue
 import PostCatalogueIndex from '@/modules/PostCatalogue/screens/View';
 import PostCatalogueStore from '@/modules/PostCatalogue/screens/Store';
 //Post
 import PostIndex from '@/modules/Post/screens/index';
 import PostStore from '@/modules/Post/screens/Store';
 //Tag
-import TagIndex from '@/modules/tag/screens';
+import TagIndex from '@/modules/Tag/screens';
+//Permission
+import PermissionIndex from '@/modules/Permission/screens';
 import './index.css';
 import { ReactQueryDevtools } from 'react-query/devtools'
 
@@ -60,6 +64,8 @@ const router = createBrowserRouter([
       { path: "/post/create", element: <PostStore /> },
       { path: "/post/update/:id", element: <PostStore /> },
       { path: "/tag/index", element: <TagIndex /> },
+      { path: "/permission/index", element: <PermissionIndex /> },
+      { path: "user/catalogue/permission", element: <Permission /> },
     ]
   },
 ]);

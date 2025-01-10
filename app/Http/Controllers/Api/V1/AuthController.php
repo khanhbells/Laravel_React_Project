@@ -155,6 +155,31 @@ class AuthController extends Controller
         ];
     }
 
-    //
-    private function refreshToken($token, $refreshToken) {}
+    //logout
+    public function logout(Request $request)
+    {
+        try {
+            // Lấy token từ cookie
+            if ($request->hasCookie('access_token')) {
+                $token = $request->cookie('access_token');
+                $request->headers->set('Authorization', 'Bearer ' . $token);
+                // Vô hiệu hóa token
+                auth()->logout();
+            }
+
+            // Xóa cookie
+            $clearTokenCookie = Cookie::forget('access_token');
+            $clearRefreshTokenCookie = Cookie::forget('refresh_token');
+
+            return response()->json([
+                'message' => 'Đăng xuất thành công'
+            ], Response::HTTP_OK)
+                ->withCookie($clearTokenCookie)
+                ->withCookie($clearRefreshTokenCookie);
+        } catch (JWTException $e) {
+            return response()->json([
+                'message' => 'Đăng xuất thất bại'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -153,7 +153,17 @@ const Filter = ({
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div className="flex justify-between">
+                        {
+                            restProps.permission
+                                ?
+                                <Link to={restProps.permission} className="p-0 bg-teal-500 mr-[10px] text-white px-[15px] flex justify-between items-center text-[12px] block p-[8px] rounded">
+                                    <FiPlus className="mr-[5px]" />
+                                    Phân quyền
+                                </Link>
+                                :
+                                null
+                        }
                         {
                             openSheet
                                 ?

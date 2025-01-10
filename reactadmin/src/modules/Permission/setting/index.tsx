@@ -1,59 +1,48 @@
 //REACT
-import React from "react";
-import { Link } from "react-router-dom";
 //COMPONENTS
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 //SETTINGS
-import { UserCatalogue } from "@/interfaces/types/UserCatalogueType";
+import { TPermission } from "@/interfaces/types/PermissionType";
 //INTERFACE & TYPE
-import { ButtonAction, ActionParam, OpenSheetFunction } from "@/interfaces/BaseServiceInterface";
-import { Select } from "@/interfaces/BaseServiceInterface";
+import { ActionParam, ButtonAction, OpenSheetFunction, Select } from "@/interfaces/BaseServiceInterface";
 //HOOK
 
 
 const breadcrumb = {
 
     index: {
-        title: 'Quản lý nhóm thành viên',
-        route: '/user/index'
+        title: 'Quản lý phân quyền',
+        route: '/permission/index'
     },
     create: {
-        title: 'Thêm mới nhóm thành viên',
+        title: 'Thêm mới quyền',
         description: 'Nhập đầy đủ các thông tin dưới đây. Các mục có dấu (*) là bắt buộc',
     },
     update: {
         title: 'Cập nhật thông tin',
         description: 'Nhập đầy đủ các thông tin dưới đây. Các mục có dấu (*) là bắt buộc',
     },
-    permission: {
-        title: 'Phân quyền nhóm thành viên',
-        route: '/user/catalogue/permission'
-    },
 
 }
 
-const model = 'user_catalogues'
+const model = 'permissions'
 
 interface tableColumn {
     name: string,
-    render: (item: UserCatalogue) => JSX.Element
+    render: (item: TPermission) => JSX.Element
 }
+
+
 const tableColumn: tableColumn[] = [
     {
-        name: 'Tên nhóm thành viên',
-        render: (item: UserCatalogue) => <span><Link to={`/user/index?user_catalogue_id=${item.id}`}>{item.name}</Link></span>
-    },
-
-    {
-        name: 'Số lượng',
-        render: (item: UserCatalogue) => <span className="">{item.users_count}</span>
+        name: 'Tên quyền',
+        render: (item: TPermission) => <span>{item.name}</span>
     },
     {
-        name: 'Mô tả',
-        render: (item: UserCatalogue) => <span>{item.description}</span>
+        name: 'Đường dẫn',
+        render: (item: TPermission) => <span>{item.canonical}</span>
     },
-
 ]
 
 
@@ -86,7 +75,7 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
 const extraFilterItems: Select[] = [
     {
         id: 'user_catalogue_Id',
-        placeholder: 'Chọn Nhóm Thành Viên',
+        placeholder: 'Chọn quyền',
         items: [
             {
                 value: '0',
@@ -103,9 +92,8 @@ const extraFilterItems: Select[] = [
 
 
 export {
-    breadcrumb,
-    model,
-    tableColumn,
-    buttonActions,
-    extraFilterItems,
-}
+    breadcrumb, buttonActions,
+    extraFilterItems, model,
+    tableColumn
+};
+

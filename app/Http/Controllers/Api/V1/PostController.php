@@ -12,9 +12,11 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UpdateByFieldRequest;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class PostController extends Controller
 {
+    use AuthorizesRequests;
     protected $postService;
     protected $postRepository;
     protected $auth;
@@ -30,13 +32,22 @@ class PostController extends Controller
 
     public function index(Request $request)
     {
-        $posts = $this->postService->paginate($request);
-        return response()->json([
-            'posts' =>  method_exists($posts, 'items') ? PostResource::collection($posts->items()) : $posts,
-            'links' => method_exists($posts, 'items') ? $posts->linkCollection() : null,
-            'current_page' => method_exists($posts, 'items') ? $posts->currentPage() : null,
-            'last_page' => method_exists($posts, 'items') ? $posts->lastPage() : null,
-        ], Response::HTTP_OK);
+        try {
+            $this->authorize('modules', '/post/index');
+            $posts = $this->postService->paginate($request);
+            return response()->json([
+                'posts' =>  method_exists($posts, 'items') ? PostResource::collection($posts->items()) : $posts,
+                'links' => method_exists($posts, 'items') ? $posts->linkCollection() : null,
+                'current_page' => method_exists($posts, 'items') ? $posts->currentPage() : null,
+                'last_page' => method_exists($posts, 'items') ? $posts->lastPage() : null,
+            ], Response::HTTP_OK);
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            return response()->json([
+                'message' => 'Không có quyền truy cập',
+                'tags' => [],
+                'code' => Status::ERROR
+            ], Response::HTTP_FORBIDDEN);
+        }
     }
 
     public function create(StorePostRequest $request)

@@ -65,6 +65,7 @@ const UserCatalogue = () => {
                             openSheet={openSheet}
                             items={filterItems}
                             buttonText="Thêm mới nhóm thành viên"
+                            permission="/user/catalogue/permission"
                         />
                         <CustomTable
                             isLoading={isLoading}

@@ -12,9 +12,11 @@ use App\Repositories\Post\PostCatalogueRepository;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UpdateByFieldRequest;
 use App\Http\Requests\Post\StorePostCatalogueRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class PostCatalogueController extends Controller
 {
+    use AuthorizesRequests;
     protected $postCatalogueService;
     protected $postCatalogueRepository;
     protected $auth;
@@ -30,13 +32,22 @@ class PostCatalogueController extends Controller
 
     public function index(Request $request)
     {
-        $postCatalogues = $this->postCatalogueService->paginate($request);
-        return response()->json([
-            'post_catalogues' =>  method_exists($postCatalogues, 'items') ? PostCatalogueResource::collection($postCatalogues->items()) : $postCatalogues,
-            'links' => method_exists($postCatalogues, 'items') ? $postCatalogues->linkCollection() : null,
-            'current_page' => method_exists($postCatalogues, 'items') ? $postCatalogues->currentPage() : null,
-            'last_page' => method_exists($postCatalogues, 'items') ? $postCatalogues->lastPage() : null,
-        ], Response::HTTP_OK);
+        try {
+            $this->authorize('modules', '/post/catalogue/index');
+            $postCatalogues = $this->postCatalogueService->paginate($request);
+            return response()->json([
+                'post_catalogues' =>  method_exists($postCatalogues, 'items') ? PostCatalogueResource::collection($postCatalogues->items()) : $postCatalogues,
+                'links' => method_exists($postCatalogues, 'items') ? $postCatalogues->linkCollection() : null,
+                'current_page' => method_exists($postCatalogues, 'items') ? $postCatalogues->currentPage() : null,
+                'last_page' => method_exists($postCatalogues, 'items') ? $postCatalogues->lastPage() : null,
+            ], Response::HTTP_OK);
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            return response()->json([
+                'message' => 'Không có quyền truy cập',
+                'tags' => [],
+                'code' => Status::ERROR
+            ], Response::HTTP_FORBIDDEN);
+        }
     }
 
     public function create(Request $request)

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Tag extends Model
+class Permission extends Model
 {
     use  Notifiable, QueryTrait, SoftDeletes;
 
@@ -19,23 +19,19 @@ class Tag extends Model
      */
     protected $fillable = [
         'name',
-        'canonical',
-        'meta_title',
-        'meta_keyword',
-        'meta_description',
         'publish',
-        'user_id',
+        'canonical',
     ];
 
 
-    protected $table = 'tags';
+    protected $table = 'permissions';
 
     public $attributes = [
-        'order' => 0,
+        'publish' => 2,
     ];
 
-    public function posts()
+    public function user_catalogues()
     {
-        return $this->morphToMany(Post::class, 'taggable', 'taggables', 'tag_id', 'taggable_id');
+        return $this->belongsToMany(UserCatalogue::class, 'user_catalogue_permission', 'permission_id', 'user_catalogue_id');
     }
 }

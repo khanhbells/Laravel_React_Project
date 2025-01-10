@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\UploadController;
 use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\PostController;
 use App\Http\Controllers\Api\V1\TagController;
+use App\Http\Controllers\Api\V1\PermissionController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Illuminate\Http\Request;
@@ -21,19 +22,17 @@ use Illuminate\Http\Request;
 // });
 
 Route::group([
-
     'middleware' => 'jwt',
     'prefix' => 'v1/auth'
-
 ], function ($router) {
-    Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
 });
 Route::group([
     'middleware' => 'jwt',
     'prefix' => 'v1'
-
 ], function ($router) {
+    //Logout
+    Route::get('logout', [AuthController::class, 'logout']);
     // User
     Route::get('users', [UserController::class, 'index']);
     Route::get('users/{id}', [UserController::class, 'show']);
@@ -54,6 +53,7 @@ Route::group([
     Route::put('user_catalogues/{id}', [UserCatalogueController::class, 'update']);
     Route::delete('user_catalogues/{id}', [UserCatalogueController::class, 'destroy']);
     Route::put('user_catalogues/{id}/status', [UserCatalogueController::class, 'updateStatusByField']);
+    Route::post('updatePermission', [UserCatalogueController::class, 'updatePermission']);
 
     // -------------------------------------------------------------------------------
     // Post Catalogue
@@ -81,6 +81,15 @@ Route::group([
     Route::put('tags/{id}', [TagController::class, 'update']);
     Route::delete('tags/{id}', [TagController::class, 'destroy']);
     Route::put('tags/{id}/status', [TagController::class, 'updateStatusByField']);
+    // -------------------------------------------------------------------------------
+
+    // Permission
+    Route::get('permissions', [PermissionController::class, 'index']);
+    Route::get('permissions/{id}', [PermissionController::class, 'show']);
+    Route::post('permissions', [PermissionController::class, 'create']);
+    Route::put('permissions/{id}', [PermissionController::class, 'update']);
+    Route::delete('permissions/{id}', [PermissionController::class, 'destroy']);
+    Route::put('permissions/{id}/status', [PermissionController::class, 'updateStatusByField']);
 
     // -------------------------------------------------------------------------------
 

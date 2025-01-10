@@ -167,6 +167,12 @@ const CustomTable = ({
                             </TableCell>
                         </TableRow>
                     ))
+                    ) : data === undefined ? (
+                        <TableRow>
+                            <TableCell colSpan={9} className="text-center text-[12px] text-[#f00]">
+                                Không có dữ liệu phù hợp để hiển thị
+                            </TableCell>
+                        </TableRow>
                     ) : (
                         <TableRow>
                             <TableCell colSpan={9} className="text-center text-[12px] text-[#f00]">

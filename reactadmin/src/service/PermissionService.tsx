@@ -2,14 +2,14 @@ import axios from "@/configs/axios";
 import { baseDestroy } from "./BaseService";
 import { baseSave } from "./BaseService";
 import { handleAxiosError } from "@/helper/axiosHelper";
-import { useNavigate } from "react-router-dom";
-export interface ITag {
+
+export interface IPermission {
     name: string,
     canonical: string,
     [key: string]: string | undefined
 }
 
-const endpoint = 'tags'
+const endpoint = 'permissions'
 
 const pagination = async (queryString: string) => {
     try {
@@ -24,13 +24,13 @@ const pagination = async (queryString: string) => {
     }
 }
 
-const save = async (payload: ITag, updateParams: { action: string, id: string | undefined }) => {
+const save = async (payload: IPermission, updateParams: { action: string, id: string | undefined }) => {
 
 
     return baseSave(`/${endpoint}`, payload, updateParams)
 }
 
-const update = async (payload: ITag) => {
+const update = async (payload: IPermission) => {
     //     header: {
     //         'Content-Type': 'multipart/form-data'
     //     }
@@ -43,14 +43,12 @@ const destroy = async (id: string) => {
 
 }
 
-const getTagById = async (id: string | undefined): Promise<ITag> => {
+const getPermissionById = async (id: string | undefined): Promise<IPermission> => {
     const response = await axios.get(`${endpoint}/${id}`)
     return response.data
 }
 
 export {
-    destroy,
-    getTagById,
-    pagination,
+    destroy, getPermissionById, pagination,
     save
 };

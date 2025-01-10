@@ -5,7 +5,6 @@ import { FiShoppingCart } from "react-icons/fi";
 import { GoBell } from "react-icons/go";
 import { IoGridOutline, IoExitOutline } from "react-icons/io5";
 import { BsFullscreenExit } from "react-icons/bs";
-
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -14,12 +13,30 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu"
-
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar"
-
-
 import { CgProfile } from "react-icons/cg";
+//CONTEXT
+import { useUserContext } from "@/contexts/UserContext";
+//API
+import { logout } from "@/service/BaseService";
+import { useDispatch } from "react-redux";
+import { setAuthLogout } from "@/redux/slide/authSlice";
 const Header = () => {
+    const dispatch = useDispatch();
+    const { user, setUser } = useUserContext();
+
+    const handleLogout = async () => {
+        try {
+            const response = await logout();
+            if (response?.status === 200) {
+                setUser(null);
+                dispatch(setAuthLogout());
+            }
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+
+    }
     return (
         <>
             <header className="app-header h-14 fixed z-10 w-full content-center items-center top-0 bg-white border border-solid border-[#f3f3f3] ">
@@ -57,12 +74,12 @@ const Header = () => {
                             <DropdownMenu>
                                 <DropdownMenuTrigger className="flex">
                                     <Avatar className="mr-3">
-                                        <AvatarImage src="https://github.com/shadcn.png" />
+                                        <AvatarImage src={user?.image} />
                                         <AvatarFallback>CN</AvatarFallback>
                                     </Avatar>
                                     <div className="profile-content text-left">
-                                        <div className="font-semibold">Vũ Bảo Khánh</div>
-                                        <div className="role text-xs text-[#536485]">Administrator</div>
+                                        <div className="font-semibold">{user?.name}</div>
+                                        <div className="role text-xs text-[#536485]">{user?.user_catalogues}</div>
                                     </div>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="top-[1px]">
@@ -72,7 +89,7 @@ const Header = () => {
                                         <CgProfile className="mr-2 text-[18px]" />
                                         Thay đổi thông tin
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem className="flex items-center text-[#333335] cursor-pointer">
+                                    <DropdownMenuItem className="flex items-center text-[#333335] cursor-pointer" onClick={() => { handleLogout() }}>
                                         <IoExitOutline className="mr-2 text-[18px]" />
                                         Đăng xuất
                                     </DropdownMenuItem>

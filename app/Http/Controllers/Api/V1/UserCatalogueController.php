@@ -12,9 +12,14 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UpdateByFieldRequest;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Requests\User\StoreUserCatalogueRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 
 class UserCatalogueController extends Controller
 {
+    use AuthorizesRequests;
+
+
     protected $userCatalogueService;
     protected $userCatalogueRepository;
     protected $userCatalogue;
@@ -30,13 +35,22 @@ class UserCatalogueController extends Controller
 
     public function index(Request $request)
     {
-        $userCatalogues = $this->userCatalogueService->paginate($request);
-        return response()->json([
-            'user_catalogues' =>  method_exists($userCatalogues, 'items') ? UserCatalogueResource::collection($userCatalogues->items()) : $userCatalogues,
-            'links' => method_exists($userCatalogues, 'items') ? $userCatalogues->linkCollection() : null,
-            'current_page' => method_exists($userCatalogues, 'items') ? $userCatalogues->currentPage() : null,
-            'last_page' => method_exists($userCatalogues, 'items') ? $userCatalogues->lastPage() : null,
-        ], Response::HTTP_OK);
+        try {
+            $this->authorize('modules', '/user/catalogue/index');
+            $userCatalogues = $this->userCatalogueService->paginate($request);
+            return response()->json([
+                'user_catalogues' =>  method_exists($userCatalogues, 'items') ? UserCatalogueResource::collection($userCatalogues->items()) : $userCatalogues,
+                'links' => method_exists($userCatalogues, 'items') ? $userCatalogues->linkCollection() : null,
+                'current_page' => method_exists($userCatalogues, 'items') ? $userCatalogues->currentPage() : null,
+                'last_page' => method_exists($userCatalogues, 'items') ? $userCatalogues->lastPage() : null,
+            ], Response::HTTP_OK);
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            return response()->json([
+                'message' => 'Không có quyền truy cập',
+                'tags' => [],
+                'code' => Status::ERROR
+            ], Response::HTTP_FORBIDDEN);
+        }
     }
 
     public function create(StoreUserCatalogueRequest $request)
@@ -123,6 +137,17 @@ class UserCatalogueController extends Controller
         return response()->json([
             'message' =>  'Cập nhật dữ liệu không thành công',
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function updatePermission(Request $request)
+    {
+        $data = $this->userCatalogueService->updatePermission($request);
+        if ($data['code'] == Status::SUCCESS) {
+            return response()->json([
+                'message' => 'Cập nhật quyền thành công',
+                'code' => Response::HTTP_OK
+            ], Response::HTTP_OK);
+        }
     }
 
     private function returnIfIdValidateFail()

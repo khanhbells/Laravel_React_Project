@@ -14,9 +14,12 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\ChangePasswordUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class UserController extends Controller
 {
+    use AuthorizesRequests;
+
     protected $userService;
     protected $userRepository;
     protected $user;
@@ -32,13 +35,22 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $users = $this->userService->paginate($request);
-        return response()->json([
-            'users' =>  UserResource::collection($users->items()),
-            'links' => $users->linkCollection(),
-            'current_page' => $users->currentPage(),
-            'last_page' => $users->lastPage(),
-        ], Response::HTTP_OK);
+        try {
+            $this->authorize('modules', '/user/index');
+            $users = $this->userService->paginate($request);
+            return response()->json([
+                'users' =>  UserResource::collection($users->items()),
+                'links' => $users->linkCollection(),
+                'current_page' => $users->currentPage(),
+                'last_page' => $users->lastPage(),
+            ], Response::HTTP_OK);
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            return response()->json([
+                'message' => 'Không có quyền truy cập',
+                'tags' => [],
+                'code' => Status::ERROR
+            ], Response::HTTP_FORBIDDEN);
+        }
     }
     public function create(StoreUserRequest $request)
     {

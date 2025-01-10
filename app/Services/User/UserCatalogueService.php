@@ -94,6 +94,42 @@ class UserCatalogueService extends BaseService
         }
     }
 
+    public function updatePermission($request)
+    {
+        DB::beginTransaction();
+        try {
+            $except = [];
+            $payload = $this->initializePayload($request, $except)->getPayload();
+
+            $userCatalogue = $this->userCatalogueRepository->findById($payload['userCatalogueId']);
+            $permissionId = $payload['permissionId'];
+            $status = $payload['status'];
+
+            if ($status) {
+                // Kiểm tra xem mối quan hệ đã tồn tại chưa trước khi thêm
+                if (!$userCatalogue->permissions()->where('permission_id', $permissionId)->exists()) {
+                    $userCatalogue->permissions()->attach($permissionId);
+                }
+            } else {
+                // Gỡ bỏ mối quan hệ nếu tồn tại
+                if ($userCatalogue->permissions()->where('permission_id', $permissionId)->exists()) {
+                    $userCatalogue->permissions()->detach($permissionId);
+                }
+            }
+
+            DB::commit();
+            return [
+                'code' => Status::SUCCESS
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return [
+                'code' => Status::ERROR,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
     public function delete($id)
     {
         DB::beginTransaction();

@@ -5,8 +5,10 @@ import { handleAxiosError } from "@/helper/axiosHelper";
 import { showToast } from "@/helper/myHelper";
 import { UserCatalogue, UserCataloguePayloadInput } from "@/interfaces/types/UserCatalogueType";
 
+const endpoint = 'user_catalogues'
+
 const pagination = async (queryString: string) => {
-    const response = await axios.get(`/user_catalogues?${queryString}`)
+    const response = await axios.get(`/${endpoint}?${queryString}`)
     return response.data
 }
 

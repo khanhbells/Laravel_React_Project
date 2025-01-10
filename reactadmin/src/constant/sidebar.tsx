@@ -37,7 +37,11 @@ export const sidebarItem = [
                     {
                         title: 'Thành viên',
                         to: '/user/index'
-                    }
+                    },
+                    {
+                        title: 'Phân quyền',
+                        to: '/permission/index'
+                    },
                 ]
             },
             {

@@ -8,8 +8,16 @@ import { PostCataloguePayloadInput, PostCatalogue } from "@/interfaces/types/Pos
 const endpoint = 'post_catalogues'
 
 const pagination = async (queryString: string) => {
-    const response = await axios.get(`/${endpoint}?${queryString}`)
-    return response.data
+    try {
+        const response = await axios.get(`/${endpoint}?${queryString}`)
+        return response.data
+    } catch (error: any) {
+        handleAxiosError(error)
+        return {
+            code: error?.response.status,
+            message: 'Không có quyền truy cập',
+        };
+    }
 }
 
 const save = async (payload: PostCataloguePayloadInput, updateParams: { action: string, id: string | undefined }) => {

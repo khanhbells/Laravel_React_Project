@@ -7,4 +7,5 @@ export type UserCatalogue = {
     name: string,
     description: string,
     users_count: string,
+    user_catalogue_permissions?: number[]
 }

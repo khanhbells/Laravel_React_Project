@@ -112,6 +112,22 @@ const sort = async (id: string, model: string, value: string) => {
     return response.data
 }
 
+const logout = async () => {
+    try {
+        const response = await axios.get('/logout')
+        return response
+    } catch (error) {
+        handleAxiosError(error)
+    }
+}
+
+const updatePermission = async (userCatalogueId: number, permissionId: number, status: boolean) => {
+    const response = await axios.post('/updatePermission', {
+        userCatalogueId, permissionId, status
+    })
+    return response.data
+}
+
 export {
     updateStatusByField,
     updateFieldByParams,
@@ -119,5 +135,7 @@ export {
     getLocationData,
     baseSave,
     baseDestroy,
-    sort
+    sort,
+    logout,
+    updatePermission
 }

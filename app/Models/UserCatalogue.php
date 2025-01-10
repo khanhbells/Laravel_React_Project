@@ -20,6 +20,7 @@ class UserCatalogue extends Model
     protected $fillable = [
         'name',
         'description',
+        'publish'
     ];
 
     protected $table = 'user_catalogues';
@@ -29,10 +30,12 @@ class UserCatalogue extends Model
         return $this->hasMany(User::class, 'user_catalogue_id', 'id');
     }
 
-    public function attributes()
+    public function permissions()
     {
-        return [
-            'publish' == 1,
-        ];
+        return $this->belongsToMany(Permission::class, 'user_catalogue_permission', 'user_catalogue_id', 'permission_id');
     }
+
+    public $attributes = [
+        'publish' => 1,
+    ];
 }

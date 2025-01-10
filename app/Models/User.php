@@ -53,12 +53,9 @@ class User extends Authenticatable implements JWTSubject
         'password' => 'hashed',
     ];
 
-    public function attributes()
-    {
-        return [
-            'publish' == 1,
-        ];
-    }
+    public $attributes = [
+        'order' => 0,
+    ];
 
     // Rest omitted for brevity
 
