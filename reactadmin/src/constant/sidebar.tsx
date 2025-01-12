@@ -1,6 +1,7 @@
 import { FaHome, FaUser } from "react-icons/fa"
 import { IoNewspaperOutline } from "react-icons/io5";
 import { CiShoppingTag } from "react-icons/ci";
+import { BsHospital } from "react-icons/bs";
 export const sidebarItem = [
     {
         label: 'MAIN',
@@ -60,20 +61,25 @@ export const sidebarItem = [
                 ]
             },
             {
+                icon: <BsHospital className="text-sm mr-2" />,
+                active: ['hospital'],
+                label: 'Quản Lý Bệnh Viện',
+                links: [
+                    {
+                        title: 'Bệnh viện',
+                        to: '/hospital/index'
+                    },
+                    {
+                        title: 'Chuyên khoa',
+                        to: '/specialty/index'
+                    }
+                ]
+            },
+            {
                 icon: <CiShoppingTag className="text-sm mr-2" />,
                 active: ['tag'],
                 label: 'Quản Lý Tags',
                 path: '/tag/index'
-                // links: [
-                //     {
-                //         title: 'Nhóm bài viết',
-                //         to: '/post/catalogue/index'
-                //     },
-                //     {
-                //         title: 'Bài viết',
-                //         to: '/post/index'
-                //     }
-                // ]
             },
         ],
     }

@@ -34,7 +34,13 @@ import PostStore from '@/modules/Post/screens/Store';
 import TagIndex from '@/modules/Tag/screens';
 //Permission
 import PermissionIndex from '@/modules/Permission/screens';
+//Hospital
+import HospitalIndex from './modules/Hospital/screens';
+import HospitalStore from './modules/Hospital/screens/Store';
+//Specialty
 import './index.css';
+import SpecialtyIndex from './modules/Specialty/screens';
+import SpecialtyStore from './modules/Specialty/screens/Store';
 import { ReactQueryDevtools } from 'react-query/devtools'
 
 const router = createBrowserRouter([
@@ -66,6 +72,12 @@ const router = createBrowserRouter([
       { path: "/tag/index", element: <TagIndex /> },
       { path: "/permission/index", element: <PermissionIndex /> },
       { path: "user/catalogue/permission", element: <Permission /> },
+      { path: "/hospital/index", element: <HospitalIndex /> },
+      { path: "/hospital/create", element: <HospitalStore /> },
+      { path: "/hospital/update/:id", element: <HospitalStore /> },
+      { path: "/specialty/index", element: <SpecialtyIndex /> },
+      { path: "/specialty/create", element: <SpecialtyStore /> },
+      { path: "/specialty/update/:id", element: <SpecialtyStore /> },
     ]
   },
 ]);

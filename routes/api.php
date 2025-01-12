@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\PostController;
 use App\Http\Controllers\Api\V1\TagController;
 use App\Http\Controllers\Api\V1\PermissionController;
+use App\Http\Controllers\Api\V1\HospitalController;
+use App\Http\Controllers\Api\V1\SpecialtyController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Illuminate\Http\Request;
@@ -90,6 +92,24 @@ Route::group([
     Route::put('permissions/{id}', [PermissionController::class, 'update']);
     Route::delete('permissions/{id}', [PermissionController::class, 'destroy']);
     Route::put('permissions/{id}/status', [PermissionController::class, 'updateStatusByField']);
+
+    // -------------------------------------------------------------------------------
+    // Hospital
+    Route::get('hospitals', [HospitalController::class, 'index']);
+    Route::get('hospitals/{id}', [HospitalController::class, 'show']);
+    Route::post('hospitals', [HospitalController::class, 'create']);
+    Route::put('hospitals/{id}', [HospitalController::class, 'update']);
+    Route::delete('hospitals/{id}', [HospitalController::class, 'destroy']);
+    Route::put('hospitals/{id}/status', [HospitalController::class, 'updateStatusByField']);
+
+    // -------------------------------------------------------------------------------
+    // Specialty
+    Route::get('specialties', [SpecialtyController::class, 'index']);
+    Route::get('specialties/{id}', [SpecialtyController::class, 'show']);
+    Route::post('specialties', [SpecialtyController::class, 'create']);
+    Route::put('specialties/{id}', [SpecialtyController::class, 'update']);
+    Route::delete('specialties/{id}', [SpecialtyController::class, 'destroy']);
+    Route::put('specialties/{id}/status', [SpecialtyController::class, 'updateStatusByField']);
 
     // -------------------------------------------------------------------------------
 

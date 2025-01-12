@@ -30,12 +30,13 @@ class Tag extends Model
 
     protected $table = 'tags';
 
-    public $attributes = [
-        'order' => 0,
-    ];
-
     public function posts()
     {
         return $this->morphToMany(Post::class, 'taggable', 'taggables', 'tag_id', 'taggable_id');
+    }
+
+    public function specialties()
+    {
+        return $this->morphToMany(Specialty::class, 'taggable', 'taggables', 'tag_id', 'taggable_id');
     }
 }

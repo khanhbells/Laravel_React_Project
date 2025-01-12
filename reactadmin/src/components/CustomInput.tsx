@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label"
 import { useFormContext } from "react-hook-form"
 
 interface CustomInputProps {
-    label: string,
+    label?: string,
     name: string,
     type: string | undefined,
     value?: string | null | undefined,
@@ -25,9 +25,9 @@ const CustomInput = ({
     return (
         <>
             <div className={className ?? "grid grid-cols-4 items-center gap-4"}>
-                <Label htmlFor={name} className={restProps.labelClassName ?? 'text-right'}>
-                    {label} {restProps.required ? <span className="text-[#f00] text-[12px]">(*)</span> : null}
-                </Label>
+                {
+                    label && <Label className="col-span-1" htmlFor={name}>{label}</Label>
+                }
                 <Input
                     type={type ?? 'text'}
                     id={name}
