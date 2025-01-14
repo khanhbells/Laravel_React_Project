@@ -12,11 +12,13 @@ import CustomUploadBox from "./CustomUploadBox";
 import { PostCatalogue } from "@/interfaces/types/PostCatalogueType";
 
 interface IImageIcon {
-    data?: PostCatalogue
+    data?: PostCatalogue,
+    flag?: boolean
 }
 
 const ImageIcon = ({
-    data
+    data,
+    flag = true
 }: IImageIcon) => {
 
     const countAlbumComponentRender = useRef(1);
@@ -33,20 +35,22 @@ const ImageIcon = ({
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="p-[10px]">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className={`grid gap-4 ${flag == true ? 'grid-cols-2' : ''}`}>
                         <CustomUploadBox
                             name="image"
                             label="Ảnh đại diện"
                             data={data?.image}
                         />
-                        <CustomUploadBox
-                            name="icon"
-                            label="Icon"
-                            data={data?.icon}
-                        />
+                        {
+                            flag && <CustomUploadBox
+                                name="icon"
+                                label="Icon"
+                                data={data?.icon}
+                            />
+                        }
                     </div>
                 </CardContent>
-            </Card>
+            </Card >
         </>
     )
 }

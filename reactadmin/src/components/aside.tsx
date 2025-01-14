@@ -38,61 +38,60 @@ const Aside = () => {
                 {
                     sidebarItem.map((group, index) => (
                         <div key={index}>
-                            <div className="menu-category px-6 py-3 text-[#a3aed1] text-10px tracking-wider opacity-50">{group.label}</div>
+                            <div className="menu-category px-6 py-3 text-[#a3aed1] text-10px tracking-wider opacity-50">
+                                {group.label}
+                            </div>
                             <Accordion type="single" collapsible className="px-3 sidebar-accordion" defaultValue={defaultValue ?? ''}>
                                 {group.items.map((item, itemIndex) => (
-                                    <AccordionItem key={itemIndex} value={`item-${index}-${itemIndex}`}>
-                                        <AccordionTrigger
-                                            className={`rounded-lg ${item.active.includes(segment) ? 'text-[#a3aed1] bg-[rgba(255,255,255,.05)]' : ''}`}
-                                        >
-                                            <div className={`menu-label flex flex-1 items-center text-[#a3aed1] ${item.active.includes(segment) ? 'text-white' : ''}`}>
+                                    <div key={itemIndex}>
+                                        {item.links ? (
+                                            <AccordionItem value={`item-${index}-${itemIndex}`}>
+                                                <AccordionTrigger
+                                                    className={`rounded-lg ${item.active.includes(segment) ? 'text-[#a3aed1] bg-[rgba(255,255,255,.05)]' : ''
+                                                        }`}
+                                                >
+                                                    <div
+                                                        className={`menu-label flex flex-1 items-center text-[#a3aed1] ${item.active.includes(segment) ? 'text-white' : ''
+                                                            }`}
+                                                    >
+                                                        {item.icon}
+                                                        <span>{item.label}</span>
+                                                    </div>
+                                                </AccordionTrigger>
+                                                <AccordionContent className="border-0 mt-2">
+                                                    <ul>
+                                                        {item.links.map((link, linkIndex) => (
+                                                            <li className="pl-6" key={linkIndex}>
+                                                                <Link
+                                                                    className="side-menu__item block text-[#a3aed1] text-13px relative hover:bg-[rgba(255,255,255,.05)] rounded-lg"
+                                                                    to={link.to}
+                                                                >
+                                                                    {link.title}
+                                                                    <span
+                                                                        className="absolute left-2 top-1/2 transform -translate-y-1/2 w-1 h-1 border border-solid border-primary rounded-full border-white"
+                                                                    ></span>
+                                                                </Link>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </AccordionContent>
+                                            </AccordionItem>
+                                        ) : (
+                                            <div className={`menu-label flex items-center text-[#a3aed1] rounded-lg pl-3 pr-3 py-2 ${item.active.includes(segment) ? 'text-[#a3aed1] bg-[rgba(255,255,255,.05)]' : ''}`} >
                                                 {item.icon}
-                                                {item.links ? <span>{item.label}</span> : <Link to={item.path}>{item.label}</Link>}
-
+                                                <Link
+                                                    to={item.path}
+                                                    className={`flex-1 ${item.active.includes(segment) ? 'text-white' : 'text-[#a3aed1]'}`}
+                                                >
+                                                    {item.label}
+                                                </Link>
                                             </div>
-                                        </AccordionTrigger>
-                                        <AccordionContent className="border-0 mt-2">
-                                            <ul>
-                                                {item.links && item.links.map((link, linkIndex) => (
-                                                    <li className="pl-6" key={linkIndex}>
-                                                        <Link
-                                                            className="
-                                                            side-menu__item
-                                                            block 
-                                                            text-[#a3aed1] 
-                                                            text-13px 
-                                                            relative 
-                                                            hover:bg-[rgba(255,255,255,.05)] 
-                                                            rounded-lg
-                                                            "
-                                                            to={link.to}
-                                                        >
-                                                            {link.title}
-                                                            <span
-                                                                className="absolute
-                                                                left-2 
-                                                                top-1/2 
-                                                                transform 
-                                                                -translate-y-1/2 
-                                                                w-1 
-                                                                h-1 
-                                                                border 
-                                                                border-solid 
-                                                                border-primary 
-                                                                rounded-full 
-                                                                border-white"
-                                                            >
-                                                            </span>
-                                                        </Link>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </AccordionContent>
-                                    </AccordionItem>
+                                        )}
+                                    </div>
                                 ))}
-
                             </Accordion>
                         </div>
+
                     ))
                 }
 

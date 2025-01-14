@@ -18,15 +18,23 @@ class SpecialtyResource extends JsonResource
 
     public function toArray(Request $request): array
     {
+        $specialtyCatalogueId = $this->specialty_catalogue_id;
         return [
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
+            'catalogues' => $this->specialty_catalogues->pluck('id')
+                ->reject(function ($id) use ($specialtyCatalogueId) {
+                    return $id === $specialtyCatalogueId;
+                })
+                ->toArray(),
+            'cats' => $this->specialty_catalogues->pluck('name')->toArray(),
             'content' => $this->content,
             'album' => $this->album,
             'meta_title' => $this->meta_title ?? '',
             'meta_keyword' => $this->meta_keyword ?? '',
             'meta_description' => $this->meta_description ?? '',
+            'specialty_catalogue_id' => (string)$this->specialty_catalogue_id,
             'canonical' => $this->canonical,
             'image' => getImages($this->image),
             'icon' => getImages($this->icon),

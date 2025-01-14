@@ -16,7 +16,7 @@ export type HospitalPayloadInput = {
     follow?: string | undefined,
     image?: any,
     icon?: any,
-    specialties?: Specialty[],
+    specialties: Specialty[],
 
 };
 export type Hospital = {

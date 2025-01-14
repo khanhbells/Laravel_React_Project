@@ -159,26 +159,20 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-            // Lấy token từ cookie
-            if ($request->hasCookie('access_token')) {
-                $token = $request->cookie('access_token');
-                $request->headers->set('Authorization', 'Bearer ' . $token);
-                // Vô hiệu hóa token
-                auth()->logout();
-            }
+            // Vô hiệu hóa token hiện tại
+            auth()->logout();
 
-            // Xóa cookie
-            $clearTokenCookie = Cookie::forget('access_token');
-            $clearRefreshTokenCookie = Cookie::forget('refresh_token');
+            // Xóa cookie chứa token
+            $tokenCookie = Cookie::forget('access_token');
+            $refreshTokenCookie = Cookie::forget('refresh_token');
 
             return response()->json([
                 'message' => 'Đăng xuất thành công'
-            ], Response::HTTP_OK)
-                ->withCookie($clearTokenCookie)
-                ->withCookie($clearRefreshTokenCookie);
-        } catch (JWTException $e) {
+            ], Response::HTTP_OK)->withCookie($tokenCookie)->withCookie($refreshTokenCookie);
+        } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Đăng xuất thất bại'
+                'message' => 'Có lỗi xảy ra khi đăng xuất',
+                'error' => $e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

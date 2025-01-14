@@ -10,7 +10,13 @@ import CustomInput from "./CustomInput";
 import { useEffect, useRef, memo } from "react";
 
 
-const General = () => {
+interface GeneralProps {
+    label?: string
+}
+
+const General = ({
+    label
+}: GeneralProps) => {
 
     return (
         <>
@@ -20,7 +26,7 @@ const General = () => {
                 </CardHeader>
                 <CardContent className="pt-[15px]">
                     <CustomInput
-                        label="Tiêu đề"
+                        label={label ? label : "Tên bài viết"}
                         name="name"
                         type="text"
                         value=""

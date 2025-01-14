@@ -167,17 +167,21 @@ const Filter = ({
                         {
                             openSheet
                                 ?
-                                <Button
-                                    className="p-0 bg-primary text-white px-[15px] flex justify-between items-center text-[12px]"
-                                    onClick={() => detectButtonAction()}>
-                                    <FiPlus className="mr-[5px]" />
-                                    {buttonText}
-                                </Button>
-                                :
-                                <Link to={restProps.to} className="p-0 bg-primary text-white px-[15px] flex justify-between items-center text-[12px] block p-[10px] rounded">
-                                    <FiPlus className="mr-[5px]" />
-                                    {buttonText}
-                                </Link>
+                                (
+                                    <Button
+                                        className="p-0 bg-primary text-white px-[15px] flex justify-between items-center text-[12px]"
+                                        onClick={() => detectButtonAction()}>
+                                        <FiPlus className="mr-[5px]" />
+                                        {buttonText}
+                                    </Button>
+                                )
+                                : buttonText &&
+                                (
+                                    <Link to={restProps.to} className="p-0 bg-primary text-white px-[15px] flex justify-between items-center text-[12px] block p-[10px] rounded">
+                                        <FiPlus className="mr-[5px]" />
+                                        {buttonText}
+                                    </Link>
+                                )
                         }
                     </div>
                 </div>

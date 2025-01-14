@@ -13,10 +13,12 @@ import ImageIcon from "@/components/ImageIcon";
 import LoadingButton from "@/components/LoadingButton";
 import Seo from "@/components/Seo";
 import Tag from "@/components/Tag";
+import Parent from "@/components/Parent";
 //SETTINGS
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { breadcrumb, model, redirectIfSucces } from "../settings";
+import { queryKey } from "@/constant/query";
 //INTERFACES
 import { SpecialtyPayloadInput } from "@/interfaces/types/SpecialtyType";
 //HOOK
@@ -24,8 +26,11 @@ import useFormSubmit from "@/hook/useFormSubmit";
 import { FormProvider, useForm } from "react-hook-form";
 //SERVICE
 import { findById, save } from "@/service/SpecialtyService";
+import { pagination } from "@/service/SpecialtyCatalogueService";
 //SCSS
 import '@/assets/scss/Editor.scss';
+//HELPERS
+import { getDropdown } from "@/helper/myHelper";
 
 const fileValidation = (fileTypes: string[], maxFileSize: number) => {
     return yup.mixed().test('fileType', 'Loại tệp không hợp kệ', (value: any) => {
@@ -41,7 +46,7 @@ const fileValidation = (fileTypes: string[], maxFileSize: number) => {
 }
 
 const schema = yup.object().shape({
-    name: yup.string().required('Bạn chưa nhập vào tên nhóm bài viết'),
+    name: yup.string().required('Bạn chưa nhập vào tên dịch vụ khám'),
     canonical: yup.string().required('Bạn chưa nhập vào đường dẫn'),
     description: yup.string().optional(),
     content: yup.string().optional(),
@@ -87,6 +92,7 @@ const Store = ({
     )
 
     //useQuery
+    const { data: dropdown, isLoading: isDropdownLoading, isError: isDropDownError } = useQuery([queryKey.specialty_catalogues], () => pagination(''))
     const { data: specialty, isLoading, isError } = useQuery([model, id], () => findById(id), {
         enabled: !!id,
         onSuccess: (data) => {
@@ -94,10 +100,19 @@ const Store = ({
                 ...data,
                 publish: String(data.publish),
                 follow: String(data.follow),
+                catalogues: String(data.catalogues),
             })
         },
         staleTime: 3000
     })
+
+    //Dropdown Select Parent
+    const specialtyCatalogues = useMemo(() => {
+        if (!isDropdownLoading && dropdown) {
+            return dropdown['specialty_catalogues'] ? getDropdown(dropdown['specialty_catalogues']) : []
+        }
+        return []
+    }, [dropdown])
 
 
 
@@ -134,6 +149,14 @@ const Store = ({
                                     {id ? specialty && <Seo data={specialty} /> : <Seo />}
                                 </div>
                                 <div className="col-span-3">
+                                    {dropdown &&
+                                        < Parent
+                                            name="specialty_catalogue_id"
+                                            options={specialtyCatalogues}
+                                            showMultiple={true}
+                                            showMultipleName="catalogues"
+                                        />
+                                    }
                                     {id ? specialty && <ImageIcon data={specialty} /> : <ImageIcon />}
                                     <Tag
                                         onOpenDialog={handleOpenDialog}

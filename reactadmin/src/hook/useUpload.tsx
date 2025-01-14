@@ -17,6 +17,7 @@ const useUpload = (multiple: boolean = false) => {
                 file,
                 preview: URL.createObjectURL(file)
             }))
+            console.log(imagePreviews);
             setImages(multiple ? [...images, ...imagePreviews] : imagePreviews)
 
         }

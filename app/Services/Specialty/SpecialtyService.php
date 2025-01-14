@@ -31,15 +31,15 @@ class SpecialtyService extends BaseService
     }
 
     //Where đến relations
-    // private function whereHas($request)
-    // {
-    //     $model = $this->model;
-    //     return [
-    //         $model . '_catalogues' => [
-    //             $this->whereHasCatalogueId($request)
-    //         ],
-    //     ];
-    // }
+    private function whereHas($request)
+    {
+        $model = $this->model;
+        return [
+            $model . '_catalogues' => [
+                $this->whereHasCatalogueId($request)
+            ],
+        ];
+    }
 
     private function paginateAgrument($request)
     {
@@ -52,7 +52,7 @@ class SpecialtyService extends BaseService
             'condition' => [
                 'publish' => $request->integer('publish'),
             ],
-            // 'whereHas' => $this->whereHas($request),
+            'whereHas' => $this->whereHas($request),
             'select' => ['*'],
             'orderBy' => $request->input('sort') ? explode(',', $request->input('sort')) : ['id', 'desc'],
         ];
@@ -81,10 +81,11 @@ class SpecialtyService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $except = ['tags'];
+            $except = ['catalogues', 'tags'];
             $payload = $this->initializeRequest($request, $auth, $except);
             $specialty = $this->specialtyRepository->create($payload);
             if ($specialty->id > 0) {
+                $this->createCatRelation($request, $specialty, 'specialty');
                 $this->createTagRelation($request, $specialty);
             }
             DB::commit();
@@ -105,12 +106,13 @@ class SpecialtyService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $except = ['tags'];
+            $except = ['specialty_counts', 'catalogues', 'cats', 'tags'];
             $payload = $this->initializeRequest($request, $auth, $except);
             $specialty = $this->specialtyRepository->update($id, $payload);
             if ($specialty) {
-                $detachArray = ['tags'];
+                $detachArray = ['specialty_catalogues', 'tags'];
                 $this->detachRelation($specialty, $detachArray);
+                $this->createCatRelation($request, $specialty, 'specialty');
                 $this->createTagRelation($request, $specialty);
             }
             DB::commit();

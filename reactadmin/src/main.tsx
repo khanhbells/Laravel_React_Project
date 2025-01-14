@@ -41,7 +41,13 @@ import HospitalStore from './modules/Hospital/screens/Store';
 import './index.css';
 import SpecialtyIndex from './modules/Specialty/screens';
 import SpecialtyStore from './modules/Specialty/screens/Store';
+//SpecialtyCatalogue
+import SpecialtyCatalogueIndex from './modules/SpecialtyCatalogue/screens';
+import SpecialtyCatalogueStore from './modules/SpecialtyCatalogue/screens/Store';
 import { ReactQueryDevtools } from 'react-query/devtools'
+//Doctor
+import DoctorIndex from './modules/Doctor/screens';
+import DoctorStore from './modules/Doctor/screens/Store';
 
 const router = createBrowserRouter([
   {
@@ -70,14 +76,20 @@ const router = createBrowserRouter([
       { path: "/post/create", element: <PostStore /> },
       { path: "/post/update/:id", element: <PostStore /> },
       { path: "/tag/index", element: <TagIndex /> },
-      { path: "/permission/index", element: <PermissionIndex /> },
-      { path: "user/catalogue/permission", element: <Permission /> },
+      { path: "/user/permission/index", element: <PermissionIndex /> },
+      { path: "/user/catalogue/permission", element: <Permission /> },
       { path: "/hospital/index", element: <HospitalIndex /> },
       { path: "/hospital/create", element: <HospitalStore /> },
       { path: "/hospital/update/:id", element: <HospitalStore /> },
       { path: "/specialty/index", element: <SpecialtyIndex /> },
       { path: "/specialty/create", element: <SpecialtyStore /> },
       { path: "/specialty/update/:id", element: <SpecialtyStore /> },
+      { path: "/specialty/catalogue/index", element: <SpecialtyCatalogueIndex /> },
+      { path: "/specialty/catalogue/create", element: <SpecialtyCatalogueStore /> },
+      { path: "/specialty/catalogue/update/:id", element: <SpecialtyCatalogueStore /> },
+      { path: "/doctor/index", element: <DoctorIndex /> },
+      { path: "/doctor/update/:id", element: <DoctorStore /> },
+
     ]
   },
 ]);

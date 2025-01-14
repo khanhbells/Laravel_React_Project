@@ -13,7 +13,7 @@ const breadcrumb = {
 
     index: {
         title: 'Quản lý phân quyền',
-        route: '/permission/index'
+        route: '/user/permission/index'
     },
     create: {
         title: 'Thêm mới quyền',

@@ -55,6 +55,7 @@ const CustomSelectBox = ({
                 <Controller
                     name={name}
                     control={control}
+                    defaultValue={defaultValue}
                     render={({ field }) => (
                         <Select
                             options={isLoading ? [] : options}
@@ -65,7 +66,7 @@ const CustomSelectBox = ({
                                 field.onChange(selected?.value)
                                 onSelectChange && onSelectChange(selected?.value)
                             }}
-                            value={options?.find(option => option.value === field.value) || null}
+                            value={options?.find(option => option.value === field.value) || options?.find(option => option.value === '0')}
                             isLoading={isLoading}
                         />
                     )}

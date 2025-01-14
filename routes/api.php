@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\V1\TagController;
 use App\Http\Controllers\Api\V1\PermissionController;
 use App\Http\Controllers\Api\V1\HospitalController;
 use App\Http\Controllers\Api\V1\SpecialtyController;
+use App\Http\Controllers\Api\V1\SpecialtyCatalogueController;
+use App\Http\Controllers\Api\V1\DoctorController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Illuminate\Http\Request;
@@ -110,6 +112,24 @@ Route::group([
     Route::put('specialties/{id}', [SpecialtyController::class, 'update']);
     Route::delete('specialties/{id}', [SpecialtyController::class, 'destroy']);
     Route::put('specialties/{id}/status', [SpecialtyController::class, 'updateStatusByField']);
+
+    // -------------------------------------------------------------------------------
+    // SpecialtyCatalogue
+    Route::get('specialty_catalogues', [SpecialtyCatalogueController::class, 'index']);
+    Route::get('specialty_catalogues/{id}', [SpecialtyCatalogueController::class, 'show']);
+    Route::post('specialty_catalogues', [SpecialtyCatalogueController::class, 'create']);
+    Route::put('specialty_catalogues/{id}', [SpecialtyCatalogueController::class, 'update']);
+    Route::delete('specialty_catalogues/{id}', [SpecialtyCatalogueController::class, 'destroy']);
+    Route::put('specialty_catalogues/{id}/status', [SpecialtyCatalogueController::class, 'updateStatusByField']);
+
+    // -------------------------------------------------------------------------------
+    // Doctor
+    Route::get('doctors', [DoctorController::class, 'index']);
+    Route::get('doctors/{id}', [DoctorController::class, 'show']);
+    Route::post('doctors', [DoctorController::class, 'create']);
+    Route::put('doctors/{id}', [DoctorController::class, 'update']);
+    Route::delete('doctors/{id}', [DoctorController::class, 'destroy']);
+    Route::put('doctors/{id}/status', [DoctorController::class, 'updateStatusByField']);
 
     // -------------------------------------------------------------------------------
 

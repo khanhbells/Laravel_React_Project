@@ -22,7 +22,7 @@ export interface FilterProps extends CheckStateInterface, SheetProps {
     refetch: any,
     handleQueryString: any,
     items: BaseFilterItem[],
-    buttonText: string,
+    buttonText?: string,
     [key: string]: any
 }
 

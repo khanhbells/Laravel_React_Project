@@ -1,4 +1,4 @@
-export interface Tag {
+export interface Array {
     value: string,
     label: string
 }
@@ -15,7 +15,8 @@ export type SpecialtyPayloadInput = {
     follow?: string | undefined,
     image?: any,
     icon?: any,
-    tags?: Tag[],
+    tags?: Array[],
+    catalogues?: string,
 };
 export type Specialty = {
     [key: string]: string

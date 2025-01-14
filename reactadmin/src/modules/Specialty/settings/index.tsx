@@ -23,11 +23,11 @@ export const redirectIfSucces = '/specialty/index'
 const breadcrumb = {
 
     index: {
-        title: 'Quản lý chuyên khoa',
+        title: 'Quản lý dịch vụ khám',
         route: '/specialty/index'
     },
     create: {
-        title: 'Thêm mới chuyên khoa',
+        title: 'Thêm mới dịch vụ khám',
         description: 'Nhập đầy đủ các thông tin dưới đây. Các mục có dấu (*) là bắt buộc',
         route: '/specialty/create'
     },
@@ -46,7 +46,7 @@ interface tableColumn {
 }
 const tableColumn: tableColumn[] = [
     {
-        name: 'Chuyên khoa',
+        name: 'Dịch vụ khám',
         render: (item: Specialty) => (
             <div className="flex items-center">
                 <div className="block mr-[10px]">
@@ -55,6 +55,12 @@ const tableColumn: tableColumn[] = [
                 <div>
                     <div className="name">
                         <span>{item.name}</span>
+                        <div className="catalogues-name">
+                            <span className="mr-[5px] text-[blue] text-[12px]">Danh mục:</span>
+                            {Array.isArray(item.cats) && item.cats.map((catItem: string) =>
+                                <span key={catItem} className="cat-item-name mr-[10px] text-[#f00] text-[12px]">{catItem}</span>
+                            )}
+                        </div>
                         <div className="catalogues-name">
                             <span className="mr-[5px] text-[blue] text-[12px]">Tags:</span>
                             {Array.isArray(item.tags) && item.tags.map((tag: { label: string, value: string }) =>

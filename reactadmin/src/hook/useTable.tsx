@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom"
 import { useState, useEffect, useCallback } from "react"
 interface UseTableProps {
     model: string,
-    pagination: any
+    pagination: any,
 }
 
 interface FilterParam {
@@ -23,6 +23,7 @@ const useTable = ({ model, pagination }: UseTableProps) => {
             initialFilterParams[key] = value || ''
         }
     })
+
     const createQueryString = (initialFilterParams: FilterParam) => {
         const query = Object.keys(initialFilterParams)
             .filter(key => {
@@ -53,7 +54,7 @@ const useTable = ({ model, pagination }: UseTableProps) => {
             navigate(-1);
         }
         return response;
-    });
+    }, {});
 
     //Pagination
     const handlePageChange = (page: number | null) => {

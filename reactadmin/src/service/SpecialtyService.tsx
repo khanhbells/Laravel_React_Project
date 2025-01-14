@@ -3,7 +3,8 @@ import { baseSave } from "./BaseService";
 import { baseDestroy } from "./BaseService";
 import { handleAxiosError } from "@/helper/axiosHelper";
 import { showToast } from "@/helper/myHelper";
-import { SpecialtyPayloadInput, Specialty, Tag, SpecialtyPayloadForSubmit } from "@/interfaces/types/SpecialtyType";
+import { SpecialtyPayloadInput, Specialty, Array, SpecialtyPayloadForSubmit } from "@/interfaces/types/SpecialtyType";
+import { log } from "node:console";
 
 const endpoint = 'specialties'
 
@@ -22,10 +23,13 @@ const pagination = async (queryString: string) => {
 
 const save = async (payload: SpecialtyPayloadInput, updateParams: { action: string, id: string | undefined }) => {
 
+
     const payloadSubmit: SpecialtyPayloadForSubmit = {
         ...payload,
-        tags: payload.tags ? payload.tags.map((tag: Tag) => tag.value) : undefined
+        tags: payload.tags ? payload.tags.map((tag: Array) => tag.value) : undefined
     }
+    console.log(payloadSubmit);
+
 
     return baseSave(endpoint, payloadSubmit, updateParams)
 }

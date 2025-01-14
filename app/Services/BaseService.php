@@ -37,9 +37,13 @@ class BaseService
 
 
     //Xử lý nhận và loại bỏ dữ liệu 
-    protected function initializePayload($request, $except = [])
+    protected function initializePayload($request, $except = [], $only = [])
     {
-        $this->payload = $request->except(['_method', 'created_at', ...$except]);
+        if (count($only)) {
+            $this->payload = $request->only([...$only]);
+        } else {
+            $this->payload = $request->except(['_method', 'created_at', ...$except]);
+        }
         return $this;
     }
 

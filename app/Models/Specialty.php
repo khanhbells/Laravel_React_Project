@@ -32,8 +32,18 @@ class Specialty extends Model
         return $this->belongsToMany(Hospital::class, 'hospital_specialty', 'specialty_id', 'hospital_id');
     }
 
+    public function specialty_catalogues(): BelongsToMany
+    {
+        return $this->belongsToMany(SpecialtyCatalogue::class, 'specialty_catalogue_specialty', 'specialty_id', 'specialty_catalogue_id')->withTimestamps();
+    }
+
     public function tags()
     {
         return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function doctors(): BelongsToMany
+    {
+        return $this->belongsToMany(Doctor::class, 'doctor_specialty', 'specialty_id', 'doctor_id');
     }
 }

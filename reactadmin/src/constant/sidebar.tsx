@@ -2,6 +2,8 @@ import { FaHome, FaUser } from "react-icons/fa"
 import { IoNewspaperOutline } from "react-icons/io5";
 import { CiShoppingTag } from "react-icons/ci";
 import { BsHospital } from "react-icons/bs";
+import { MdOutlineMedicalServices } from "react-icons/md";
+import { FaUserDoctor } from "react-icons/fa6";
 export const sidebarItem = [
     {
         label: 'MAIN',
@@ -41,7 +43,7 @@ export const sidebarItem = [
                     },
                     {
                         title: 'Phân quyền',
-                        to: '/permission/index'
+                        to: '/user/permission/index'
                     },
                 ]
             },
@@ -57,23 +59,35 @@ export const sidebarItem = [
                     {
                         title: 'Bài viết',
                         to: '/post/index'
+                    },
+                ]
+            },
+            {
+                icon: <MdOutlineMedicalServices className="text-sm mr-2" />,
+                active: ['specialty'],
+                label: 'QL Dịch Vụ Khám Bệnh',
+                links: [
+                    {
+                        title: 'Nhóm dịch vụ khám',
+                        to: '/specialty/catalogue/index'
+                    },
+                    {
+                        title: 'Dịch vụ khám',
+                        to: '/specialty/index'
                     }
                 ]
+            },
+            {
+                icon: <FaUserDoctor className="text-sm mr-2" />,
+                active: ['doctor'],
+                label: 'QL Thông Tin Bác Sĩ',
+                path: '/doctor/index'
             },
             {
                 icon: <BsHospital className="text-sm mr-2" />,
                 active: ['hospital'],
                 label: 'Quản Lý Bệnh Viện',
-                links: [
-                    {
-                        title: 'Bệnh viện',
-                        to: '/hospital/index'
-                    },
-                    {
-                        title: 'Chuyên khoa',
-                        to: '/specialty/index'
-                    }
-                ]
+                path: '/hospital/index'
             },
             {
                 icon: <CiShoppingTag className="text-sm mr-2" />,

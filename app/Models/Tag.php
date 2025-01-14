@@ -39,4 +39,8 @@ class Tag extends Model
     {
         return $this->morphToMany(Specialty::class, 'taggable', 'taggables', 'tag_id', 'taggable_id');
     }
+    public function doctors()
+    {
+        return $this->morphToMany(Doctor::class, 'taggable', 'taggables', 'tag_id', 'taggable_id');
+    }
 }

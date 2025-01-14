@@ -26,6 +26,7 @@ class StoreSpecialtyRequest extends FormRequest
         return [
             'name' => 'required',
             'canonical' => 'required|unique:posts',
+            'specialty_catalogue_id' => 'required|gt:0'
         ];
     }
     public function messages(): array
@@ -34,6 +35,8 @@ class StoreSpecialtyRequest extends FormRequest
             'name.required' => 'Tên chuyên khoa không được để trống',
             'canonical.required' => 'Đường dẫn không được để trống',
             'canonical.unique' => 'Đường dẫn đã tồn tại',
+            'specialty_catalogue_id.required' => 'Danh mục cha là bắt buộc',
+            'specialty_catalogue_id.gt' => 'Giá trị cho danh mục cha không hợp lệ',
         ];
     }
 }

@@ -3,4 +3,6 @@ export const queryKey = {
     tags: 'tags',
     userCatalogues: 'user_catalogues',
     permissions: 'permissions',
+    specialty_catalogues: 'specialty_catalogues',
+    hospitals: 'hospitals'
 }

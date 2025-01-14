@@ -54,11 +54,11 @@ class BaseRepository
 
     public function findById(
         $modelId,
+        $relation = [],
         $column = ['*'],
-        $relation = []
-    ) {
 
-        return $this->model->select($column)->with($relation)->find($modelId);
+    ) {
+        return $this->model->select($column)->with($relation['relations'] ?? [])->find($modelId);
     }
 
     public function deleteBatch($ids = [])

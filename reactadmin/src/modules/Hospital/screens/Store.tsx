@@ -9,7 +9,7 @@ import General from "@/components/General";
 import PageHeading from "@/components/heading";
 import ImageIcon from "@/components/ImageIcon";
 import LoadingButton from "@/components/LoadingButton";
-import Address from "@/components/Address";
+import Information from "@/components/Information";
 import Seo from "@/components/Seo";
 import Specialty from "@/components/Specialty";
 import CustomDialog from "@/components/CustomDialog";
@@ -19,7 +19,7 @@ import { breadcrumb, model, redirectIfSucces } from "@/modules/Hospital/settings
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 //INTERFACES
-import { HospitalPayloadInput } from "@/interfaces/types/HospitalType";
+import { HospitalPayloadInput, Specialty as SpecialtyType } from "@/interfaces/types/HospitalType";
 //HOOK
 import useFormSubmit from "@/hook/useFormSubmit";
 import { FormProvider, useForm } from "react-hook-form";
@@ -27,6 +27,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { getHospitalById, pagination, save } from "@/service/HospitalService";
 //SCSS
 import '@/assets/scss/Editor.scss';
+import { spec } from "node:test/reporters";
 
 const fileValidation = (fileTypes: string[], maxFileSize: number) => {
     return yup.mixed().test('fileType', 'Loại tệp không hợp kệ', (value: any) => {
@@ -49,8 +50,14 @@ const schema = yup.object().shape({
     address: yup.string().required('Bạn chưa nhập vào địa chỉ'),
     publish: yup.string().optional(),
     follow: yup.string().optional(),
+    specialties: yup.array().of(
+        yup.object().shape({
+            value: yup.string().required('Bạn chưa nhập vào id'),
+            label: yup.string().required('Bạn chưa nhập vào tên chuyên khoa')
+        })
+    ).min(1, 'Bạn chưa chọn chuyên khoa').required('Bạn chưa chọn chuyên khoa'),
     image: fileValidation(['image/jpeg', 'image/png', 'image/gif', 'image/jpg'], 2).optional().nullable(),
-    icon: fileValidation(['image/jpeg', 'image/png', 'image/gif', 'image/jpg'], 2).optional().nullable()
+    icon: fileValidation(['image/jpeg', 'image/png', 'image/gif', 'image/jpg'], 2).optional().nullable(),
 })
 
 /*
@@ -62,7 +69,6 @@ const schema = yup.object().shape({
 const Store = ({
 
 }) => {
-
 
     const [album, setAlbum] = useState<string[]>([])
 
@@ -147,7 +153,10 @@ const Store = ({
                                     {id ? hospital && <Seo data={hospital} /> : <Seo />}
                                 </div>
                                 <div className="col-span-3">
-                                    <Address />
+                                    <Information
+                                        label="Địa chỉ"
+                                        name="address"
+                                    />
                                     {id ? hospital && <ImageIcon data={hospital} /> : <ImageIcon />}
                                     <Specialty
                                     />
