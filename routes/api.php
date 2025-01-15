@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\V1\SpecialtyCatalogueController;
 use App\Http\Controllers\Api\V1\DoctorController;
 use App\Http\Controllers\Api\V1\PatientCatalogueController;
 use App\Http\Controllers\Api\V1\PatientController;
+use App\Http\Controllers\Api\V1\TimeSlotController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Illuminate\Http\Request;
@@ -153,6 +154,16 @@ Route::group([
     Route::put('patients/{id}/reset-password', [PatientController::class, 'resetPassword']);
     Route::post('check-email', [PatientController::class, 'create']);
     Route::put('patients/{id}/status', [PatientController::class, 'updateStatusByField']);
+
+    // -------------------------------------------------------------------------------
+
+    // TimeSlot
+    Route::get('time_slots', [TimeSlotController::class, 'index']);
+    Route::get('time_slots/{id}', [TimeSlotController::class, 'show']);
+    Route::post('time_slots', [TimeSlotController::class, 'create']);
+    Route::put('time_slots/{id}', [TimeSlotController::class, 'update']);
+    Route::delete('time_slots/{id}', [TimeSlotController::class, 'destroy']);
+    Route::put('time_slots/{id}/status', [TimeSlotController::class, 'updateStatusByField']);
 
     // -------------------------------------------------------------------------------
 

@@ -52,6 +52,9 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 //Doctor
 import DoctorIndex from './modules/Doctor/screens';
 import DoctorStore from './modules/Doctor/screens/Store';
+//TimeSlot
+import TimeSlotIndex from '@/modules/TimeSlot/screens';
+
 
 const router = createBrowserRouter([
   {
@@ -81,7 +84,7 @@ const router = createBrowserRouter([
       { path: "/post/index", element: <PostIndex /> },
       { path: "/post/create", element: <PostStore /> },
       { path: "/post/update/:id", element: <PostStore /> },
-      { path: "/tag/index", element: <TagIndex /> },
+      { path: "/setting/tag/index", element: <TagIndex /> },
       { path: "/user/permission/index", element: <PermissionIndex /> },
       { path: "/user/catalogue/permission", element: <Permission /> },
       { path: "/hospital/index", element: <HospitalIndex /> },
@@ -95,6 +98,7 @@ const router = createBrowserRouter([
       { path: "/specialty/catalogue/update/:id", element: <SpecialtyCatalogueStore /> },
       { path: "/user/doctor/index", element: <DoctorIndex /> },
       { path: "/user/doctor/update/:id", element: <DoctorStore /> },
+      { path: "/setting/timeSlot/index", element: <TimeSlotIndex /> },
     ]
   },
 ]);

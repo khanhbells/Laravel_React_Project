@@ -42,6 +42,10 @@ const CustomTable = ({
     ...restProps
 }: CustomTableProps) => {
 
+    // useEffect(() => {
+    //     console.log(data);
+    // }, [data])
+
     const { buttonActions } = restProps;
     const { columnState, handleChecked, setInitialColumnState } = useColumnState()
     const { confirmAction, openAlertDialog, closeAlertDialog, alertDialogOpen, isLoading: isDialogLoading } = useDialog(refetch)
@@ -97,7 +101,7 @@ const CustomTable = ({
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {isLoading ? (
+                    {isLoading || data[model] === undefined ? (
                         <TableRow>
                             <TableCell colSpan={9} className="text-center items-center">
                                 <LoadingSpinner className="inline-block mr-[5px]" />

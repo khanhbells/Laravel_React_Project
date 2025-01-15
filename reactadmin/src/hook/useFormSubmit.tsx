@@ -26,7 +26,7 @@ const useFormSubmit = <T extends FieldValues, R>(
         onSuccess: (response) => {
             showToast('Cập nhật dữ liệu thành công', 'success');
             if (closeSheet) {
-                // closeSheet()
+                closeSheet()
             }
             if (refetch) {
                 queryClient.invalidateQueries(refetch)
