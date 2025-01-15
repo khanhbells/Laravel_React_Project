@@ -20,18 +20,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getInitialName } from "@/helper/myHelper";
 
 const model = 'doctors'
-export const redirectIfSucces = '/doctor/index'
+export const redirectIfSucces = '/user/doctor/index'
 
 const breadcrumb = {
 
     index: {
         title: 'Quản lý bác sĩ',
-        route: '/doctor/index'
+        route: '/user/doctor/index'
     },
     create: {
-        title: 'Thêm mới bác sĩ',
-        description: 'Nhập đầy đủ các thông tin dưới đây. Các mục có dấu (*) là bắt buộc',
-        route: '/doctor/create'
+        title: 'Quản lý bác sĩ',
+        route: '/user/doctor/index'
     },
     update: {
         title: 'Cập nhật thông tin',
@@ -88,7 +87,7 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
         onClick: (id: string, openSheet: OpenSheetFunction) => {
             openSheet({ open: true, action: 'update', id: id })
         },
-        path: '/doctor/update/'
+        path: '/user/doctor/update/'
     },
 ]
 

@@ -96,7 +96,7 @@ const Store = ({
 
     //useQuery
     const { data: dropdown, isLoading: isDropdownLoading, isError: isDropDownError } = useQuery([queryKey.hospitals], () => pagination(''), {
-        staleTime: Infinity
+        staleTime: 6000
     })
     const { data: doctor, isLoading, isError } = useQuery([model, id], () => findById(id), {
         enabled: !!id,
@@ -108,7 +108,7 @@ const Store = ({
                 user_id: data.user_id,
             })
         },
-        staleTime: 10000, // Dữ liệu không bao giờ bị coi là stale
+        staleTime: 6000, // Dữ liệu không bao giờ bị coi là stale
     })
 
     //Dropdown Select Parent

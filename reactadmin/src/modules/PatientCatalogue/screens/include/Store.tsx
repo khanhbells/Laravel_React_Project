@@ -1,33 +1,32 @@
 //CORE REACT
-import { useEffect } from "react";
 import { useQuery } from "react-query";
 //COMPONENT
-import CustomInput from "@/components/CustomInput"
-import LoadingButton from "@/components/LoadingButton"
+import CustomInput from "@/components/CustomInput";
+import LoadingButton from "@/components/LoadingButton";
 //HOOK
-import { FormProvider, useForm } from "react-hook-form";
 import useFormSubmit from "@/hook/useFormSubmit";
 import useSetFormValue from "@/hook/useSetFormValue";
+import { FormProvider, useForm } from "react-hook-form";
 //SETTING
-import { UserCatalogue } from "@/interfaces/types/UserCatalogueType";
-import { yupResolver } from '@hookform/resolvers/yup'
+import { PatientCatalogue } from "@/interfaces/types/PatientCatalogueType";
+import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 //SERVICE
-import { save, getUserCatalogueById } from "@/service/UserCatalogueService";
+import { getPatientCatalogueById, save } from "@/service/PatientCatalogueService";
 //INTERFACES
 import { StoreProps } from "@/interfaces/BaseServiceInterface";
-import { UserCataloguePayloadInput } from "@/interfaces/types/UserCatalogueType";
+import { PatientCataloguePayloadInput } from "@/interfaces/types/PatientCatalogueType";
 
 
 
-const UserCatalogueStore = ({ id, action, refetch, closeSheet }: StoreProps) => {
+const PatientCatalogueStore = ({ id, action, refetch, closeSheet }: StoreProps) => {
     const schema = yup.object().shape({
-        name: yup.string().required('Bạn chưa nhập vào tên nhóm thành viên').min(3, 'Tên nhóm thành viên tối thiểu phải có 3 ký tự'),
+        name: yup.string().required('Bạn chưa nhập vào tên nhóm bệnh nhân').min(3, 'Tên nhóm bệnh nhân tối thiểu phải có 3 ký tự'),
         description: yup.string().optional(),
     })
 
     //useForm
-    const methods = useForm<UserCataloguePayloadInput>({
+    const methods = useForm<PatientCataloguePayloadInput>({
         context: { action },
         resolver: yupResolver(schema),
         mode: 'onSubmit'
@@ -35,8 +34,8 @@ const UserCatalogueStore = ({ id, action, refetch, closeSheet }: StoreProps) => 
     const { register, handleSubmit, reset, formState: { errors }, setValue, control } = methods
     const { onSubmitHanler, loading } = useFormSubmit(save, { action: action, id: id }, null, refetch, closeSheet)
 
-    const { data, isLoading, isError } = useQuery<UserCatalogue>(['user_catalogue', id],
-        () => getUserCatalogueById(id),
+    const { data, isLoading, isError } = useQuery<PatientCatalogue>(['patient_catalogue', id],
+        () => getPatientCatalogueById(id),
         {
             enabled: action === 'update' && !!id,
         }
@@ -78,4 +77,4 @@ const UserCatalogueStore = ({ id, action, refetch, closeSheet }: StoreProps) => 
     )
 }
 
-export default UserCatalogueStore
+export default PatientCatalogueStore

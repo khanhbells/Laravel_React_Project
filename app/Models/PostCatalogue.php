@@ -28,7 +28,8 @@ class PostCatalogue extends Model
         'order' => 0,
         'lft' => 0,
         'rgt' => 0,
-        'level' => 0
+        'level' => 0,
+        'parent_id' => 0
     ];
 
     protected $table = 'post_catalogues';

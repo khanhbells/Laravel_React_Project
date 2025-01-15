@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\V1\HospitalController;
 use App\Http\Controllers\Api\V1\SpecialtyController;
 use App\Http\Controllers\Api\V1\SpecialtyCatalogueController;
 use App\Http\Controllers\Api\V1\DoctorController;
+use App\Http\Controllers\Api\V1\PatientCatalogueController;
+use App\Http\Controllers\Api\V1\PatientController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Illuminate\Http\Request;
@@ -132,7 +134,27 @@ Route::group([
     Route::put('doctors/{id}/status', [DoctorController::class, 'updateStatusByField']);
 
     // -------------------------------------------------------------------------------
+    // Patient Catalogue
+    Route::get('patient_catalogues', [PatientCatalogueController::class, 'index']);
+    Route::get('patient_catalogues/{id}', [PatientCatalogueController::class, 'show']);
+    Route::post('patient_catalogues', [PatientCatalogueController::class, 'create']);
+    Route::put('patient_catalogues/{id}', [PatientCatalogueController::class, 'update']);
+    Route::delete('patient_catalogues/{id}', [PatientCatalogueController::class, 'destroy']);
+    Route::put('patient_catalogues/{id}/status', [PatientCatalogueController::class, 'updateStatusByField']);
 
+    // -------------------------------------------------------------------------------
+    // Patient
+    Route::get('patients', [PatientController::class, 'index']);
+    Route::get('patients/{id}', [PatientController::class, 'show']);
+    Route::post('patients', [PatientController::class, 'create']);
+    Route::put('patients/{id}', [PatientController::class, 'update']);
+    Route::delete('patients/{id}', [PatientController::class, 'destroy']);
+
+    Route::put('patients/{id}/reset-password', [PatientController::class, 'resetPassword']);
+    Route::post('check-email', [PatientController::class, 'create']);
+    Route::put('patients/{id}/status', [PatientController::class, 'updateStatusByField']);
+
+    // -------------------------------------------------------------------------------
 
 
 

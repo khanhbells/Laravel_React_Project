@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\QueryTrait;
 
-class User extends Authenticatable implements JWTSubject
+class Patient extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, QueryTrait;
 
@@ -30,7 +30,7 @@ class User extends Authenticatable implements JWTSubject
         'image',
         'description',
         'publish',
-        'user_catalogue_id',
+        'patient_catalogue_id',
         'password'
     ];
 
@@ -76,13 +76,13 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function user_catalogues()
+    public function patient_catalogues()
     {
-        return $this->belongsTo(UserCatalogue::class, 'user_catalogue_id', 'id');
+        return $this->belongsTo(PatientCatalogue::class, 'patient_catalogue_id', 'id');
     }
 
     public function doctors()
     {
-        return $this->hasOne(Doctor::class, 'user_id', 'id');
+        return $this->hasOne(Doctor::class, 'patient_id', 'id');
     }
 }

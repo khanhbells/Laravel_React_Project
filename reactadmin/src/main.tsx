@@ -21,9 +21,13 @@ import Dashboard from './modules/Dashboard';
 import Login from './modules/Login';
 //User
 import UserIndex from '@/modules/User/screens/View'
+//Patient
+import PatientIndex from '@/modules/Patient/screens'
 //UserCatalogue
 import UserCatalogueIndex from '@/modules/UserCatalogue/screens/View';
 import Permission from '@/modules/UserCatalogue/screens/Permission';
+//PatientCatalogue
+import PatientCatalogueIndex from '@/modules/PatientCatalogue/screens';
 //PostCatalogue
 import PostCatalogueIndex from '@/modules/PostCatalogue/screens/View';
 import PostCatalogueStore from '@/modules/PostCatalogue/screens/Store';
@@ -68,7 +72,9 @@ const router = createBrowserRouter([
     children: [
       { path: "/dashboard", element: <Dashboard /> },
       { path: "/user/index", element: <UserIndex /> },
+      { path: "/patient/index", element: <PatientIndex /> },
       { path: "/user/catalogue/index", element: <UserCatalogueIndex /> },
+      { path: "/patient/catalogue/index", element: <PatientCatalogueIndex /> },
       { path: "/post/catalogue/index", element: <PostCatalogueIndex /> },
       { path: "/post/catalogue/create", element: <PostCatalogueStore /> },
       { path: "/post/catalogue/update/:id", element: <PostCatalogueStore /> },
@@ -87,9 +93,8 @@ const router = createBrowserRouter([
       { path: "/specialty/catalogue/index", element: <SpecialtyCatalogueIndex /> },
       { path: "/specialty/catalogue/create", element: <SpecialtyCatalogueStore /> },
       { path: "/specialty/catalogue/update/:id", element: <SpecialtyCatalogueStore /> },
-      { path: "/doctor/index", element: <DoctorIndex /> },
-      { path: "/doctor/update/:id", element: <DoctorStore /> },
-
+      { path: "/user/doctor/index", element: <DoctorIndex /> },
+      { path: "/user/doctor/update/:id", element: <DoctorStore /> },
     ]
   },
 ]);

@@ -3,7 +3,7 @@ import { IoNewspaperOutline } from "react-icons/io5";
 import { CiShoppingTag } from "react-icons/ci";
 import { BsHospital } from "react-icons/bs";
 import { MdOutlineMedicalServices } from "react-icons/md";
-import { FaUserDoctor } from "react-icons/fa6";
+import { FaUserInjured } from "react-icons/fa6";
 export const sidebarItem = [
     {
         label: 'MAIN',
@@ -42,8 +42,27 @@ export const sidebarItem = [
                         to: '/user/index'
                     },
                     {
+                        title: 'Thông tin bác sĩ',
+                        to: '/user/doctor/index'
+                    },
+                    {
                         title: 'Phân quyền',
                         to: '/user/permission/index'
+                    },
+                ]
+            },
+            {
+                icon: <FaUserInjured className="text-sm mr-2" />,
+                active: ['patient'],
+                label: 'Quản Lý Bệnh Nhân',
+                links: [
+                    {
+                        title: 'Nhóm bệnh nhân',
+                        to: '/patient/catalogue/index'
+                    },
+                    {
+                        title: 'Bệnh nhân',
+                        to: '/patient/index'
                     },
                 ]
             },
@@ -76,12 +95,6 @@ export const sidebarItem = [
                         to: '/specialty/index'
                     }
                 ]
-            },
-            {
-                icon: <FaUserDoctor className="text-sm mr-2" />,
-                active: ['doctor'],
-                label: 'QL Thông Tin Bác Sĩ',
-                path: '/doctor/index'
             },
             {
                 icon: <BsHospital className="text-sm mr-2" />,

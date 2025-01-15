@@ -14,7 +14,7 @@ const schema = yup.object().shape({
         then: (schema) => schema.notRequired(),
         otherwise: (schema) => schema.required('Bạn chưa nhập vào ô xác nhận mật khẩu').oneOf([yup.ref('password')], 'Mật khẩu nhập lại không chính xác')
     }),
-    user_catalogue_id: yup.string().required('Bạn chưa chọn nhóm thành viên'),
+    patient_catalogue_id: yup.string().required('Bạn chưa chọn nhóm thành viên'),
     province_id: yup.string().required('Bạn chưa chọn thành phố'),
     district_id: yup.string().required('Bạn chưa chọn quận/huyện'),
     ward_id: yup.string().required('Bạn chưa chọn phường/xã'),
