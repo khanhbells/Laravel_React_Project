@@ -33,14 +33,16 @@ const destroy = async (id: string) => {
 
 }
 
-const getTimeSlotById = async (id: string | undefined): Promise<TimeSlot> => {
+const findById = async (id: string | undefined): Promise<TimeSlot> => {
     const response = await axios.get(`time_slots/${id}`)
     return response.data
 }
 
+
+
 export {
     pagination,
     save,
-    getTimeSlotById,
+    findById,
     destroy,
 }

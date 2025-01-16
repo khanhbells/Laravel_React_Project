@@ -87,6 +87,7 @@ export type ActionParam = keyof Row | `${string}:f` | `${string}:c` | `${string}
 export type ParamToType<T extends ActionParam> =
     T extends `${string}:f` ? Function :
     T extends `${string}:pf` ? Function :
+    T extends `${string}:an` ? any :
     T extends `${string}:c` ? React.ComponentType<any> :
     T extends keyof Row ? Row[T] :
     never;

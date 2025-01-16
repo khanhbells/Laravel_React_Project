@@ -1,27 +1,28 @@
 //REACT
-import { useState, memo, useEffect } from "react";
+import { useState, memo, useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useQuery } from "react-query";
 //COMPONENT
-// import CustomInput from "./CustomInput";
-// import LoadingButton from "./LoadingButton";
 import LoadingButton from "@/components/LoadingButton";
 import CustomTimePicker from "@/components/CustomTimePicker";
 //SETTINGS
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-
 //HOOK
 import useFormSubmit from "@/hook/useFormSubmit";
 //API
-import { save } from "@/service/TimeSlotService";
+import { save, findById } from "@/service/TimeSlotService";
 export type TTimeSlot = {
     start_time: string,
-    end_time: string
+    end_time: string,
 }
+//CONTEXT
+import { useTableContext } from "@/contexts/TableContext";
+
 
 export interface ITimeSlot {
-    close: () => void,
-    refetch: any
+    close?: () => void,
+    [key: string]: any
 }
 
 const schema = yup.object().shape({
@@ -30,19 +31,35 @@ const schema = yup.object().shape({
 })
 const Store = ({
     close,
-    refetch
+    ...restProps
 }: ITimeSlot) => {
+    const model = "time_slots"
     //-------------------------------------
     const methods = useForm<TTimeSlot>({
         resolver: yupResolver(schema),
         mode: 'onSubmit'
     })
+
+    const currentAction = useMemo(() => restProps.id ? 'update' : '', [])
     const { handleSubmit, reset, formState: { errors } } = methods
-    const { onSubmitHanler, loading, isSuccess, } = useFormSubmit(save, { action: '', id: '' })
+    const { onSubmitHanler, loading, isSuccess, } = useFormSubmit(save, { action: currentAction, id: restProps.id })
+
+    const { refetch } = useTableContext();
+
+    const { data, isLoading, isError } = useQuery([model, restProps.id], () => findById(restProps.id), {
+        enabled: !!restProps.id,
+        onSuccess: (data) => {
+            reset({
+                start_time: String(data.start_time),
+                end_time: String(data.end_time),
+            })
+        },
+        staleTime: 3000
+    })
 
     useEffect(() => {
         if (isSuccess) {
-            close()
+            close && close()
             refetch()
         }
     }, [isSuccess])

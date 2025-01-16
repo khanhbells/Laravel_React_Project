@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 //COMPONENTS
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import Store from "../screens/include/Store";
 //SETTINGS
 import { TimeSlot } from "@/interfaces/types/TimeSlotType";
 //INTERFACE & TYPE
@@ -50,12 +51,13 @@ const tableColumn: tableColumn[] = [
 
 const buttonActions: ButtonAction<ActionParam[]>[] = [
     {
-        icon: <FaRegEdit className="text-white" />,
+        icon: <FaRegEdit className="text-white text-[20px]" />,
         className: 'flex mr-[5px]',
-        method: 'create',
-        params: ['id', 'openSheet:f'],
-        onClick: (id: string, openSheet: OpenSheetFunction) => {
-            openSheet({ open: true, action: 'update', id: id })
+        method: 'reset',
+        params: ['id', 'handleDialog:f', 'Store:c'],
+        component: Store,
+        onClick: (id: string, handleDialog: Function, Store: React.ComponentType<any>) => {
+            handleDialog(id, undefined, Store)
         }
     },
     {
@@ -68,6 +70,7 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
             // confirmAction(destroy)
         }
     },
+
 ]
 
 

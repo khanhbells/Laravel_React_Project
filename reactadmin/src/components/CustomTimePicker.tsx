@@ -35,7 +35,6 @@ const CustomTimePicker = ({
                     render={({ field }) => {
                         const handleChange = (value: any) => {
                             if (dayjs(value).isValid()) {
-                                // Chuyển đổi giá trị thành định dạng mong muốn
                                 const formattedValue = dayjs(value).format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (z)');
                                 field.onChange(formattedValue);
                             } else {
