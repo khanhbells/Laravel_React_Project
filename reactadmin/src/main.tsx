@@ -54,6 +54,9 @@ import DoctorIndex from './modules/Doctor/screens';
 import DoctorStore from './modules/Doctor/screens/Store';
 //TimeSlot
 import TimeSlotIndex from '@/modules/TimeSlot/screens';
+//Schedules
+import ScheduleIndex from '@/modules/Schedule/screens';
+import ScheduleCreate from '@/modules/Schedule/screens/Store';
 
 
 const router = createBrowserRouter([
@@ -99,6 +102,8 @@ const router = createBrowserRouter([
       { path: "/user/doctor/index", element: <DoctorIndex /> },
       { path: "/user/doctor/update/:id", element: <DoctorStore /> },
       { path: "/setting/timeSlot/index", element: <TimeSlotIndex /> },
+      { path: "/schedule/index", element: <ScheduleIndex /> },
+      { path: "/schedule/create", element: <ScheduleCreate /> },
     ]
   },
 ]);

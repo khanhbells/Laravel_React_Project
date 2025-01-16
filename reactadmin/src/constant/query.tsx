@@ -4,5 +4,7 @@ export const queryKey = {
     userCatalogues: 'user_catalogues',
     permissions: 'permissions',
     specialty_catalogues: 'specialty_catalogues',
-    hospitals: 'hospitals'
+    hospitals: 'hospitals',
+    doctors: 'doctors',
+    timeSlots: 'timeSlots'
 }

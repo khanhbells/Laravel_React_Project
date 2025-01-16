@@ -5,6 +5,7 @@ import { BsHospital } from "react-icons/bs";
 import { MdOutlineMedicalServices } from "react-icons/md";
 import { FaUserInjured } from "react-icons/fa6";
 import { IoSettingsOutline } from "react-icons/io5";
+import { GrSchedules } from "react-icons/gr";
 export const sidebarItem = [
     {
         label: 'MAIN',
@@ -96,6 +97,12 @@ export const sidebarItem = [
                         to: '/specialty/index'
                     }
                 ]
+            },
+            {
+                icon: <GrSchedules className="text-sm mr-2" />,
+                active: ['schedule'],
+                label: 'Quản Lý Lịch Khám',
+                path: '/hospital/index'
             },
             {
                 icon: <BsHospital className="text-sm mr-2" />,

@@ -50,7 +50,7 @@ const Parent = ({
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="p-[10px]">
-                    <span className="text-[#f00] text-[12px] mb-[10px] block">*Chọn Root nếu không có danh mục cha</span>
+                    <span className="text-[#f00] text-[12px] mb-[10px] block">{label ? '' : '*Chọn Root nếu không có danh mục cha'}</span>
                     <Controller
                         name={name}
                         // control={control}
@@ -59,7 +59,7 @@ const Parent = ({
                             <Select
                                 options={combinedOptions}
                                 className="w-full text-[12px]"
-                                placeholder="Chọn danh mục chính"
+                                placeholder={label ?? 'Danh mục chính'}
                                 onChange={(selected) => {
                                     field.onChange(selected?.value)
                                 }}

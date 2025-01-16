@@ -26,6 +26,6 @@ class TimeSlot extends Model
     protected $table = 'time_slots';
 
     public $attributes = [
-        'publish' => 1,
+        'publish' => 2,
     ];
 }
