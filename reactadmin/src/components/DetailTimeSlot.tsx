@@ -15,6 +15,7 @@ import { useTimeSlotContext } from "@/contexts/TimeSlotContext";
 import { useFormContext } from "react-hook-form";
 //INTERFACE
 import { SchedulePayloadInput } from "@/interfaces/types/ScheduleType";
+import { addCommas } from "@/helper/myHelper";
 
 interface DetailTimeSlotProps {
     label?: string
@@ -51,9 +52,14 @@ const DetailTimeSlot = ({
                             <div className="flex items-center gap-2 w-[48%]">
                                 <Label className="w-[20%]">Giá tiền</Label>
                                 <Input
-                                    type="number"
+                                    type="text"
                                     className="w-full focus-visible:ring-0 focus:outline-none focus:border-sky-500 focus:ring-2"
-                                    {...register(`time_slots.${index}.price`)}
+                                    {...register(`time_slots.${index}.price`, {
+                                        onChange: (event) => {
+                                            const formattedValue = addCommas(event.target.value);
+                                            event.target.value = formattedValue;
+                                        }
+                                    })}
                                 />
                                 {errors.time_slots?.[index]?.price && (
                                     <span className="text-red-500 text-xs">
@@ -61,9 +67,13 @@ const DetailTimeSlot = ({
                                     </span>
                                 )}
                             </div>
-
                         </div>
                     ))}
+                {errors.time_slots && (
+                    <span className="text-red-500 text-xs">
+                        {errors.time_slots.message}
+                    </span>
+                )}
             </CardContent>
         </Card>
     );

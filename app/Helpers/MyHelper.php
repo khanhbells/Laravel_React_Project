@@ -33,5 +33,15 @@ if (!function_exists('loadClass')) {
     }
 }
 
+if (!function_exists('convert_price')) {
+    function convert_price(mixed $price = '', $flag = false)
+    {
+        if ($price == null) {
+            return 0;
+        }
+        return ($flag == false) ? str_replace('.', '', $price) : number_format($price, 0, ',', '.');
+    }
+}
+
 // tác dụng của studly chuyển chuỗi thành kiểu chữ "StudlyCase" (còn gọi là PascalCase), trong đó mỗi từ bắt đầu bằng chữ cái viết hoa và không có dấu gạch dưới hoặc khoảng trắng.
 // tác dụng của singular chuyển đổi một chuỗi từ số nhiều (plural) thành số ít (singular).

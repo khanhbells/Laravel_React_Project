@@ -28,4 +28,9 @@ class TimeSlot extends Model
     public $attributes = [
         'publish' => 2,
     ];
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class, 'time_slot_id', 'id');
+    }
 }

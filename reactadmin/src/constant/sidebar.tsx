@@ -102,7 +102,7 @@ export const sidebarItem = [
                 icon: <GrSchedules className="text-sm mr-2" />,
                 active: ['schedule'],
                 label: 'Quản Lý Lịch Khám',
-                path: '/hospital/index'
+                path: '/schedule/index'
             },
             {
                 icon: <BsHospital className="text-sm mr-2" />,

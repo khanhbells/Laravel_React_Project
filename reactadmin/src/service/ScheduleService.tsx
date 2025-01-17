@@ -3,7 +3,7 @@ import { baseSave } from "./BaseService";
 import { baseDestroy } from "./BaseService";
 import { handleAxiosError } from "@/helper/axiosHelper";
 import { showToast } from "@/helper/myHelper";
-import { SchedulePayloadInput, Schedule } from "@/interfaces/types/ScheduleType";
+import { SchedulePayloadInput, Schedule, TimeSlot, SchedulePayloadForSubmit } from "@/interfaces/types/ScheduleType";
 
 const endpoint = 'schedules'
 
@@ -22,8 +22,11 @@ const pagination = async (queryString: string) => {
 
 const save = async (payload: SchedulePayloadInput, updateParams: { action: string, id: string | undefined }) => {
     console.log(payload);
-
-    // return baseSave(endpoint, payload, updateParams)
+    const payloadSubmit: SchedulePayloadForSubmit = {
+        ...payload,
+        time_slots: JSON.stringify(payload.time_slots)
+    }
+    return baseSave(endpoint, payloadSubmit, updateParams)
 }
 
 const update = async (payload: SchedulePayloadInput) => {

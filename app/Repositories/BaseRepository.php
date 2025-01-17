@@ -19,12 +19,11 @@ class BaseRepository
         $query->select($params['select'])
             ->condition($params['condition'] ?? [])
             ->keyword($params['keyword'] ?? '')
+            ->relationWith($params['relations'] ?? [])
             ->relationWhereHas($params['whereHas'] ?? [])
             ->relationCount($params['relationCount'] ?? [])
             ->orderBy($params['orderBy'][0], $params['orderBy'][1]);
-        if (isset($params['relations']) && count($params['relations'])) {
-            $query->with($params['relations']);
-        }
+
         // return $query->toSql();
         if ($params['perpage']) {
             return $query->paginate($params['perpage']);
@@ -35,6 +34,13 @@ class BaseRepository
     public function create($payload = [])
     {
         return $this->model->create($payload);
+    }
+
+    public function createMany($payload = [])
+    {
+
+        return $this->model->insert($payload);
+        // return 
     }
 
     public function update($id, $payload)
@@ -59,6 +65,29 @@ class BaseRepository
 
     ) {
         return $this->model->select($column)->with($relation['relations'] ?? [])->find($modelId);
+    }
+
+    public function findByCondition(
+        $condition = [],
+        $flag = false,
+        $relation = [],
+        array $orderBy = ['id', 'desc'],
+        array $param = [],
+        array $withCount = []
+    ) {
+        $query = $this->model->newQuery();
+        foreach ($condition as $key => $val) {
+            $query->where($val[0], $val[1], $val[2]);
+        }
+
+        if (isset($param['whereIn'])) {
+            $query->whereIn($param['whereInField'], $param['whereIn']);
+        }
+
+        $query->with($relation);
+        $query->withCount($withCount);
+        $query->orderBy($orderBy[0], $orderBy[1]);
+        return ($flag == false) ? $query->first() : $query->get();
     }
 
     public function deleteBatch($ids = [])

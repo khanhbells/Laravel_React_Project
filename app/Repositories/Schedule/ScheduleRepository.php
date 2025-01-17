@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Repositories\TimeSlot;
+namespace App\Repositories\Schedule;
 
 use App\Repositories\BaseRepository;
-use App\Models\TimeSlot;
+use App\Models\Schedule;
 
-class TimeSlotRepository extends BaseRepository
+class ScheduleRepository extends BaseRepository
 {
     protected $model;
     public function __construct(
-        TimeSlot $model
+        Schedule $model
     ) {
         $this->model = $model;
     }

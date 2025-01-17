@@ -51,4 +51,9 @@ class Doctor extends Model
     {
         return $this->morphToMany(Tag::class, 'taggable');
     }
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class, 'doctor_id', 'id');
+    }
 }

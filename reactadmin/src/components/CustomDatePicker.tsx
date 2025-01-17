@@ -11,40 +11,63 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 //INTERFACE
-import { Option } from "@/components/CustomSelectBox";
-
 
 interface IDatePickerProps {
+    name: string,
+    label: string
 }
 
 const CustomDatePicker = ({
+    name,
+    label
 }: IDatePickerProps) => {
-    const [value, setValue] = useState<{ startDate: Date | null; endDate: Date | null }>({
-        startDate: null,
-        endDate: null
-    });
+
+    //Cấu hình ngày được chọn
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+
+    const { register, formState: { errors }, control } = useFormContext()
+    const errorMessage = errors[name]?.message
 
     // Lấy ngày hiện tại
-    const today = new Date();
+
     return (
         <>
             <Card className="rounded-[5px] mb-[20px]">
                 <CardHeader className="border-b border-solid border-[#f3f3f3] p-[15px]">
                     <CardTitle className="uppercase">
-                        Ngày khám bệnh
+                        {label}
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="p-[10px]">
-                    <Datepicker
-                        useRange={false}
-                        asSingle={true}
-                        value={value}
-                        onChange={newValue => setValue({
-                            startDate: newValue?.startDate || null,
-                            endDate: newValue?.endDate || null
-                        })}
-                        minDate={today}
+                    <Controller
+                        name={name}
+                        control={control}
+                        render={({ field }) => {
+                            const handleChange = (selected: any) => {
+                                const formattedDate = selected?.startDate
+                                    ? new Date(selected.startDate).toISOString().split("T")[0] // Format thành YYYY-MM-DD
+                                    : null;
+                                field.onChange(formattedDate); // Lưu giá trị chuỗi vào form
+                            };
+                            return (
+                                <Datepicker
+                                    useRange={false}
+                                    asSingle={true}
+                                    value={field.value ? { startDate: field.value, endDate: field.value } : null}
+                                    onChange={handleChange}
+                                    minDate={tomorrow}
+                                />
+                            );
+                        }}
                     />
+                    <div className="error-line text-right ">
+                        {typeof errorMessage === 'string' && (
+                            <span className="text-red-500 text-xs">{errorMessage}</span>
+                        )}
+                    </div>
                 </CardContent>
             </Card>
         </>

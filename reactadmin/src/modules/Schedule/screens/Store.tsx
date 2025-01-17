@@ -10,7 +10,7 @@ import Parent from "@/components/Parent";
 import TimeSlot from "@/components/TimeSlot";
 import DetailTimeSlot from "@/components/DetailTimeSlot";
 import CustomDialog from "@/components/CustomDialog";
-import StoreTimeSlot from "@/modules/TimeSlot/screens/include/Store";
+import CreateTimeSlot from "./CreateTimeSlot";
 //SETTINGS
 import { queryKey } from "@/constant/query";
 import { getDropdown } from "@/helper/myHelper";
@@ -30,20 +30,19 @@ import { pagination as paginationTimeSlot } from "@/service/TimeSlotService";
 import '@/assets/scss/Editor.scss';
 //CONTEXT
 import { TimeSlotProvider } from "@/contexts/TimeSlotContext";
-import { TableProvider } from "@/contexts/TableContext";
 
 
 
 const schema = yup.object().shape({
-    user_id: yup.string().optional(),
-    doctor_id: yup.string().required("Bác sĩ là bắt buộc"),
+    doctor_id: yup.string().optional(),
+    user_id: yup.string().required("Bác sĩ là bắt buộc"),
     time_slots: yup.array().of(
         yup.object().shape({
-            time_slot_id: yup.string().required("ID thời gian là bắt buộc"),
-            price: yup.string().required("Giá tiền là bắt buộc").min(0, "Giá tiền không thể nhỏ hơn 0"),
+            time_slot_id: yup.string().required("Thời gian là bắt buộc"),
+            price: yup.string().required("Giá tiền là bắt buộc").min(4, "Giá tiền không thể nhỏ hơn 0"),
         })
     ).required("Danh sách thời gian là bắt buộc"),
-    date: yup.string().optional(),
+    date: yup.string().required("Ngày khám bệnh là bắt buộc"),
     publish: yup.string().optional(),
 })
 
@@ -51,9 +50,8 @@ const Store = ({
 
 }) => {
     //--------------STATE--------------------
-    const [album, setAlbum] = useState<string[]>([])
     const [openDialog, setOpenDialog] = useState<boolean>()
-    const [newTags, setNewTag] = useState<{ value: string, label: string }[]>([])
+    const [loadingTimeSlot, setLoadingTimeSlot] = useState<boolean>(false)
 
 
     //--------------------------------------
@@ -75,7 +73,7 @@ const Store = ({
     const { handleSubmit, reset, formState: { errors } } = methods
 
     //Gui du lieu ve phia server
-    const { onSubmitHanler, loading, isSuccess } = useFormSubmit(save, { action: currentAction, id: id }, album)
+    const { onSubmitHanler, loading, isSuccess } = useFormSubmit(save, { action: currentAction, id: id })
 
     //useQuery
     const { data: dropdown, isLoading: isDropdownLoading, isError: isDropDownError } = useQuery([queryKey.doctors], () => pagination(''))
@@ -109,56 +107,59 @@ const Store = ({
 
     return (
         <>
-            <TableProvider model="time_slots" pagination={paginationTimeSlot}>
-                <TimeSlotProvider>
-                    <FormProvider {...methods}>
-                        <div className="page-container " >
-                            <PageHeading breadcrumb={breadcrumbData} />
-                            <div className="p-[15px]">
-                                <form onSubmit={handleSubmit(onSubmitHanler)}>
-                                    <div className="grid grid-cols-12 gap-4 ">
-                                        <div className="col-span-9">
-                                            <TimeSlot
-                                                onOpenDialog={handleOpenDialog}
-                                            />
-                                            <DetailTimeSlot />
-                                        </div>
-                                        <div className="col-span-3">
-                                            {dropdown &&
-                                                < Parent
-                                                    name="doctor_id"
-                                                    options={doctors}
-                                                    label="Bác sĩ"
-                                                />
-                                            }
-                                            <CustomDatePicker />
-                                            <div className="mt-[20px] text-right">
-                                                <LoadingButton
-                                                    loading={loading}
-                                                    text="Lưu thông tin"
-                                                />
-                                            </div>
-                                        </div>
+            <FormProvider {...methods}>
+                <div className="page-container " >
+                    <PageHeading breadcrumb={breadcrumbData} />
+                    <div className="p-[15px]">
+                        <form onSubmit={handleSubmit(onSubmitHanler)}>
+                            <div className="grid grid-cols-12 gap-4 ">
+                                <div className="col-span-9">
+                                    <TimeSlotProvider>
+                                        <TimeSlot
+                                            onOpenDialog={handleOpenDialog}
+                                            loadingTimeSlot={loadingTimeSlot}
+                                        />
+                                        <DetailTimeSlot />
+                                    </TimeSlotProvider>
+                                </div>
+                                <div className="col-span-3">
+                                    {dropdown &&
+                                        < Parent
+                                            name="user_id"
+                                            options={doctors}
+                                            label="Bác sĩ"
+                                        />
+                                    }
+                                    <CustomDatePicker
+                                        name="date"
+                                        label="Ngày khám bệnh"
+                                    />
+                                    <div className="mt-[20px] text-right">
+                                        <LoadingButton
+                                            loading={loading}
+                                            text="Lưu thông tin"
+                                        />
                                     </div>
-                                </form>
+                                </div>
                             </div>
-                        </div>
-                    </FormProvider>
-                </TimeSlotProvider>
-                {openDialog && (
-                    <CustomDialog
-                        heading="Thêm thời gian mới"
-                        description="Nhập đầy đủ thông tin dưới đây. Các mục có dấu (*) là bắt buộc"
-                        buttonLoading={false}
-                        open={openDialog}
+                        </form>
+                    </div>
+                </div>
+            </FormProvider>
+            {openDialog && (
+                <CustomDialog
+                    heading="Thêm thời gian mới"
+                    description="Nhập đầy đủ thông tin dưới đây. Các mục có dấu (*) là bắt buộc"
+                    buttonLoading={false}
+                    open={openDialog}
+                    close={() => setOpenDialog(false)}
+                >
+                    <CreateTimeSlot
                         close={() => setOpenDialog(false)}
-                    >
-                        <StoreTimeSlot
-                            close={() => setOpenDialog(false)}
-                        />
-                    </CustomDialog>
-                )}
-            </TableProvider>
+                        setLoadingTimeSlot={setLoadingTimeSlot}
+                    />
+                </CustomDialog>
+            )}
         </>
     )
 }

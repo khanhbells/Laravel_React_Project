@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');
             $table->foreign('time_slot_id')->references('id')->on('time_slots')->onDelete('cascade');
             $table->decimal('price');
-            $table->dateTime('date');
+            $table->date('date');
             $table->string('status');
             $table->tinyInteger('publish')->default(1);
             $table->timestamps();

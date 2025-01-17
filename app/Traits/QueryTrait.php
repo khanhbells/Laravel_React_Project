@@ -64,6 +64,15 @@ trait QueryTrait
         return $query;
     }
 
+    public function scopeRelationWith($query, $relations)
+    {
+        if (isset($relations) && count($relations)) {
+            foreach ($relations as $key => $value) {
+                $query->with($value);
+            }
+        }
+    }
+
     public function scopeInnerJoin($query, $join)
     {
         if (!empty($join)) {

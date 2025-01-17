@@ -20,21 +20,21 @@ import { pagination } from "@/service/TimeSlotService";
 import { TimeSlot as TTimeSlot } from "@/interfaces/types/TimeSlotType";
 //CONTEXT
 import { useTimeSlotContext } from "@/contexts/TimeSlotContext";
-import { useTableContext } from "@/contexts/TableContext";
 interface TimeSlotProps {
     label?: string,
     onOpenDialog: () => void
+    [key: string]: any
 }
 
 const TimeSlot = ({
     label,
-    onOpenDialog
+    onOpenDialog,
+    ...restProps
 }: TimeSlotProps) => {
     const model = 'time_slots'
-    const { data, isLoading, isError, refetch } = useQuery([queryKey.timeSlots], () => pagination(''))
+    const { data, isLoading, isError, refetch } = useQuery([queryKey.timeSlots], () => pagination('perpage=20'))
     const [customData, setCustomData] = useState<TTimeSlot[]>([]);
     const { activeIndices, setActiveIndices } = useTimeSlotContext();
-    const { data: DataTableTimeSlots } = useTableContext()
 
     useEffect(() => {
         if (!isLoading) {
@@ -50,7 +50,7 @@ const TimeSlot = ({
 
     useEffect(() => {
         refetch();
-    }, [DataTableTimeSlots]);
+    }, [restProps.loadingTimeSlot]);
 
     const handleButtonClick = (timeSlot: TTimeSlot) => {
         // Kiểm tra xem thời gian khám có đang bị tắt publish hay không

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\TimeSlot;
+namespace App\Http\Requests\Time;
 
 use Illuminate\Foundation\Http\FormRequest;
 

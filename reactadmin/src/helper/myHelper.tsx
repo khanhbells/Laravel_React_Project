@@ -70,6 +70,20 @@ export const slug = (str: string): string => {
     return str;
 };
 
+export const addCommas = (nStr: string): string => {
+
+    nStr = String(nStr);
+    nStr = nStr.replace(/[^0-9]/g, "");
+    nStr = nStr.replace(/\./gi, "");
+    let str = '';
+    for (let i = nStr.length; i > 0; i -= 3) {
+        let a = ((i - 3) < 0) ? 0 : (i - 3);
+        str = nStr.slice(a, i) + '.' + str;
+    }
+    str = str.slice(0, str.length - 1);
+    return str;
+}
+
 
 export const getDropdown = (data: { [key: string]: any }, params?: any): { value: string, label: string }[] => {
     const temp: { value: string, label: string }[] = []

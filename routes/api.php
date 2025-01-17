@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\V1\DoctorController;
 use App\Http\Controllers\Api\V1\PatientCatalogueController;
 use App\Http\Controllers\Api\V1\PatientController;
 use App\Http\Controllers\Api\V1\TimeSlotController;
+use App\Http\Controllers\Api\V1\ScheduleController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Illuminate\Http\Request;
@@ -166,11 +167,20 @@ Route::group([
     Route::put('time_slots/{id}/status', [TimeSlotController::class, 'updateStatusByField']);
 
     // -------------------------------------------------------------------------------
+    // Schedule
+    Route::get('schedules', [ScheduleController::class, 'index']);
+    Route::get('schedules/{id}', [ScheduleController::class, 'show']);
+    Route::post('schedules', [ScheduleController::class, 'create']);
+    Route::put('schedules/{id}', [ScheduleController::class, 'update']);
+    Route::delete('schedules/{id}', [ScheduleController::class, 'destroy']);
+    Route::put('schedules/{id}/status', [ScheduleController::class, 'updateStatusByField']);
+
+    // -------------------------------------------------------------------------------
 
 
 
 
-
+    //ALL
     Route::delete('records/delete/batch', [DashboardController::class, 'deleteBatch']);
     Route::put('records/update/batch', [DashboardController::class, 'updateBatch']);
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Services\TimeSlot;
+namespace App\Services\Time;
 
 use App\Services\BaseService;
-use App\Repositories\TimeSlot\TimeSlotRepository;
+use App\Repositories\Time\TimeSlotRepository;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Status;
 
