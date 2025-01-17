@@ -18,6 +18,7 @@ const login = async (payload: LoginPayload): Promise<User | null> => {
         return response.data.user;
 
     } catch (error) {
+
         handleAxiosError(error)
         return null
     }
@@ -30,7 +31,6 @@ const fetchUser = async (): Promise<User | null> => {
         return response.data.user
 
     } catch (error) {
-        handleAxiosError(error)
         return null
     }
 }

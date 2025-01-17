@@ -118,7 +118,9 @@ class ScheduleService extends BaseService
         DB::beginTransaction();
         try {
             $except = [];
-            $payload = $this->initializePayload($request, $except)->processCanonical()->getPayload();
+            $only = ['date', 'price', 'status'];
+            $payload = $this->initializePayload($request, $except, $only)->getPayload();
+            $payload['price'] = convert_price($payload['price']);
             $schedule = $this->scheduleRepository->update($id, $payload);
             // dd($schedule);
             DB::commit();

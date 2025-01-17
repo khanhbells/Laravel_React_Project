@@ -8,6 +8,7 @@ import { Schedule } from "@/interfaces/types/ScheduleType";
 import { ActionParam, ButtonAction, OpenSheetFunction } from "@/interfaces/BaseServiceInterface";
 //SERVICE
 //HEPLERS
+import { addCommas } from "@/helper/myHelper";
 import dayjs from "dayjs";
 
 
@@ -63,6 +64,10 @@ const tableColumn: tableColumn[] = [
         render: (item: Schedule) => <span>{item.date}</span>
     },
     {
+        name: 'Giá tiền',
+        render: (item: Schedule) => <span className="cursor-pointer cat-item-name mr-[10px] text-[#fff] inline-block rounded bg-cyan-600 px-[5px] py-[0px] text-[10px]">{addCommas(item.price)}đ</span>
+    },
+    {
         name: 'Trạng thái',
         render: (item: Schedule) => <span className={`cursor-pointer cat-item-name mr-[10px] text-[#fff] inline-block rounded px-[5px] py-[0px] text-[10px]  
             ${item.status === 'OPEN' ? 'bg-[green]' : item.status === 'CLOSE' ? 'bg-[red]' : 'bg-[orange]'}`}>{item.status}</span>
@@ -80,8 +85,7 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
         params: ['id', 'openSheet:f'],
         onClick: (id: string, openSheet: OpenSheetFunction) => {
             openSheet({ open: true, action: 'update', id: id })
-        },
-        path: '/schedule/update/'
+        }
     },
     {
         icon: <RiDeleteBin6Line className="text-white" />,
@@ -94,6 +98,18 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
     },
 ]
 
+const options = [
+    {
+        value: 'OPEN', label: 'Đang rảnh'
+    },
+    {
+        value: 'WAIT', label: 'Đang chờ'
+    },
+    {
+        value: 'CLOSE', label: 'Đang bận'
+    },
+]
+
 
 
 
@@ -103,5 +119,6 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
 
 export {
     breadcrumb, buttonActions, model,
-    tableColumn
+    tableColumn,
+    options
 };

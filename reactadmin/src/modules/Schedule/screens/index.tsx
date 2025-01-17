@@ -27,10 +27,14 @@ import { FilterProvider } from "@/contexts/FilterContext"
 //react
 import { useCustomFilter } from "@/hook/useCustomFilter"
 import { useMemo } from "react"
+import useSheet from "@/hook/useSheet"
+import CustomSheet from "@/components/CustomSheet"
+import UpdateSchedule from "./include/UpdateSchedule"
 //Service
 const Schedule = () => {
     const model = 'schedules'
     const breadcrumbData: Breadcrumb = breadcrumb.index
+    const { isSheetOpen, openSheet, closeSheet } = useSheet()
 
     //REACT QUERY
     const { isLoading, data, isError, refetch, handlePageChange, handleQueryString } = useTable({ model, pagination })
@@ -76,6 +80,7 @@ const Schedule = () => {
                             model={model}
                             tableColumn={tableColumn}
                             checkedState={checkedState}
+                            openSheet={openSheet}
                             checkedAllState={checkedAllState}
                             handleCheckedChange={handleCheckedChange}
                             handleCheckedAllChange={handleCheckedAllChange}
@@ -88,6 +93,22 @@ const Schedule = () => {
                         {!isLoading && data[model] && data.links ? <Paginate links={data?.links} pageChange={handlePageChange} /> : null}
                     </CardFooter>
                 </Card>
+                {isSheetOpen && (
+                    <CustomSheet
+                        title={isSheetOpen.action === 'update' ? breadcrumb.update.title : breadcrumb.create.title}
+                        description={breadcrumb.create.description}
+                        isSheetOpen={isSheetOpen.open}
+                        closeSheet={closeSheet}
+                        className="w-[400px] sm:w-[500px]"
+                    >
+                        <UpdateSchedule
+                            refetch={refetch}
+                            closeSheet={closeSheet}
+                            id={isSheetOpen.id}
+                            action={isSheetOpen.action}
+                        />
+                    </CustomSheet>
+                )}
             </div >
         </FilterProvider>
     )

@@ -10,7 +10,7 @@ import Parent from "@/components/Parent";
 import TimeSlot from "@/components/TimeSlot";
 import DetailTimeSlot from "@/components/DetailTimeSlot";
 import CustomDialog from "@/components/CustomDialog";
-import CreateTimeSlot from "./CreateTimeSlot";
+import CreateTimeSlot from "./include/CreateTimeSlot";
 //SETTINGS
 import { queryKey } from "@/constant/query";
 import { getDropdown } from "@/helper/myHelper";

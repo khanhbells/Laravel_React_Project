@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useFormContext } from "react-hook-form"
+import { addCommas } from "@/helper/myHelper"
 
 interface CustomInputProps {
     label?: string,
@@ -37,7 +38,14 @@ const CustomInput = ({
                         focus-visible:ring-0
                         focus:outline-none focus:border-sky-500 focus:ring-2
                         `}
-                    {...register(name)}
+                    {...register(name, {
+                        onChange(event) {
+                            if (name === 'price') {
+                                const formattedValue = addCommas(event.target.value);
+                                event.target.value = formattedValue;
+                            }
+                        },
+                    })}
                     defaultValue={value || ''}
                     {...(restProps.onChange ? { onChange: restProps.onChange } : {})}
                 />

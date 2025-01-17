@@ -65,6 +65,7 @@ class ScheduleController extends Controller
     public function update(Request $request, $id)
     {
         $data = $this->scheduleService->update($request, $id);
+        return $data;
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
                 'message' => 'Cập nhật bản ghi thành công',

@@ -14,12 +14,16 @@ dayjs.extend(timezone);
 
 interface ITimePickerProps {
     name: string,
-    label: string
+    label: string,
+    readOnly?: boolean,
+    [key: string]: any
 }
 
 const CustomTimePicker = ({
     name,
-    label
+    label,
+    readOnly = false,
+    ...restProps
 }: ITimePickerProps) => {
     const { register, formState: { errors }, control } = useFormContext()
     const errorMessage = errors[name]?.message
@@ -27,7 +31,6 @@ const CustomTimePicker = ({
 
     return (
         <>
-
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Controller
                     name={name}
@@ -42,16 +45,24 @@ const CustomTimePicker = ({
                             }
                         };
                         return (
-                            <TimePicker
-                                label={label}
-                                value={field.value ? dayjs(field.value) : null}
-                                onChange={handleChange}
-                                viewRenderers={{
-                                    hours: renderTimeViewClock,
-                                    minutes: renderTimeViewClock,
-                                    seconds: renderTimeViewClock,
-                                }}
-                            />
+                            <div
+                                className={`relative w-full ${readOnly ? "opacity-50 pointer-events-none" : ""
+                                    }`}
+                            >
+                                <TimePicker
+                                    className="w-full"
+                                    label={label}
+                                    value={field.value ? dayjs(field.value) : null}
+                                    onChange={handleChange}
+                                    viewRenderers={{
+                                        hours: renderTimeViewClock,
+                                        minutes: renderTimeViewClock,
+                                        seconds: renderTimeViewClock,
+                                    }}
+                                    readOnly={readOnly}
+                                    {...restProps}
+                                />
+                            </div>
                         );
                     }}
                 />

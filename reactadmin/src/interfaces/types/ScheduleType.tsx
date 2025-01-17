@@ -9,6 +9,7 @@ export type SchedulePayloadInput = {
     time_slots: TimeSlot[];
     date: string;
     publish?: string | undefined;
+    status?: string
 };
 
 export type SchedulePayloadForSubmit = Omit<SchedulePayloadInput, 'time_slots'> & {

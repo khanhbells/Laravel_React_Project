@@ -27,6 +27,7 @@ class ScheduleResource extends JsonResource
             'date' => $this->date,
             'status' => $this->status,
             'publish' => $this->publish,
+            'price' => $this->price
         ];
     }
 }
