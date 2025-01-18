@@ -10,6 +10,8 @@ import { ActionParam, ButtonAction, OpenSheetFunction } from "@/interfaces/BaseS
 //HEPLERS
 import { addCommas } from "@/helper/myHelper";
 import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+dayjs.extend(isBetween);
 
 
 const model = 'schedules'
@@ -57,7 +59,7 @@ const tableColumn: tableColumn[] = [
     },
     {
         name: 'Thời gian khám',
-        render: (item: Schedule) => <span className="text-[#f00]">{`${dayjs(item.start_time).format('hh:mm A')} - ${dayjs(item.end_time).format('hh:mm A')}`}</span>
+        render: (item: Schedule) => <span className="cursor-pointer cat-item-name mr-[10px] text-[#fff] inline-block rounded bg-cyan-600 px-[5px] py-[0px] ">{`${dayjs(item.start_time).format('hh:mm A')} - ${dayjs(item.end_time).format('hh:mm A')}`}</span>
     },
     {
         name: 'Ngày khám bệnh',
@@ -72,7 +74,58 @@ const tableColumn: tableColumn[] = [
         render: (item: Schedule) => <span className={`cursor-pointer cat-item-name mr-[10px] text-[#fff] inline-block rounded px-[5px] py-[0px] text-[10px]  
             ${item.status === 'OPEN' ? 'bg-[green]' : item.status === 'CLOSE' ? 'bg-[red]' : 'bg-[orange]'}`}>{item.status}</span>
     },
+    {
+        name: 'Hoạt động',
+        render: (item: Schedule) => {
+            const now = dayjs(); // Thời gian hiện tại
+            const appointmentDate = dayjs(`${item.date} ${dayjs(item.start_time).format('hh:mm A')}`); // Ngày khám
 
+            const startTime = dayjs(`${item.date} ${dayjs(item.start_time).format('hh:mm A')}`); // Ngày giờ bắt đầu
+            const endTime = dayjs(`${item.date} ${dayjs(item.end_time).format('hh:mm A')}`); // Ngày giờ kết thúc
+
+            const isExpired = endTime.isBefore(now); // Đã qua thời gian khám
+            const isOngoing = now.isBetween(startTime, endTime, 'minute', '[)'); // Đang trong thời gian khám
+            const daysLeft = appointmentDate.diff(now, 'day'); // Số ngày còn lại đến ngày khám
+            const hoursLeft = appointmentDate.diff(now, 'hour'); // Số giờ còn lại
+            const minutesLeft = appointmentDate.diff(now, 'minute'); // Số phút còn lại
+
+
+
+            // Hiển thị thời gian còn lại theo giờ hoặc ngày
+            let timeLeftMessage = '';
+            if (isExpired) {
+                timeLeftMessage = 'Hết hạn';
+            } else if (isOngoing) {
+                timeLeftMessage = 'Đang diễn ra';
+            } else {
+                // Nếu còn ít hơn 24 giờ thì tính theo giờ, còn không thì tính theo ngày
+                if (hoursLeft < 24) {
+                    // Tính số giờ và phút còn lại
+                    const remainingHours = Math.floor(minutesLeft / 60); // Số giờ còn lại
+                    const remainingMinutes = minutesLeft % 60; // Số phút còn lại
+                    timeLeftMessage = remainingHours > 0
+                        ? `Còn ${remainingHours} giờ ${remainingMinutes} phút`
+                        : `Còn ${remainingMinutes} phút`;
+                } else {
+                    // Tính theo số ngày còn lại
+                    timeLeftMessage = `Còn ${daysLeft} ngày`;
+                }
+            }
+
+            return (
+                <span
+                    className={`cursor-pointer cat-item-name mr-[10px] text-[#fff] inline-block rounded px-[5px] py-[0px] text-[10px] 
+                ${isExpired ? 'bg-[#f00]' : isOngoing ? 'bg-[orange]' : 'bg-teal-800'}`}
+                    style={{
+                        opacity: isExpired ? 0.5 : 1, // Làm mờ nếu hết hạn
+                        pointerEvents: isExpired ? 'none' : 'auto', // Vô hiệu hóa tương tác nếu hết hạn
+                    }}
+                >
+                    {timeLeftMessage}
+                </span>
+            );
+        }
+    }
 ]
 
 
@@ -101,9 +154,6 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
 const options = [
     {
         value: 'OPEN', label: 'Đang rảnh'
-    },
-    {
-        value: 'WAIT', label: 'Đang chờ'
     },
     {
         value: 'CLOSE', label: 'Đang bận'

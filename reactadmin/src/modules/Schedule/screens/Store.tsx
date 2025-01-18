@@ -25,11 +25,13 @@ import { FormProvider, useForm } from "react-hook-form";
 //SERVICE
 import { findById, save } from "@/service/ScheduleService";
 import { pagination } from "@/service/DoctorService";
+import { getUserById } from "@/service/UserService";
 import { pagination as paginationTimeSlot } from "@/service/TimeSlotService";
 //SCSS
 import '@/assets/scss/Editor.scss';
 //CONTEXT
 import { TimeSlotProvider } from "@/contexts/TimeSlotContext";
+import { useUserContext } from "@/contexts/UserContext";
 
 
 
@@ -52,6 +54,9 @@ const Store = ({
     //--------------STATE--------------------
     const [openDialog, setOpenDialog] = useState<boolean>()
     const [loadingTimeSlot, setLoadingTimeSlot] = useState<boolean>(false)
+
+    //--------------CONTEXT------------------
+    const { user } = useUserContext();
 
 
     //--------------------------------------
@@ -77,10 +82,12 @@ const Store = ({
 
     //useQuery
     const { data: dropdown, isLoading: isDropdownLoading, isError: isDropDownError } = useQuery([queryKey.doctors], () => pagination(''))
-    const { data: scheduleCatalogue, isLoading, isError } = useQuery([model, id], () => findById(id), {
-        enabled: !!id,
+    const { data: doctor, isLoading, isError } = useQuery(['users', user?.id], () => getUserById(String(user?.id)), {
+        enabled: !!user?.id && user?.user_catalogue_id === 2,
         onSuccess: (data) => {
-            reset(data)
+            reset({
+                user_id: String(data.id)
+            })
         },
         staleTime: 3000
     })
@@ -88,16 +95,18 @@ const Store = ({
     //Dropdown Select Parent
     const doctors = useMemo(() => {
         if (!isDropdownLoading && dropdown) {
+            console.log(dropdown['users']);
             return dropdown['users'] ? getDropdown(dropdown['users']) : []
         }
+        console.log(doctor);
         return []
-    }, [dropdown])
+    }, [dropdown, user, doctor])
 
 
     //Tra ve view
-    // useEffect(() => {
-    //     isSuccess === true && navigate(redirectIfSucces)
-    // }, [isSuccess])
+    useEffect(() => {
+        isSuccess === true && navigate(redirectIfSucces)
+    }, [isSuccess])
 
     //Tag dialog create
     const handleOpenDialog = useCallback(() => {

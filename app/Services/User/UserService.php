@@ -19,26 +19,32 @@ class UserService extends BaseService
         $this->userRepository = $userRepository;
     }
 
-    public function paginate($request)
+    public function paginate($request, $auth)
     {
-        $agrument = $this->paginateAgrument($request);
+        $agrument = $this->paginateAgrument($request, $auth);
 
         $users = $this->userRepository->pagination([...$agrument]);
         return $users;
     }
 
-    private function paginateAgrument($request)
+    private function paginateAgrument($request, $auth)
     {
+        $condition = [
+            'publish' => $request->integer('publish'),
+            'user_catalogue_id' => $request->integer('user_catalogue_id'),
+        ];
+
+        // Nếu $auth->user_catalogue_id == 2, thêm điều kiện 'id'
+        if ($auth->user_catalogue_id == 2) {
+            $condition['id'] = $auth->id;
+        }
         return [
             'perpage' => $request->input('perpage') ?? 10,
             'keyword' => [
                 'search' => $request->input('keyword') ?? '',
                 'field' => ['name', 'email', 'address', 'phone']
             ],
-            'condition' => [
-                'publish' => $request->integer('publish'),
-                'user_catalogue_id' => $request->integer('user_catalogue_id'),
-            ],
+            'condition' => $condition,
             'select' => ['*'],
             'orderBy' => $request->input('sort') ? explode(',', $request->input('sort')) : ['id', 'desc'],
             'relations' => ['user_catalogues']

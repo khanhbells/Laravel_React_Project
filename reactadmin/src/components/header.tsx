@@ -87,7 +87,7 @@ const Header = () => {
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem className="flex items-center text-[#333335] cursor-pointer">
                                         <CgProfile className="mr-2 text-[18px]" />
-                                        <Link to={`/doctor/${user?.id}`}>Thay đổi thông tin</Link>
+                                        <Link to={`/user/doctor/update/${user?.id}`}>Thay đổi thông tin</Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem className="flex items-center text-[#333335] cursor-pointer" onClick={() => { handleLogout() }}>
                                         <IoExitOutline className="mr-2 text-[18px]" />

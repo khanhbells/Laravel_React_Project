@@ -37,7 +37,8 @@ class UserController extends Controller
     {
         try {
             $this->authorize('modules', '/user/index');
-            $users = $this->userService->paginate($request);
+            $auth = auth()->user();
+            $users = $this->userService->paginate($request, $auth);
             return response()->json([
                 'users' =>  UserResource::collection($users->items()),
                 'links' => $users->linkCollection(),

@@ -40,9 +40,9 @@ const Seo = <T extends FieldValues>({
     useEffect(() => {
         if (data) {
             setSeo({
-                canonical: `${import.meta.env.VITE_BASE_URL}/${slug(data.canonical)}${import.meta.env.VITE_SUFFIX}`,
-                metaTitle: data.meta_title !== '' && removeHtmlTags(data.meta_title) || '',
-                metaDescription: data.meta_description !== '' && removeHtmlTags(data.meta_description) || ''
+                canonical: `${import.meta.env.VITE_BASE_URL}/${data.canonical && slug(data.canonical)}${import.meta.env.VITE_SUFFIX}`,
+                metaTitle: data.meta_title && data.meta_title !== '' && removeHtmlTags(data.meta_title) || '',
+                metaDescription: data.meta_description && data.meta_description !== '' && removeHtmlTags(data.meta_description) || ''
             })
         }
     }, [data])

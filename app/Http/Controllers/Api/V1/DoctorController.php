@@ -78,19 +78,28 @@ class DoctorController extends Controller
 
     public function show(Request $request, $id)
     {
-        if (empty($id) || $id < 0) {
-            return $this->returnIfIdValidateFail();
-        }
-        $userDoctor = $this->doctorService->findUserDoctor($id);
-        if (!$userDoctor) {
+        try {
+            $this->authorize('modules', '/update/doctor');
+            if (empty($id) || $id < 0) {
+                return $this->returnIfIdValidateFail();
+            }
+            $userDoctor = $this->doctorService->findUserDoctor($id);
+            if (!$userDoctor) {
+                return response()->json([
+                    'code' => Status::ERROR,
+                    'message' => 'Không có dữ liệu phù hợp'
+                ], Response::HTTP_NOT_FOUND);
+            } else {
+                return response()->json(
+                    new DoctorResource($userDoctor)
+                );
+            }
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
             return response()->json([
-                'code' => Status::ERROR,
-                'message' => 'Không có dữ liệu phù hợp'
-            ], Response::HTTP_NOT_FOUND);
-        } else {
-            return response()->json(
-                new DoctorResource($userDoctor)
-            );
+                'message' => 'Không có quyền truy cập',
+                'doctors' => [],
+                'code' => Status::ERROR
+            ], Response::HTTP_FORBIDDEN);
         }
     }
 

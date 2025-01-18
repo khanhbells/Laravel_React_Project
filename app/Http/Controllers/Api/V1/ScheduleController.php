@@ -31,7 +31,8 @@ class ScheduleController extends Controller
     {
         try {
             $this->authorize('modules', '/schedule/index');
-            $schedules = $this->scheduleService->paginate($request);
+            $auth = auth()->user();
+            $schedules = $this->scheduleService->paginate($request, $auth);
             return response()->json([
                 'schedules' =>  method_exists($schedules, 'items') ? ScheduleResource::collection($schedules->items()) : $schedules,
                 'links' => method_exists($schedules, 'items') ? $schedules->linkCollection() : null,
@@ -62,7 +63,7 @@ class ScheduleController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateScheduleRequest $request, $id)
     {
         $data = $this->scheduleService->update($request, $id);
         return $data;

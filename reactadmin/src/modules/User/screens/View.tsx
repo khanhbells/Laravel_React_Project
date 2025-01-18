@@ -51,7 +51,7 @@ const User = () => {
 
     const userCatalogues = useMemo(() => {
         if (!isUserCatalogueLoading && dataUserCatalogues) {
-            return dataUserCatalogues['user_catalogues'].map((userCatalogueItem: UserCatalogue) => ({
+            return dataUserCatalogues['user_catalogues'] && dataUserCatalogues['user_catalogues'].map((userCatalogueItem: UserCatalogue) => ({
                 value: String(userCatalogueItem.id),
                 label: String(userCatalogueItem.name)
             }))
@@ -75,7 +75,7 @@ const User = () => {
         ), [userCatalogues])
 
     useEffect(() => {
-        if (userCatalogues.length) {
+        if (userCatalogues) {
             setCustomFilter(setCustomFilterCallback)
         }
     }, [userCatalogues])

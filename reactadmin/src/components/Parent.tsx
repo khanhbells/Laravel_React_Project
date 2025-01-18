@@ -36,7 +36,6 @@ const Parent = ({
     const [defaultSelectValue, _] = useState<Option | null>(null)
 
     const combinedOptions = [
-        { value: '0', label: '[Root]' },
         ...options.filter(option => option.value !== '0')
     ];
 

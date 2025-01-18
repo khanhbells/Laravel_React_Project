@@ -4,6 +4,7 @@ import { baseDestroy } from "./BaseService";
 import { handleAxiosError } from "@/helper/axiosHelper";
 import { showToast } from "@/helper/myHelper";
 import { DoctorPayloadInput, Doctor, TagSpecialty, DoctorPayloadForSubmit } from "@/interfaces/types/DoctorType";
+import { Navigate } from "react-router-dom";
 
 const endpoint = 'doctors'
 
@@ -42,8 +43,16 @@ const destroy = async (id: string) => {
 }
 
 const findById = async (id: string | undefined): Promise<Doctor> => {
-    const response = await axios.get(`${endpoint}/${id}`)
-    return response.data
+    try {
+        const response = await axios.get(`${endpoint}/${id}`)
+        return response.data
+    } catch (error: any) {
+        handleAxiosError(error)
+        return {
+            code: error?.response.status,
+            message: 'Không có quyền truy cập',
+        };
+    }
 }
 
 

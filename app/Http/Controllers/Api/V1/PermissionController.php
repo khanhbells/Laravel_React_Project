@@ -12,9 +12,12 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UpdateByFieldRequest;
 use App\Http\Requests\Permission\StorePermissionRequest;
 use App\Http\Requests\Permission\UpdatePermissionRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class PermissionController extends Controller
 {
+    use AuthorizesRequests;
+
     protected $permissionService;
     protected $permissionRepository;
     public function __construct(
@@ -27,13 +30,24 @@ class PermissionController extends Controller
 
     public function index(Request $request)
     {
-        $permissions = $this->permissionService->paginate($request);
-        return response()->json([
-            'permissions' =>  method_exists($permissions, 'items') ? PermissionResource::collection($permissions->items()) : $permissions,
-            'links' => method_exists($permissions, 'items') ? $permissions->linkCollection() : null,
-            'current_page' => method_exists($permissions, 'items') ? $permissions->currentPage() : null,
-            'last_page' => method_exists($permissions, 'items') ? $permissions->lastPage() : null,
-        ], Response::HTTP_OK);
+
+
+        try {
+            $this->authorize('modules', '/permission/index');
+            $permissions = $this->permissionService->paginate($request);
+            return response()->json([
+                'permissions' =>  method_exists($permissions, 'items') ? PermissionResource::collection($permissions->items()) : $permissions,
+                'links' => method_exists($permissions, 'items') ? $permissions->linkCollection() : null,
+                'current_page' => method_exists($permissions, 'items') ? $permissions->currentPage() : null,
+                'last_page' => method_exists($permissions, 'items') ? $permissions->lastPage() : null,
+            ], Response::HTTP_OK);
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            return response()->json([
+                'message' => 'Không có quyền truy cập',
+                'tags' => [],
+                'code' => Status::ERROR
+            ], Response::HTTP_FORBIDDEN);
+        }
     }
 
     public function create(StorePermissionRequest $request)

@@ -98,7 +98,13 @@ const Store = ({
     const { data: dropdown, isLoading: isDropdownLoading, isError: isDropDownError } = useQuery([queryKey.hospitals], () => pagination(''), {
         staleTime: 6000
     })
-    const { data: doctor, isLoading, isError } = useQuery([model, id], () => findById(id), {
+    const { data: doctor, isLoading, isError } = useQuery([model, id], async () => {
+        const response = await findById(id)
+        if (Number(response?.code) === 403) {
+            navigate(-1);
+        }
+        return response;
+    }, {
         enabled: !!id,
         onSuccess: (data) => {
             reset({
@@ -108,7 +114,6 @@ const Store = ({
                 user_id: data.user_id,
             })
         },
-        staleTime: 6000, // Dữ liệu không bao giờ bị coi là stale
     })
 
     //Dropdown Select Parent
@@ -121,9 +126,9 @@ const Store = ({
 
 
     //Tra ve view
-    useEffect(() => {
-        isSuccess === true && navigate(redirectIfSucces)
-    }, [isSuccess])
+    // useEffect(() => {
+    //     isSuccess === true && navigate(redirectIfSucces)
+    // }, [isSuccess])
 
     //Tag dialog create
     const handleOpenDialog = useCallback(() => {

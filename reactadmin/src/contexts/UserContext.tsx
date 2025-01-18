@@ -29,7 +29,7 @@ export const UserProvider: React.FC<{ children: ReactNode; initialUser: User | n
     const [user, setUser] = useState<User | null>(initialUser);
 
     useEffect(() => {
-        setUser(initialUser);
+        setUser(initialUser); // Cập nhật user khi initialUser thay đổi
     }, [initialUser]);
 
     return (

@@ -50,7 +50,7 @@ const Patient = () => {
 
     const patientCatalogues = useMemo(() => {
         if (!isPatientCatalogueLoading && dataPatientCatalogues) {
-            return dataPatientCatalogues['patient_catalogues'].map((patientCatalogueItem: PatientCatalogue) => ({
+            return dataPatientCatalogues['patient_catalogues'] && dataPatientCatalogues['patient_catalogues'].map((patientCatalogueItem: PatientCatalogue) => ({
                 value: String(patientCatalogueItem.id),
                 label: String(patientCatalogueItem.name)
             }))
@@ -74,7 +74,7 @@ const Patient = () => {
         ), [patientCatalogues])
 
     useEffect(() => {
-        if (patientCatalogues.length) {
+        if (patientCatalogues) {
             setCustomFilter(setCustomFilterCallback)
         }
     }, [patientCatalogues])

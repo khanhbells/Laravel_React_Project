@@ -22,8 +22,9 @@ import CustomAlertDialog from "@/components/CustomAlertDialog";
 import useDialog from "@/hook/useDialog"
 import { CustomTableProps, Row, ParamsToTuple } from "@/interfaces/BaseServiceInterface"
 import { changePassword } from "@/service/UserService"
-
+import dayjs from "dayjs"
 import CustomDialog from "@/components/CustomDialog"
+import { useUserContext } from "@/contexts/UserContext"
 
 
 const CustomTable = ({
@@ -45,10 +46,15 @@ const CustomTable = ({
     // useEffect(() => {
     //     console.log(data);
     // }, [data])
+    const now = dayjs();
+
+    //CONTEXT
+    const { user } = useUserContext();
 
     const { buttonActions } = restProps;
     const { columnState, handleChecked, setInitialColumnState } = useColumnState()
     const { confirmAction, openAlertDialog, closeAlertDialog, alertDialogOpen, isLoading: isDialogLoading } = useDialog(refetch)
+
 
     const [DialogComponent, setDialogComponent] = useState<React.ComponentType<any> | null>(null)
 
@@ -94,7 +100,13 @@ const CustomTable = ({
                             />
                         </TableHead>
                         {tableColumn && tableColumn.map((column, index) => (
-                            <TableHead key={index}>{column.name}</TableHead>
+                            user?.user_catalogue_id === 1 && column.name === 'Bác sĩ' ? (
+                                <TableHead key={index}>{column.name}</TableHead>
+                            ) :
+                                column.name !== 'Bác sĩ' ?
+                                    (<TableHead key={index}>{column.name}</TableHead>)
+                                    :
+                                    (<></>)
                         ))}
                         <TableHead className="text-center">Tình trạng</TableHead>
                         <TableHead className="text-center">Tác vụ</TableHead>
@@ -116,7 +128,10 @@ const CustomTable = ({
                             </TableCell>
                         </TableRow>
                     ) : (data?.[model] ?? []).length > 0 ? (data[model] && data[model].map((row: any, index: number) => (
-                        <TableRow key={index} className={checkedState[row.id] ? 'bg-[#ffc]' : ''}>
+                        <TableRow
+                            key={index}
+                            className={`${checkedState[row.id] ? 'bg-[#ffc]' : ''} ${dayjs(`${row.date} ${dayjs(row.end_time).format('hh:mm A')}`).isBefore(now) ? 'opacity-50' : ''}`}
+                        >
                             <TableCell className="font-medium">
                                 <Checkbox id="checkAll"
                                     className="text-white"
@@ -125,7 +140,14 @@ const CustomTable = ({
                                 />
                             </TableCell>
                             {tableColumn && tableColumn.map((column, index) => (
-                                <TableCell key={index}>{column.render(row)}</TableCell>
+                                user?.user_catalogue_id === 1 && column.name === 'Bác sĩ' ? (
+                                    <TableCell key={index}>{column.render(row)}</TableCell>
+                                ) :
+                                    column.name !== 'Bác sĩ' ?
+                                        (<TableCell key={index}>{column.render(row)}</TableCell>)
+                                        :
+                                        (<></>)
+
                             ))}
                             <TableCell className="text-center">
                                 <Switch value={row.id} checked={columnState[row.id]?.publish} onCheckedChange={() => handleChecked(row.id, 'publish', model)} />

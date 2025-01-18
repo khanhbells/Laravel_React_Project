@@ -8,8 +8,16 @@ import { UserCatalogue, UserCataloguePayloadInput } from "@/interfaces/types/Use
 const endpoint = 'user_catalogues'
 
 const pagination = async (queryString: string) => {
-    const response = await axios.get(`/${endpoint}?${queryString}`)
-    return response.data
+    try {
+        const response = await axios.get(`/${endpoint}?${queryString}`)
+        return response.data
+    } catch (error: any) {
+        handleAxiosError(error)
+        return {
+            code: error?.response.status,
+            message: 'Không có quyền truy cập',
+        };
+    }
 }
 
 const save = async (payload: UserCataloguePayloadInput, updateParams: { action: string, id: string | undefined }) => {
