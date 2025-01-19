@@ -38,12 +38,17 @@ class ScheduleService extends BaseService
         // Nếu $auth->user_catalogue_id == 2, thêm điều kiện 'id'
         if ($auth->user_catalogue_id == 2) {
             $condition['user_id'] = $auth->id;
+        } else if ($request->input('user_id')) {
+            $condition['user_id'] = $request->input('user_id');
+        }
+        if ($request->input('date')) {
+            $condition['date'] = $request->input('date');
         }
         return [
             'perpage' => $request->input('perpage') ?? 10,
             'keyword' => [
                 'search' => $request->input('keyword') ?? '',
-                'field' => ['date']
+                'field' => ['price', 'status']
             ],
             'condition' => $condition,
             'select' => ['*'],
@@ -64,6 +69,7 @@ class ScheduleService extends BaseService
             $replaceTimeSlot = json_decode($request->input('time_slots'), true);
             $userDoctor = $this->userRepository->findById($payload['user_id'], $param);
             $payload['doctor_id'] = $userDoctor->doctors->id;
+
 
             $findDates = $this->scheduleRepository->findByCondition(
                 [

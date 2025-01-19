@@ -4,19 +4,24 @@ namespace App\Services\User;
 
 use App\Services\BaseService;
 use App\Repositories\User\UserRepository;
+use App\Repositories\Doctor\DoctorRepository;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Status;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserService extends BaseService
 {
     protected $userRepository;
+    protected $doctorRepository;
     protected $files = ['image'];
 
     public function __construct(
         UserRepository $userRepository,
+        DoctorRepository $doctorRepository,
     ) {
         $this->userRepository = $userRepository;
+        $this->doctorRepository = $doctorRepository;
     }
 
     public function paginate($request, $auth)
@@ -74,6 +79,13 @@ class UserService extends BaseService
             $except = ['confirmPassword', 'id'];
             $payload = $this->initializeRequest($request, $except, $auth);
             $user = $this->userRepository->create($payload);
+            if ($user && $user->user_catalogue_id == 2) {
+                $payloadDoctor = [
+                    'user_id' => $user->id,
+                    'canonical' => Str::slug($user->name)
+                ];
+                $this->doctorRepository->create($payloadDoctor);
+            }
             DB::commit();
             return [
                 'user' => $user,

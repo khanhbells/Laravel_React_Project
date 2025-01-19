@@ -14,12 +14,12 @@ import {
 
 interface IDatePickerProps {
     name: string,
-    label: string
+    label: string,
 }
 
 const CustomDatePicker = ({
     name,
-    label
+    label,
 }: IDatePickerProps) => {
 
     //Cấu hình ngày được chọn

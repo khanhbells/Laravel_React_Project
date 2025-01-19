@@ -14,6 +14,7 @@ import { Button } from "../components/ui/button"
 import CustomAlertDialog from "@/components/CustomAlertDialog";
 import CustomFilter from "./CustomFilter";
 import { Link } from "react-router-dom";
+import CustomFilterDatePicker from "./CustomFilterDatePicker";
 //SETTINGS
 import { FilterProps } from "@/interfaces/BaseServiceInterface";
 import { perpages, publishs, sort } from "../constant/general";
@@ -31,6 +32,7 @@ const Filter = ({
     openSheet,
     items,
     buttonText,
+    filterDate,
     ...restProps
 }: FilterProps) => {
     //Delay keyword
@@ -150,6 +152,11 @@ const Filter = ({
                                         defaultValue={keyword}
                                     />
                                 </div>
+                                <div className="mr-[10px]">
+                                    {
+                                        filterDate && filterDate === true && <CustomFilterDatePicker handleFilter={handleFilter} />
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -195,6 +202,7 @@ const Filter = ({
                     </div>
                 </div>
                 <CustomFilter handleFilter={handleFilter} />
+
             </div >
         </>
     )

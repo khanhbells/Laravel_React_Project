@@ -48,7 +48,6 @@ const CustomFilter: React.FC<CustomFilterProps> = ({
                                     {option.label}
                                 </SelectItem>
                             ))}
-
                         </SelectContent>
                     </Select>
                 </div>

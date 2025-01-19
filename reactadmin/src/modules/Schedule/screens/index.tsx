@@ -30,20 +30,43 @@ import { useMemo } from "react"
 import useSheet from "@/hook/useSheet"
 import CustomSheet from "@/components/CustomSheet"
 import UpdateSchedule from "./include/UpdateSchedule"
+import { useQuery } from "react-query"
+import { queryKey } from "@/constant/query"
+import { useUserContext } from "@/contexts/UserContext"
 //Service
+import { pagination as doctorsPagination } from "@/service/DoctorService"
 const Schedule = () => {
     const model = 'schedules'
     const breadcrumbData: Breadcrumb = breadcrumb.index
     const { isSheetOpen, openSheet, closeSheet } = useSheet()
 
+    //CONTEXT
+    const { user } = useUserContext()
     //REACT QUERY
     const { isLoading, data, isError, refetch, handlePageChange, handleQueryString } = useTable({ model, pagination })
     //Checkbox
     const { checkedState, checkedAllState, handleCheckedChange, handleCheckedAllChange, isAnyChecked } = useCheckBoxState(data, model, isLoading)
     const somethingChecked = isAnyChecked()
+    //SELECT FILTER
+    const { data: doctors, isLoading: isDoctorLoading, isError: isDoctorError } = useQuery([queryKey.doctors], () => doctorsPagination(''), {
+        enabled: user?.user_catalogue_id === 1
+    })
 
-
-    const filterInitial = useMemo(() => [], [])
+    const filterInitial = useMemo(() => {
+        if (doctors && user?.user_catalogue_id === 1) {
+            return [
+                {
+                    name: 'user_id',
+                    placeholder: 'Chọn tên bác sĩ',
+                    data: doctors?.['users'],
+                    isLoading: isDoctorLoading,
+                    isNested: true,
+                    valueKey: 'id',
+                    labelKey: 'name'
+                }
+            ]
+        } return []
+    }, [doctors, user])
 
     /* 
        - Phân loại được là kiểu hiện có hiển thị theo kiểu danh mục cha con không: isNested:true/ false --> false
@@ -72,6 +95,7 @@ const Schedule = () => {
                             items={filterItems}
                             buttonText="Thêm mới lịch khám bệnh"
                             to="/schedule/create"
+                            filterDate={true}
                         />
                         <CustomTable
                             isLoading={isLoading}
