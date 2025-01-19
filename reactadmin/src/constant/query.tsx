@@ -6,5 +6,6 @@ export const queryKey = {
     specialty_catalogues: 'specialty_catalogues',
     hospitals: 'hospitals',
     doctors: 'doctors',
-    timeSlots: 'timeSlots'
+    timeSlots: 'timeSlots',
+    systems: 'systems'
 }

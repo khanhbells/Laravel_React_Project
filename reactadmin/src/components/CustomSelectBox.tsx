@@ -18,8 +18,8 @@ interface CustomSelectBoxProps {
     value: Option | null,
     name: string,
     register?: any,
-    control: any,
-    errors: any,
+    control?: any,
+    errors?: any,
 }
 const CustomSelectBox = ({
     title,

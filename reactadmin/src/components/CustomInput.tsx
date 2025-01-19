@@ -27,7 +27,7 @@ const CustomInput = ({
         <>
             <div className={className ?? "grid grid-cols-4 items-center gap-4"}>
                 {
-                    label && <Label className="col-span-1" htmlFor={name}>{label}</Label>
+                    label && <Label className={`${restProps.labelClass ?? null} col-span-1`} htmlFor={name}>{label}</Label>
                 }
                 <Input
                     type={type ?? 'text'}

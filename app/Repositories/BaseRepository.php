@@ -45,12 +45,15 @@ class BaseRepository
 
     public function update($id, $payload)
     {
-
         $model = $this->findById($id);
-
         $model->fill($payload);
         $model->save();
         return $model;
+    }
+
+    public function updateOrInsert(array $payload = [], array $condition = [])
+    {
+        return $this->model->updateOrInsert($condition, $payload);
     }
 
     public function delete($id)

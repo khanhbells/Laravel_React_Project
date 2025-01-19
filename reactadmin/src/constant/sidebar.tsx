@@ -129,6 +129,10 @@ export const sidebarItem = [
                         title: 'Tags',
                         to: '/setting/tag/index'
                     },
+                    {
+                        title: 'Cấu hình hệ thống',
+                        to: '/system/index'
+                    },
                 ]
             },
         ],

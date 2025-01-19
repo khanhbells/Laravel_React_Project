@@ -58,6 +58,9 @@ import TimeSlotIndex from '@/modules/TimeSlot/screens';
 //Schedules
 import ScheduleIndex from '@/modules/Schedule/screens';
 import ScheduleCreate from '@/modules/Schedule/screens/Store';
+//System
+import SytemIndex from '@/modules/System/screens';
+
 
 
 const router = createBrowserRouter([
@@ -105,6 +108,7 @@ const router = createBrowserRouter([
       { path: "/setting/timeSlot/index", element: <TimeSlotIndex /> },
       { path: "/schedule/index", element: <ScheduleIndex /> },
       { path: "/schedule/create", element: <ScheduleCreate /> },
+      { path: "/system/index", element: <SytemIndex /> },
     ]
   },
 ]);

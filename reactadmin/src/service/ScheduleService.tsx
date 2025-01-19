@@ -21,7 +21,6 @@ const pagination = async (queryString: string) => {
 }
 
 const save = async (payload: SchedulePayloadInput, updateParams: { action: string, id: string | undefined }) => {
-    console.log(payload);
     const payloadSubmit: SchedulePayloadForSubmit = {
         ...payload,
         time_slots: JSON.stringify(payload.time_slots)

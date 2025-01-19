@@ -13,7 +13,7 @@ interface CustomCKEditorProps<T extends FieldValues> {
     name: string,
 }
 
-class CustomUploadPlugin {
+export class CustomUploadPlugin {
     constructor(editor: any) {
         editor.plugins.get('FileRepository').createUploadAdapter = (loader: any) => {
             return new MyUploadAdapter(loader);
@@ -21,7 +21,7 @@ class CustomUploadPlugin {
     }
 }
 
-class MyUploadAdapter {
+export class MyUploadAdapter {
 
     private loader: any
 
