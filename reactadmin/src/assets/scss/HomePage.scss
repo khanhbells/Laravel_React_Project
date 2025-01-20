@@ -1,0 +1,191 @@
+.slick-prev {
+    left: -10px !important;
+    z-index: 1000;
+    height: 48px !important;
+    width: 44px !important;
+    background: #fff !important;
+    border : 2px solid #d7d7d7 !important;
+
+    &:hover {
+        background: #e6dede !important;
+    }
+}
+
+.slick-next {
+    right: -10px !important;
+    z-index: 1000;
+    height: 48px !important;
+    width: 44px !important;
+    background: #fff !important;
+    border: 2px solid #d7d7d7 !important;
+
+    &:hover {
+        background: #e6dede !important;
+    }
+
+}
+
+.slick-disabled {
+    display: none !important;
+}
+
+.slick-prev::before,
+.slick-next::before {
+    font-family: FontAwesome !important;
+    color: red !important;
+    // content: "\f060" !important;
+}
+
+.section-share {
+    &.section-specialty {
+        background: #f5f5f5;
+    }
+
+    &.section-outstanding-doctor {
+        background: #f5f5f5;
+    }
+
+    &.section-about {
+        border-top: 1px solid #b6b0b0d5;
+        height: 500px !important;
+        border-bottom: 1px solid #f5f5f5;
+    }
+
+    .section-body {
+        .section-customize {
+            .bg-image {
+                height: 150px;
+                width: 278px;
+
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-color: #eee;
+
+                &.section-specialty {
+                    background-image: url('../../assets/specialty/co-xuong-khop-1.jpg');
+                }
+
+                &.section-medical-facility {
+                    background-image: url('../../assets/medical-facility/co-so-y-te-1.jpg');
+                }
+
+                &.section-outstanding-doctor {
+                    background-image: url('../../assets/oustanding-doctor/anh-dai-dien-bs.png');
+                    width: 120px;
+                    height: 120px;
+                    border-radius: 50%;
+                }
+
+                &.section-handbook {
+                    background-image: url('../../assets/handbook/nieng-rang.jpg');
+                }
+            }
+        }
+    }
+}
+
+.section-share {
+    height: 330px;
+
+
+
+    .section-container {
+        margin: 0 100px;
+        display: flex;
+        flex-direction: column;
+
+        .section-header {
+            height: 60px;
+            margin-bottom: 30px;
+            padding-top: 30px;
+
+            .title-section {
+                font-size: 22px;
+                font-weight: 600;
+            }
+
+            .btn-section {
+                float: right;
+                display: block;
+                padding: 10px 15px;
+                border: none;
+                outline: none;
+                background: #ebebeb;
+                color: black;
+                cursor: pointer;
+                text-transform: uppercase;
+
+                &:hover {
+                    color: #fff;
+                    background: #f7d800;
+                }
+            }
+        }
+
+
+
+    }
+
+
+
+
+}
+
+.section-outstanding-doctor {
+    .outer-bg {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .section-customize {
+        padding: 5px;
+
+        .customize-border {
+            border: 1px solid rgba(187, 176, 176, 0.767);
+            padding: 20px;
+        }
+    }
+}
+
+.home-footer {
+    text-align: center;
+    padding-top: 8px;
+
+    a {
+        text-decoration: unset;
+    }
+
+
+}
+
+.section-about {
+    padding: 0 100px;
+
+    .section-about-header {
+        padding: 20px 10px;
+        font-size: 22px;
+        font-weight: 600;
+    }
+
+    .section-about-content {
+        display: flex;
+        gap: 15px;
+        width: 100%;
+
+        .content-left {
+            width: 40%;
+        }
+
+        .content-right {
+            width: 60%;
+
+            p {
+                text-align: justify;
+                font-style: italic;
+                padding-top: 10px;
+            }
+        }
+    }
+}

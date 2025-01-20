@@ -2,15 +2,12 @@ import ReactDOM from 'react-dom/client'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { HelmetProvider } from 'react-helmet-async';
-
 import { store } from './redux/store'
 import { Provider } from 'react-redux'
-
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-
 import {
   QueryClient,
   QueryClientProvider,
@@ -60,6 +57,10 @@ import ScheduleIndex from '@/modules/Schedule/screens';
 import ScheduleCreate from '@/modules/Schedule/screens/Store';
 //System
 import SytemIndex from '@/modules/System/screens';
+/*--------------------------UI/UX------------------------- */
+import LayoutFrontend from './components/Frontend/Layout';
+import HomePage from './components/Frontend/HomePage';
+import DetailDoctor from './components/Frontend/Section/DetailDoctor';
 
 
 
@@ -109,6 +110,16 @@ const router = createBrowserRouter([
       { path: "/schedule/index", element: <ScheduleIndex /> },
       { path: "/schedule/create", element: <ScheduleCreate /> },
       { path: "/system/index", element: <SytemIndex /> },
+    ]
+  },
+  {
+    path: "/frontend",
+    element: (
+      <LayoutFrontend />
+    ),
+    children: [
+      { path: "homepage.html", element: <HomePage /> },
+      { path: "homepage/detail-doctor.html", element: <DetailDoctor /> },
     ]
   },
 ]);
