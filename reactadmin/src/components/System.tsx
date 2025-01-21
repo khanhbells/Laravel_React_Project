@@ -88,7 +88,7 @@ const System = ({
     }, [restProps.data, setValue]);
 
     return (
-        <div className="grid grid-cols-12 gap-4 ">
+        <div className="grid grid-cols-12 gap-4 mb-[20px]">
             <div className="col-span-6">
                 <div className="panel-head">
                     <div className="text-[20px] mb-[15px] font-bold text-black">{restProps.title ?? "Thông tin"}</div>

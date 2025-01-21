@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 //COMPONENT
 import BannerHeader from "./Section/BannerHeader";
 import ContentSlider from "./Section/ContentSlider";
@@ -6,8 +7,14 @@ import About from "./Section/About";
 //SCSS
 import '../../assets/scss/HomeHeader.scss'
 import '../../assets/scss/HomePage.scss'
-const HomePage = () => {
+//SERVICE
+import { findById, pagination } from "@/service/Frontend/FrontEndService";
+//SETTINGS
+import { endpoint } from "@/constant/endpoint";
+import { queryKey } from "@/constant/query";
 
+import useGetDataFrontEnd from "@/hook/useGetDataFrontEnd";
+const HomePage = () => {
     const settings = {
         dots: false,
         infinite: true,
@@ -15,24 +22,55 @@ const HomePage = () => {
         slidesToShow: 4,
         slidesToScroll: 1,
     };
+
+    //GET SPECIALTIES
+    const { getData: specialties, dataCatalogue: specialty_catalogues } = useGetDataFrontEnd({
+        id: '13',
+        endpointCatalogue: endpoint.specialty_catalogues,
+        endpoint: endpoint.specialties,
+        filter: '&specialty_catalogue_id=13',
+        queryKeyCatalogue: queryKey.specialty_catalogues,
+        queryKey: queryKey.specialties
+    })
+    //GET BLOGS
+    const { getData: posts, dataCatalogue: post_catalogues } = useGetDataFrontEnd({
+        id: '7',
+        endpointCatalogue: endpoint.post_catalogues,
+        endpoint: endpoint.posts,
+        filter: '&post_catalogue_id=7',
+        queryKeyCatalogue: queryKey.postCatalogues,
+        queryKey: queryKey.posts
+    })
+    //GET DOCTORS
+    const { getData: doctors } = useGetDataFrontEnd({
+        endpoint: endpoint.doctors,
+        filter: '&permission=true',
+        queryKey: queryKey.doctors
+    })
+
+
     return (
         <>
             <BannerHeader />
             <ContentSlider
                 settings={settings}
-                label="Chuyên khoa phổ biến"
                 className="section-specialty"
+                dataCatalogue={specialty_catalogues}
+                data={specialties}
             />
             <ContentSlider
                 settings={settings}
-                label="Cơ sở y tế nổi bật"
-                className="section-medical-facility"
-            />
-            <ContentSlider
-                settings={settings}
-                label="Bác sĩ nổi bật tuần uqa"
+                label="Bác sĩ nổi bật tuần qua"
                 className="section-outstanding-doctor"
+                data={doctors}
             />
+            <ContentSlider
+                settings={settings}
+                dataCatalogue={post_catalogues}
+                className="abc"
+                data={posts}
+            />
+
             <About />
         </>
     )

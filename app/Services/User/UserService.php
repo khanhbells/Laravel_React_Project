@@ -27,7 +27,6 @@ class UserService extends BaseService
     public function paginate($request, $auth)
     {
         $agrument = $this->paginateAgrument($request, $auth);
-
         $users = $this->userRepository->pagination([...$agrument]);
         return $users;
     }
@@ -40,7 +39,7 @@ class UserService extends BaseService
         ];
 
         // Nếu $auth->user_catalogue_id == 2, thêm điều kiện 'id'
-        if ($auth->user_catalogue_id == 2) {
+        if (isset($auth) && $auth->user_catalogue_id == 2) {
             $condition['id'] = $auth->id;
         }
         return [

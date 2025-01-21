@@ -28,28 +28,25 @@ class DoctorService extends BaseService
         $agrument = $this->paginateAgrument($request);
 
         $doctors = $this->doctorRepository->pagination([...$agrument]);
+
         return $doctors;
     }
 
     private function paginateAgrument($request)
     {
         return [
-            'perpage' => $request->input('perpage') ?? 10,
+            // 'perpage' => $request->input('perpage') ?? 10,
             'keyword' => [
                 'search' => $request->input('keyword') ?? '',
-                'field' => ['name', 'email', 'address', 'phone']
+                'field' => ['mete_title']
             ],
             'condition' => [
                 'publish' => $request->integer('publish'),
-                'users.user_catalogue_id' => 2,
             ],
-            'select' => ['doctors.*', 'users.name as user_name', 'users.address as user_address', 'users.image as user_image'],
+            'select' => ['*'],
             'orderBy' => $request->input('sort') ? explode(',', $request->input('sort')) : ['id', 'desc'],
-            'relations' => ['users'],
-            'join' => [
-                ['users', 'users.id', '=', 'doctors.user_id'], // Join với bảng users
-            ],
-
+            'relations' => ['users', 'specialties', 'tags'],
+            'limit' => 10,
         ];
     }
 

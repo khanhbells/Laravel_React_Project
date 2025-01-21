@@ -24,8 +24,11 @@ class BaseRepository
             ->relationCount($params['relationCount'] ?? [])
             ->orderBy($params['orderBy'][0], $params['orderBy'][1]);
 
+        if (!empty($params['limit'])) {
+            $query->limit($params['limit']);
+        }
         // return $query->toSql();
-        if ($params['perpage']) {
+        if (isset($params['perpage']) && !empty($params['perpage'])) {
             return $query->paginate($params['perpage']);
         }
         return $query->get();

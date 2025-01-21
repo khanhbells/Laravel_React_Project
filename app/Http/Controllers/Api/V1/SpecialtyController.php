@@ -33,7 +33,9 @@ class SpecialtyController extends Controller
     public function index(Request $request)
     {
         try {
-            $this->authorize('modules', '/specialty/index');
+            if ($request->input('specialty_catalogue_id') == null) {
+                $this->authorize('modules', '/specialty/index');
+            }
             $specialties = $this->specialtyService->paginate($request);
             return response()->json([
                 'specialties' =>  method_exists($specialties, 'items') ? SpecialtyResource::collection($specialties->items()) : $specialties,

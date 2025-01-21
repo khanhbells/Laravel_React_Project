@@ -6,6 +6,7 @@ use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use App\Http\Resources\DetailDoctorResource;
 use App\Http\Resources\DoctorResource;
 use App\Services\Doctor\DoctorService;
 use App\Repositories\Doctor\DoctorRepository;
@@ -30,13 +31,12 @@ class DoctorController extends Controller
     public function index(Request $request)
     {
         try {
-            $this->authorize('modules', '/doctor/index');
+            if ($request->input('permission') == null) {
+                $this->authorize('modules', '/doctor/index');
+            }
             $doctors = $this->doctorService->paginate($request);
             return response()->json([
-                'doctors' =>  method_exists($doctors, 'items') ? DoctorResource::collection($doctors->items()) : $doctors,
-                'links' => method_exists($doctors, 'items') ? $doctors->linkCollection() : null,
-                'current_page' => method_exists($doctors, 'items') ? $doctors->currentPage() : null,
-                'last_page' => method_exists($doctors, 'items') ? $doctors->lastPage() : null,
+                'doctors' =>  DetailDoctorResource::collection($doctors),
             ], Response::HTTP_OK);
         } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
             return response()->json([
@@ -100,6 +100,25 @@ class DoctorController extends Controller
                 'doctors' => [],
                 'code' => Status::ERROR
             ], Response::HTTP_FORBIDDEN);
+        }
+    }
+    public function showDoctor(Request $request, $id)
+    {
+        if (empty($id) || $id < 0) {
+            return $this->returnIfIdValidateFail();
+        }
+        $doctor = $this->doctorRepository->findById($id);
+
+
+        if (!$doctor) {
+            return response()->json([
+                'code' => Status::ERROR,
+                'message' => 'Không có dữ liệu phù hợp'
+            ], Response::HTTP_NOT_FOUND);
+        } else {
+            return response()->json(
+                new DetailDoctorResource($doctor)
+            );
         }
     }
 

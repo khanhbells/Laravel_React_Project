@@ -1,14 +1,18 @@
 import logo from '../../assets/logo1.png'
 import { FaHistory } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 const Header = () => {
     return (
         <>
             <header className="">
                 <div className='home-header-container'>
                     <div className='home-header-content'>
+
                         <div className='left-content'>
                             <i className="fas fa-bars"></i>
-                            <img src={logo} className='header-logo' />
+                            <Link to={`homepage`}>
+                                <img src={logo} className='header-logo' />
+                            </Link>
                             <div className='header-logo'></div>
                         </div>
                         <div className='center-content'>

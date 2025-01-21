@@ -118,8 +118,8 @@ const router = createBrowserRouter([
       <LayoutFrontend />
     ),
     children: [
-      { path: "homepage.html", element: <HomePage /> },
-      { path: "homepage/detail-doctor.html", element: <DetailDoctor /> },
+      { path: "homepage", element: <HomePage /> },
+      { path: "homepage/:specialId/:specialty/:doctorId/:name.html", element: <DetailDoctor /> },
     ]
   },
 ]);

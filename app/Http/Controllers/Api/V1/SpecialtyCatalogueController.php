@@ -82,7 +82,6 @@ class SpecialtyCatalogueController extends Controller
 
     public function show(Request $request, $id)
     {
-
         try {
             if (!$id) {
                 return response()->json([
@@ -97,7 +96,7 @@ class SpecialtyCatalogueController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'code' => Status::ERROR,
-                'message' => 'Network Error'
+                'message' => $e->getMessage()
             ], Response::HTTP_NOT_FOUND);
         }
     }

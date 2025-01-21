@@ -72,7 +72,6 @@ const CustomCKEditor = <T extends FieldValues>({
                 filter((item: any) => item.name === 'imageBlock').
                 map((item: any) => item.getAttribute('src'))
 
-            // const removeImage = getPreviousImage().filter(src => !currentImages.includes(src))
             setPreviousImage(prev => {
                 const removeImage = prev.filter(src => !currentImages.includes(src))
                 removeImage.forEach((src) => deleteImageFromCkeditor(src))
@@ -100,7 +99,7 @@ const CustomCKEditor = <T extends FieldValues>({
                 control={control}
                 render={({ field }) => (
                     <CKEditor
-                        editor={ClassicEditor}
+                        editor={ClassicEditor as any}
                         data={field.value ?? ''}
                         config={
                             {

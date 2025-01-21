@@ -18,6 +18,8 @@ use App\Http\Controllers\Api\V1\PatientController;
 use App\Http\Controllers\Api\V1\TimeSlotController;
 use App\Http\Controllers\Api\V1\ScheduleController;
 use App\Http\Controllers\Api\V1\SystemController;
+use App\Http\Resources\DoctorResource;
+use App\Models\SpecialtyCatalogue;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Illuminate\Http\Request;
@@ -187,9 +189,6 @@ Route::group([
 
     // -------------------------------------------------------------------------------
 
-
-
-
     //ALL
     Route::delete('records/delete/batch', [DashboardController::class, 'deleteBatch']);
     Route::put('records/update/batch', [DashboardController::class, 'updateBatch']);
@@ -206,6 +205,25 @@ Route::group([
     // COMMON REQUEST
     Route::post('sort', [DashboardController::class, 'sort']);
 });
+
+/*--------------------------------FRONT END--------------------------- */
+Route::group([
+    'prefix' => 'v1'
+], function ($router) {
+    //GET SPECIALTY
+    Route::get('frontend/specialty_catalogues/{id}', [SpecialtyCatalogueController::class, 'show']);
+    Route::get('frontend/specialties', [SpecialtyController::class, 'index']);
+    //GET POST
+    Route::get('frontend/post_catalogues/{id}', [PostCatalogueController::class, 'show']);
+    Route::get('frontend/posts', [PostController::class, 'index']);
+    //GET USER
+    Route::get('frontend/user_catalogues/{id}', [UserCatalogueController::class, 'show']);
+    Route::get('frontend/users', [UserController::class, 'index']);
+    //GET DOCTOR
+    Route::get('frontend/doctors/{id}', [DoctorController::class, 'showDoctor']);
+    Route::get('frontend/doctors', [DoctorController::class, 'index']);
+});
+
 
 Route::post('v1/auth/refresh', [AuthController::class, 'refresh']);
 Route::post('v1/auth/login', [AuthController::class, 'login']);

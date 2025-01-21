@@ -36,7 +36,9 @@ class UserController extends Controller
     public function index(Request $request)
     {
         try {
-            $this->authorize('modules', '/user/index');
+            if ($request->input('user_catalogue_id') == null) {
+                $this->authorize('modules', '/user/index');
+            }
             $auth = auth()->user();
             $users = $this->userService->paginate($request, $auth);
             return response()->json([
@@ -83,9 +85,6 @@ class UserController extends Controller
         if (empty($id) || $id < 0) {
             return $this->returnIfIdValidateFail();
         }
-
-
-
         $user = $this->userRepository->findById($id);
 
 

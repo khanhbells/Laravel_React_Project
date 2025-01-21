@@ -33,7 +33,9 @@ class PostController extends Controller
     public function index(Request $request)
     {
         try {
-            $this->authorize('modules', '/post/index');
+            if ($request->input('post_catalogue_id') == null) {
+                $this->authorize('modules', '/post/index');
+            }
             $posts = $this->postService->paginate($request);
             return response()->json([
                 'posts' =>  method_exists($posts, 'items') ? PostResource::collection($posts->items()) : $posts,
