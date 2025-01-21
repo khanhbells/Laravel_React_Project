@@ -213,6 +213,7 @@ Route::group([
     //GET SPECIALTY
     Route::get('frontend/specialty_catalogues/{id}', [SpecialtyCatalogueController::class, 'show']);
     Route::get('frontend/specialties', [SpecialtyController::class, 'index']);
+    Route::get('frontend/specialties/{id}', [SpecialtyController::class, 'show']);
     //GET POST
     Route::get('frontend/post_catalogues/{id}', [PostCatalogueController::class, 'show']);
     Route::get('frontend/posts', [PostController::class, 'index']);

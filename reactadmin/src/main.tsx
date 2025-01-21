@@ -61,7 +61,7 @@ import SytemIndex from '@/modules/System/screens';
 import LayoutFrontend from './components/Frontend/Layout';
 import HomePage from './components/Frontend/HomePage';
 import DetailDoctor from './components/Frontend/Section/DetailDoctor';
-
+import ScrollToTop from './components/ScrollToTop';
 
 
 const router = createBrowserRouter([
@@ -113,13 +113,17 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: "/frontend",
+    path: "/",
     element: (
-      <LayoutFrontend />
+      <>
+        <ScrollToTop />
+        <LayoutFrontend />
+      </>
     ),
     children: [
       { path: "homepage", element: <HomePage /> },
       { path: "homepage/:specialId/:specialty/:doctorId/:name.html", element: <DetailDoctor /> },
+      { path: "homepage/:specialId/:specialty.html", element: <HomePage /> },
     ]
   },
 ]);

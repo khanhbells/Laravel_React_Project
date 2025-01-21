@@ -1,6 +1,7 @@
 import { toast } from "react-toastify"
 import { ToastType } from "../contexts/ToastContext"
-
+import { format } from "date-fns";
+import { vi } from "date-fns/locale";
 export const showNotify = (
     message: string,
     type: ToastType,
@@ -102,6 +103,26 @@ export const getDropdown = (data: { [key: string]: any }, params?: any): { value
     }
     return temp
 }
+
+export const getDropdownDate = (data: { [key: string]: any }, params?: any): { value: string, label: string }[] => {
+    const temp: { value: string, label: string }[] = [];
+    //Set để lọc giá trị trùng lặp
+    const uniqueDates = new Set<string>();
+    if (Array.isArray(data)) {
+        data.forEach((item) => {
+            if (!uniqueDates.has(item.date)) {
+                uniqueDates.add(item.date);
+                const formattedDate = format(new Date(item.date), "EEEE - dd/MM", { locale: vi });
+                temp.push({
+                    value: item.date,
+                    label: formattedDate,
+                });
+            }
+        });
+    }
+
+    return temp;
+};
 
 // Sử dụng hàm repeat để lặp lại chuỗi "|----" dựa trên giá trị của catalogue.level
 export const formatCatalogueName = (catalogue: { [key: string]: any }, labelKey: string = 'name') => {

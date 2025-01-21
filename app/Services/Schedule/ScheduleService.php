@@ -33,6 +33,7 @@ class ScheduleService extends BaseService
     {
         $condition = [
             'publish' => $request->integer('publish'),
+            'doctor_id' => $request->integer('doctor_id'),
         ];
 
         // Nếu $auth->user_catalogue_id == 2, thêm điều kiện 'id'

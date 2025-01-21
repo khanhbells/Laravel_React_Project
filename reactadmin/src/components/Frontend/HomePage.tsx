@@ -28,7 +28,7 @@ const HomePage = () => {
         id: '13',
         endpointCatalogue: endpoint.specialty_catalogues,
         endpoint: endpoint.specialties,
-        filter: '&specialty_catalogue_id=13',
+        filter: '&specialty_catalogue_id=13&publish=2',
         queryKeyCatalogue: queryKey.specialty_catalogues,
         queryKey: queryKey.specialties
     })
@@ -37,14 +37,14 @@ const HomePage = () => {
         id: '7',
         endpointCatalogue: endpoint.post_catalogues,
         endpoint: endpoint.posts,
-        filter: '&post_catalogue_id=7',
+        filter: '&post_catalogue_id=7&publish=2',
         queryKeyCatalogue: queryKey.postCatalogues,
         queryKey: queryKey.posts
     })
     //GET DOCTORS
     const { getData: doctors } = useGetDataFrontEnd({
         endpoint: endpoint.doctors,
-        filter: '&permission=true',
+        filter: '&permission=true&publish=2',
         queryKey: queryKey.doctors
     })
 
@@ -52,25 +52,29 @@ const HomePage = () => {
     return (
         <>
             <BannerHeader />
-            <ContentSlider
-                settings={settings}
-                className="section-specialty"
-                dataCatalogue={specialty_catalogues}
-                data={specialties}
-            />
+            {
+                specialty_catalogues?.publish === 2 &&
+                <ContentSlider
+                    settings={settings}
+                    className="section-specialty"
+                    dataCatalogue={specialty_catalogues}
+                    data={specialties}
+                />
+            }
             <ContentSlider
                 settings={settings}
                 label="Bác sĩ nổi bật tuần qua"
                 className="section-outstanding-doctor"
                 data={doctors}
             />
-            <ContentSlider
-                settings={settings}
-                dataCatalogue={post_catalogues}
-                className="abc"
-                data={posts}
-            />
-
+            {
+                post_catalogues?.publish === 2 &&
+                <ContentSlider
+                    settings={settings}
+                    dataCatalogue={post_catalogues}
+                    data={posts}
+                />
+            }
             <About />
         </>
     )
