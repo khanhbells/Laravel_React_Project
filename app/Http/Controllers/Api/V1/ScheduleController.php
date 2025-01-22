@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UpdateByFieldRequest;
 use App\Http\Requests\Schedule\StoreScheduleRequest;
 use App\Http\Requests\Schedule\UpdateScheduleRequest;
+use Mockery\Undefined;
 
 class ScheduleController extends Controller
 {
@@ -30,7 +31,10 @@ class ScheduleController extends Controller
     public function index(Request $request)
     {
         try {
-            $this->authorize('modules', '/schedule/index');
+            $permission =  $request->input('permission') ?? null;
+            if ($permission == null) {
+                $this->authorize('modules', '/schedule/index');
+            }
             $auth = auth()->user();
             $schedules = $this->scheduleService->paginate($request, $auth);
             return response()->json([

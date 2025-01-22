@@ -7,7 +7,7 @@ use App\Repositories\Schedule\ScheduleRepository;
 use App\Repositories\User\UserRepository;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Status;
-
+use Illuminate\Support\Carbon;
 
 class ScheduleService extends BaseService
 {
@@ -25,7 +25,6 @@ class ScheduleService extends BaseService
     {
         $agrument = $this->paginateAgrument($request, $auth);
         $schedules = $this->scheduleRepository->pagination([...$agrument]);
-        // dd($schedules);
         return $schedules;
     }
 
@@ -35,18 +34,26 @@ class ScheduleService extends BaseService
             'publish' => $request->integer('publish'),
             'doctor_id' => $request->integer('doctor_id'),
         ];
-
         // Nếu $auth->user_catalogue_id == 2, thêm điều kiện 'id'
-        if ($auth->user_catalogue_id == 2) {
-            $condition['user_id'] = $auth->id;
-        } else if ($request->input('user_id')) {
-            $condition['user_id'] = $request->input('user_id');
+        if (isset($auth)) {
+            if ($auth->user_catalogue_id == 2) {
+                $condition['user_id'] = $auth->id;
+            } else if ($request->input('user_id')) {
+                $condition['user_id'] = $request->input('user_id');
+            }
         }
         if ($request->input('date')) {
             $condition['date'] = $request->input('date');
         }
+        $findByCondition = [];
+        $permission = $request->input('permission') ?? null;
+        if ($permission != null) {
+            $findByCondition = [
+                ['date', '>=', Carbon::now()->toDateString()]
+            ];
+        }
         return [
-            'perpage' => $request->input('perpage') ?? 10,
+            'perpage' => $request->input('perpage') ?? 20,
             'keyword' => [
                 'search' => $request->input('keyword') ?? '',
                 'field' => ['price', 'status']
@@ -54,9 +61,12 @@ class ScheduleService extends BaseService
             'condition' => $condition,
             'select' => ['*'],
             'orderBy' => $request->input('sort') ? explode(',', $request->input('sort')) : ['id', 'desc'],
-            'relations' => ['users', 'time_slots']
+            'relations' => ['users', 'time_slots'],
+            'findByCondition' => $findByCondition
         ];
     }
+
+
 
     public function create($request)
     {

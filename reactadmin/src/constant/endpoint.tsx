@@ -5,5 +5,6 @@ export const endpoint = {
     posts: 'frontend/posts',
     user_catalogues: 'frontend/user_catalogues',
     users: 'frontend/users',
-    doctors: 'frontend/doctors'
+    doctors: 'frontend/doctors',
+    schedules: 'frontend/schedules',
 }

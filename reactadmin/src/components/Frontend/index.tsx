@@ -7,8 +7,8 @@ import About from "./Section/About";
 //SCSS
 import '../../assets/scss/HomeHeader.scss'
 import '../../assets/scss/HomePage.scss'
-//SERVICE
-import { findById, pagination } from "@/service/Frontend/FrontEndService";
+//COMPONENT
+
 //SETTINGS
 import { endpoint } from "@/constant/endpoint";
 import { queryKey } from "@/constant/query";
@@ -19,12 +19,12 @@ const HomePage = () => {
         dots: false,
         infinite: true,
         speed: 500,
-        slidesToShow: 4,
+        slidesToShow: 5,
         slidesToScroll: 1,
     };
 
     //GET SPECIALTIES
-    const { getData: specialties, dataCatalogue: specialty_catalogues } = useGetDataFrontEnd({
+    const { getData: specialties, dataCatalogue: specialty_catalogues, isLoading: isLoadingSpecialties } = useGetDataFrontEnd({
         id: '13',
         endpointCatalogue: endpoint.specialty_catalogues,
         endpoint: endpoint.specialties,
@@ -33,7 +33,7 @@ const HomePage = () => {
         queryKey: queryKey.specialties
     })
     //GET BLOGS
-    const { getData: posts, dataCatalogue: post_catalogues } = useGetDataFrontEnd({
+    const { getData: posts, dataCatalogue: post_catalogues, isLoading: isPostsLoading } = useGetDataFrontEnd({
         id: '7',
         endpointCatalogue: endpoint.post_catalogues,
         endpoint: endpoint.posts,
@@ -42,7 +42,7 @@ const HomePage = () => {
         queryKey: queryKey.posts
     })
     //GET DOCTORS
-    const { getData: doctors } = useGetDataFrontEnd({
+    const { getData: doctors, isLoading: isDoctorsLoading } = useGetDataFrontEnd({
         endpoint: endpoint.doctors,
         filter: '&permission=true&publish=2',
         queryKey: queryKey.doctors
@@ -52,30 +52,39 @@ const HomePage = () => {
     return (
         <>
             <BannerHeader />
-            {
-                specialty_catalogues?.publish === 2 &&
+            <div className="bg-sky-100">
+                {
+                    specialty_catalogues?.publish === 2 &&
+                    <ContentSlider
+                        settings={settings}
+                        className="section-specialty"
+                        dataCatalogue={specialty_catalogues}
+                        data={specialties}
+                        isLoading={isLoadingSpecialties}
+                        nameCatalogueParams="specialty"
+                    />
+                }
                 <ContentSlider
                     settings={settings}
-                    className="section-specialty"
+                    label="Bác sĩ nổi bật tuần qua"
+                    className="section-outstanding-doctor"
+                    data={doctors}
                     dataCatalogue={specialty_catalogues}
-                    data={specialties}
+                    isLoading={isPostsLoading}
+                    nameCatalogueParams="specialty"
                 />
-            }
-            <ContentSlider
-                settings={settings}
-                label="Bác sĩ nổi bật tuần qua"
-                className="section-outstanding-doctor"
-                data={doctors}
-            />
-            {
-                post_catalogues?.publish === 2 &&
-                <ContentSlider
-                    settings={settings}
-                    dataCatalogue={post_catalogues}
-                    data={posts}
-                />
-            }
-            <About />
+                {
+                    post_catalogues?.publish === 2 &&
+                    <ContentSlider
+                        settings={settings}
+                        dataCatalogue={post_catalogues}
+                        data={posts}
+                        isLoading={isDoctorsLoading}
+                        nameCatalogueParams="post"
+                    />
+                }
+                <About />
+            </div>
         </>
     )
 }

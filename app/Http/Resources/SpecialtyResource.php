@@ -23,6 +23,7 @@ class SpecialtyResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
+            // 'nameCatalogue' => $this->specialty_catalogues->name ?? '',
             'catalogues' => $this->specialty_catalogues->pluck('id')
                 ->reject(function ($id) use ($specialtyCatalogueId) {
                     return $id === $specialtyCatalogueId;

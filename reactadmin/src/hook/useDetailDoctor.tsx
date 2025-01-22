@@ -2,7 +2,7 @@ import { useMemo, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { findById } from '@/service/Frontend/FrontEndService';
 import { endpoint } from '@/constant/endpoint';
-import { pagination } from '@/service/ScheduleService';
+import { pagination } from '@/service/Frontend/FrontEndService';
 import { queryKey } from '@/constant/query';
 import { getDropdownDate } from '@/helper/myHelper';
 
@@ -24,7 +24,7 @@ const useDetailDoctor = (specialId: string | undefined, doctorId: string | undef
 
     const { data: dataSchedule, isLoading: isScheduleLoading } = useQuery(
         [model],
-        () => pagination(`&publish=2&doctor_id=${doctorId}`)
+        () => pagination(`&publish=2&doctor_id=${doctorId}&permission=true`, endpoint.schedules)
     );
 
     const schedules = useMemo(() => {

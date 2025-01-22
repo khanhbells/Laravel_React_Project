@@ -82,4 +82,13 @@ trait QueryTrait
         }
         return $query;
     }
+
+    public function scopeFindByCondition($query, $findByCondition)
+    {
+        if (isset($findByCondition) && count($findByCondition)) {
+            foreach ($findByCondition as $key => $val) {
+                $query->where($val[0], $val[1], $val[2]);
+            }
+        }
+    }
 }

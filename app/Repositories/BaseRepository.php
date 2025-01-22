@@ -18,6 +18,7 @@ class BaseRepository
         $query = $this->model->newQuery();
         $query->select($params['select'])
             ->condition($params['condition'] ?? [])
+            ->findByCondition($params['findByCondition'] ?? [])
             ->keyword($params['keyword'] ?? '')
             ->relationWith($params['relations'] ?? [])
             ->relationWhereHas($params['whereHas'] ?? [])

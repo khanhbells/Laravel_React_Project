@@ -208,21 +208,23 @@ Route::group([
 
 /*--------------------------------FRONT END--------------------------- */
 Route::group([
-    'prefix' => 'v1'
+    'prefix' => 'v1/frontend'
 ], function ($router) {
     //GET SPECIALTY
-    Route::get('frontend/specialty_catalogues/{id}', [SpecialtyCatalogueController::class, 'show']);
-    Route::get('frontend/specialties', [SpecialtyController::class, 'index']);
-    Route::get('frontend/specialties/{id}', [SpecialtyController::class, 'show']);
+    Route::get('specialty_catalogues/{id}', [SpecialtyCatalogueController::class, 'show']);
+    Route::get('specialties', [SpecialtyController::class, 'index']);
+    Route::get('specialties/{id}', [SpecialtyController::class, 'show']);
     //GET POST
-    Route::get('frontend/post_catalogues/{id}', [PostCatalogueController::class, 'show']);
-    Route::get('frontend/posts', [PostController::class, 'index']);
+    Route::get('post_catalogues/{id}', [PostCatalogueController::class, 'show']);
+    Route::get('posts', [PostController::class, 'index']);
     //GET USER
-    Route::get('frontend/user_catalogues/{id}', [UserCatalogueController::class, 'show']);
-    Route::get('frontend/users', [UserController::class, 'index']);
+    Route::get('user_catalogues/{id}', [UserCatalogueController::class, 'show']);
+    Route::get('users', [UserController::class, 'index']);
     //GET DOCTOR
-    Route::get('frontend/doctors/{id}', [DoctorController::class, 'showDoctor']);
-    Route::get('frontend/doctors', [DoctorController::class, 'index']);
+    Route::get('doctors/{id}', [DoctorController::class, 'showDoctor']);
+    Route::get('doctors', [DoctorController::class, 'index']);
+    //GET SCHEDULES
+    Route::get('schedules', [ScheduleController::class, 'index']);
 });
 
 

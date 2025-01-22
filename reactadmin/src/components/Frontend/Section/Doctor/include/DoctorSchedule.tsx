@@ -4,6 +4,10 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs'
 import { LoadingSpinner } from '@/components/ui/loading';
+import { FaRegHandPointer } from "react-icons/fa6";
+import { memo } from 'react';
+//CONTEXT
+import { useDataSchedule } from '@/contexts/DataScheduleContext';
 interface ISchedules {
     options: { value: string, label: string }[]
     data: any
@@ -17,14 +21,26 @@ const DoctorSchedule = ({
     options,
     data
 }: ISchedules) => {
-
-    const [timeSlot, setTimeSlot] = useState([])
+    const { setSelectedDataSchedule } = useDataSchedule()
+    const [timeSlot, setTimeSlot] = useState<TimeSlot[]>([])
     const [selectedDate, setSelectedDate] = useState<string | undefined>(undefined)
+    const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot | null>(null)
 
     const handleSelectChange = (selected: string | undefined) => {
         setSelectedDate(selected)
         const timeSlotData = data.filter((value: TimeSlot) => value.date === selected)
         setTimeSlot(timeSlotData)
+        setSelectedTimeSlot(null)
+    }
+
+    const handleSetDataSchedule = (value: TimeSlot) => {
+        if (selectedTimeSlot === value) {
+            setSelectedTimeSlot(null)
+            setSelectedDataSchedule(null)
+        } else {
+            setSelectedDataSchedule(value)
+            setSelectedTimeSlot(value)
+        }
     }
 
     useEffect(() => {
@@ -32,12 +48,14 @@ const DoctorSchedule = ({
         if (options && options.length > 0) {
             const defaultDate = options[0]?.value; // Lấy giá trị của ngày đầu tiên
             handleSelectChange(defaultDate);
+        } else {
+            setTimeSlot([])
         }
     }, [options, data]);
 
     return (
         <>
-            <div className="doctor-schedule-container border-primary border-r h-[100%]">
+            <div className="doctor-schedule-container border-primary border-r h-[100%] ">
                 <div className="all-schedule">
                     <Select
                         options={options}
@@ -58,22 +76,33 @@ const DoctorSchedule = ({
                     </div>
                     <div className='time-content'>
                         {
-                            timeSlot && timeSlot.length > 0 ? timeSlot.map((value: TimeSlot, index: number) => (
+                            timeSlot && timeSlot.length > 0 ? timeSlot.map((value: TimeSlot, index: number) =>
+                            (
                                 <Button
                                     key={index}
                                     type="button"
                                     variant="outline"
-                                    className={`px-1 py-2 m-2 bg-[#fff04b] font-normal`}
+                                    className={`px-1 py-2 m-2 bg-[#fff04b] font-normal ${selectedTimeSlot === value ? 'bg-sky-400 text-white' : 'bg-[#fff04b]'
+                                        }`}
+                                    onClick={() => handleSetDataSchedule(value)}
                                 >
                                     {`${dayjs(value.start_time).format('hh:mm A')} - ${dayjs(value.end_time).format('hh:mm A')}`}
                                 </Button>
-                            )) : (
+                            )
+                            ) : options.length === 0 ? (
+                                <div className='italic mt-[5px]'>
+                                    Bác sĩ hiện tại chưa có lịch khám bệnh!. Vui lòng quay lại vào dịp khác
+                                </div>
+                            ) : (
                                 <div className="flex items-center justify-center w-full">
                                     <LoadingSpinner className="mr-[5px]" />
                                     Loading...
                                 </div>
                             )
                         }
+                        <div className="book-free mt-[5px]">
+                            <span className='flex'>Chọn <FaRegHandPointer className='mx-[5px]' /> và đặt (miễn phí)</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -81,4 +110,4 @@ const DoctorSchedule = ({
     )
 }
 
-export default DoctorSchedule
+export default memo(DoctorSchedule)

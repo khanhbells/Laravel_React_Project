@@ -31,7 +31,8 @@ class DoctorController extends Controller
     public function index(Request $request)
     {
         try {
-            if ($request->input('permission') == null) {
+            $permission =  $request->input('permission') ?? null;
+            if ($permission == null) {
                 $this->authorize('modules', '/doctor/index');
             }
             $doctors = $this->doctorService->paginate($request);

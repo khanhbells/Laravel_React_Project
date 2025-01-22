@@ -55,6 +55,7 @@ class SpecialtyService extends BaseService
             'whereHas' => $this->whereHas($request),
             'select' => ['*'],
             'orderBy' => $request->input('sort') ? explode(',', $request->input('sort')) : ['id', 'desc'],
+            'relations' => ['specialty_catalogues']
         ];
     }
 
