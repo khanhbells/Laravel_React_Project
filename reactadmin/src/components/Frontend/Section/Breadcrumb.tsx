@@ -24,7 +24,7 @@ const PageHeading: React.FC<PageHeadingProps> = ({ breadcrumb }) => {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <Link to="/homepage" className="flex"><FaHome className="mt-[2px] mr-[5px]" /> Home</Link>
+                                <Link to="/homepage" className="flex"><FaHome className="" /></Link>
                             </BreadcrumbItem>
                             {
                                 breadcrumb && breadcrumb.map((value, index) => (

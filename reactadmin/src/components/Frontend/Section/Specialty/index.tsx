@@ -15,7 +15,7 @@ const Specialty = () => {
     );
     const breadcrumb = [
         {
-            title: `${dataSpecialties?.specialties[0].cats[0]}`,
+            title: `${dataSpecialties ? dataSpecialties.specialties[0].cats[0] : 'Loading...'}`,
             route: ''
         },
     ]

@@ -7,6 +7,7 @@ use App\Repositories\Doctor\DoctorRepository;
 use App\Repositories\User\UserRepository;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Status;
+use GuzzleHttp\Psr7\Query;
 use Illuminate\Support\Facades\Hash;
 
 class DoctorService extends BaseService
@@ -27,9 +28,23 @@ class DoctorService extends BaseService
     {
         $agrument = $this->paginateAgrument($request);
 
+        if ($request->input('specialty_id')) {
+            $agrument['whereHas'] = $this->whereHas($request);
+        }
+
         $doctors = $this->doctorRepository->pagination([...$agrument]);
 
         return $doctors;
+    }
+
+    private function whereHas($request)
+    {
+        return [
+            'specialties' => function ($query) use ($request) {
+                $query->where('specialty_id', $request->integer('specialty_id'))
+                    ->where('publish', 2);
+            }
+        ];
     }
 
     private function paginateAgrument($request)

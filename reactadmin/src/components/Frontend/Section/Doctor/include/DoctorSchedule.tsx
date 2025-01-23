@@ -10,7 +10,8 @@ import { memo } from 'react';
 import { useDataSchedule } from '@/contexts/DataScheduleContext';
 interface ISchedules {
     options: { value: string, label: string }[]
-    data: any
+    data: any,
+    className?: string
 }
 
 interface TimeSlot {
@@ -19,7 +20,8 @@ interface TimeSlot {
 
 const DoctorSchedule = ({
     options,
-    data
+    data,
+    className
 }: ISchedules) => {
     const { setSelectedDataSchedule } = useDataSchedule()
     const [timeSlot, setTimeSlot] = useState<TimeSlot[]>([])
@@ -28,9 +30,11 @@ const DoctorSchedule = ({
 
     const handleSelectChange = (selected: string | undefined) => {
         setSelectedDate(selected)
-        const timeSlotData = data.filter((value: TimeSlot) => value.date === selected)
-        setTimeSlot(timeSlotData)
-        setSelectedTimeSlot(null)
+        if (data) {
+            const timeSlotData = data.filter((value: TimeSlot) => value.date === selected)
+            setTimeSlot(timeSlotData)
+            setSelectedTimeSlot(null)
+        }
     }
 
     const handleSetDataSchedule = (value: TimeSlot) => {
@@ -43,8 +47,12 @@ const DoctorSchedule = ({
         }
     }
 
+
+
     useEffect(() => {
-        // Nếu options có dữ liệu, tự động chọn ngày đầu tiên
+        console.log(data);
+
+
         if (options && options.length > 0) {
             const defaultDate = options[0]?.value; // Lấy giá trị của ngày đầu tiên
             handleSelectChange(defaultDate);
@@ -55,7 +63,7 @@ const DoctorSchedule = ({
 
     return (
         <>
-            <div className="doctor-schedule-container border-primary border-r h-[100%] ">
+            <div className={`doctor-schedule-container ${className ?? ''} h-[100%] `}>
                 <div className="all-schedule">
                     <Select
                         options={options}

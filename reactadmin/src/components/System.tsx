@@ -147,7 +147,7 @@ const System = ({
                                                     defaultValue={value.content}
                                                     render={({ field }) => (
                                                         <CKEditor
-                                                            editor={ClassicEditor}
+                                                            editor={ClassicEditor as any}
                                                             data={field.value ?? ''}
                                                             config={
                                                                 {

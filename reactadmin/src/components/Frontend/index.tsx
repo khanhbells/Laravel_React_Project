@@ -66,7 +66,7 @@ const HomePage = () => {
                 }
                 <ContentSlider
                     settings={settings}
-                    label="Bác sĩ nổi bật tuần qua"
+                    label="Bác sĩ nổi bật"
                     className="section-outstanding-doctor"
                     data={doctors}
                     dataCatalogue={specialty_catalogues}

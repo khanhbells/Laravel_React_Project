@@ -18,7 +18,7 @@ const useGetDataFrontEnd = ({ id, endpointCatalogue, endpoint, filter, queryKeyC
         enabled: !!id
     })
     const { data, isLoading, isError } = useQuery([queryKey], () => pagination(filter, endpoint), {
-        staleTime: 6000
+        enabled: !!filter && !!endpoint && !!queryKey
     })
 
     const [getData, setData] = useState();

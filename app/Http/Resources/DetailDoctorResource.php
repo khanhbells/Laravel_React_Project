@@ -22,6 +22,8 @@ class DetailDoctorResource extends JsonResource
                     'label' => $special->name,
                     'value' => $special->id,
                     'canonical' => $special->canonical,
+                    'description' => $special->description,
+                    'content' => $special->content,
                 ];
             });
         }

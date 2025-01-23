@@ -2,7 +2,8 @@ import '../../../../assets/scss/DetailDoctor.scss'
 import DoctorSchedule from './include/DoctorSchedule'
 import { useParams } from 'react-router-dom'
 import PageHeading from '../Breadcrumb'
-import DoctoExtraInfo from './include/DoctorExtraInfo'
+import DoctorExtraInfo from './include/DoctorExtraInfo'
+import DoctorInfor from './include/DoctorInfor'
 //HOOK
 import useDetailDoctor from '@/hook/useDetailDoctor'
 //CONTEXT
@@ -29,39 +30,21 @@ const DetailDoctor = () => {
         <>
             <PageHeading breadcrumb={breadcrumb} />
             <div className="h-[full]">
-                <div className='flex px-[200px] py-[10px] bg-[white] '>
-                    {dataDoctor ? (
-                        <div
-                            className="w-[120px] h-[120px] rounded-full bg-cover bg-no-repeat bg-center"
-                            style={{ backgroundImage: `url(${dataDoctor.image})` }}
-                        ></div>
-                    ) : (
-                        <LoadingSpinner />
-                    )}
-                    <div className='w-[80%] flex flex-col ml-[20px]'>
-                        {/* up */}
-                        <div className='text-[20px] font-semibold  '>
-                            {`${dataDoctor ? dataDoctor.exp : ''} ${dataDoctor ? dataDoctor.name : 'Loading...'}`}
-                        </div>
-                        {/* down */}
-                        <div className='pt-[10px]'>
-                            <span
-                                className=''
-                                dangerouslySetInnerHTML={{ __html: dataDoctor?.description }}
-                            ></span>
-                        </div>
-                    </div>
-                </div>
+                <DoctorInfor
+                    dataDoctor={dataDoctor}
+                    className='px-[200px] py-[10px]'
+                />
                 <div className='schedule-doctor h-[100%] flex px-[200px] py-[10px] min-h-[200px] bg-sky-100'>
                     <DataScheduleProvider>
                         <div className='content-left w-[50%]'>
                             <DoctorSchedule
                                 options={schedules || []}
                                 data={getData || []}
+                                className='border-primary border-r'
                             />
                         </div>
                         <div className='content-right w-[50%]'>
-                            <DoctoExtraInfo
+                            <DoctorExtraInfo
                                 dataDoctor={dataDoctor}
                             />
                         </div>
