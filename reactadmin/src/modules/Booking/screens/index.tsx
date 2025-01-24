@@ -1,11 +1,14 @@
+//Create Store
+import Store from "./include/Store"
 //pagination
+import { pagination, destroy } from "@/service/BookingService"
 import Paginate from "@/components/paginate"
-import { destroy, pagination } from "@/service/PostService"
 //breadcrumb
 import PageHeading from "@/components/heading"
 import { Breadcrumb } from "@/types/Breadcrumb"
 //table
 import CustomTable from "@/components/customTable"
+import useTable from "@/hook/useTable"
 import {
     Card,
     CardContent,
@@ -14,53 +17,34 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import useTable from "@/hook/useTable"
 //filter
 import Filter from "@/components/Filter"
 //Checkbox
 import useCheckBoxState from "@/hook/useCheckBoxState"
+//Sheet Create
+import useSheet from "@/hook/useSheet"
+import CustomSheet from "@/components/CustomSheet"
 //settings
-import { queryKey } from "@/constant/query"
+import { breadcrumb, tableColumn, model, buttonActions } from "../setting"
 import { filterItems } from "@/settings/globalSettings"
-import { breadcrumb, buttonActions, tableColumn } from "../settings"
+import { SelectConfig } from "@/components/CustomFilter"
 //contexts
 import { FilterProvider } from "@/contexts/FilterContext"
-//react
-import { useCustomFilter } from "@/hook/useCustomFilter"
-import { useMemo } from "react"
-import { useQuery } from "react-query"
-//Service
-import { pagination as postCataloguesPagination } from "@/service/PostCatalogueService"
-const Post = () => {
-    const model = 'posts'
+//
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+const Booking = () => {
     const breadcrumbData: Breadcrumb = breadcrumb.index
+    const navigate = useNavigate()
 
     //REACT QUERY
     const { isLoading, data, isError, refetch, handlePageChange, handleQueryString } = useTable({ model, pagination })
     //Checkbox
     const { checkedState, checkedAllState, handleCheckedChange, handleCheckedAllChange, isAnyChecked } = useCheckBoxState(data, model, isLoading)
     const somethingChecked = isAnyChecked()
-    const { data: postCatalogues, isLoading: isPostCatalogueLoading, isError: isPostCatalogueError } = useQuery([queryKey.postCatalogues], () => postCataloguesPagination(''))
+    const { isSheetOpen, openSheet, closeSheet } = useSheet()
 
-    const filterInitial = useMemo(() => [
-        {
-            name: 'post_catalogue_id',
-            placeholder: 'Chọn nhóm bài viết',
-            data: postCatalogues?.['post_catalogues'],
-            isLoading: isPostCatalogueLoading,
-            isNested: true,
-            valueKey: 'id',
-            labelKey: 'name'
-        }
-    ], [postCatalogues])
-
-    /* 
-       - Phân loại được là kiểu hiện có hiển thị theo kiểu danh mục cha con không: isNested:true/ false --> false
-       - Key và label thì phải custom được vì có thể là nó sẽ không theo cái tiêu chí là id và name
-       - Trạng thái của dữ liệu: Loading vv...
-    */
-
-    const customFilter = useCustomFilter(filterInitial);
+    const [customFilter, setCustomFilter] = useState<SelectConfig[]>([]);
 
     return (
         <FilterProvider customFilters={customFilter}>
@@ -68,8 +52,8 @@ const Post = () => {
             <div className="container">
                 <Card className="rounded-[5px] mt-[15px] ">
                     <CardHeader className="border-b border-solid border-[#f3f3f3] p-[20px]">
-                        <CardTitle className="uppercase">Quản lý danh sách bài viết</CardTitle>
-                        <CardDescription className="text-xs text-[#f00000]">Hiển thị danh sách bài viết, sử dụng các chức năng bên dưới để lọc theo mong muốn</CardDescription>
+                        <CardTitle className="uppercase">Quản lý danh sách booking</CardTitle>
+                        <CardDescription className="text-xs text-[#f00000]">Hiển thị danh sách booking, sử dụng các chức năng bên dưới để lọc theo mong muốn</CardDescription>
                     </CardHeader>
                     <CardContent className="p-[15px]">
                         <Filter
@@ -79,8 +63,6 @@ const Post = () => {
                             refetch={refetch}
                             handleQueryString={(filters: any) => handleQueryString(filters)}
                             items={filterItems}
-                            buttonText="Thêm mới bài viết"
-                            to="/post/create"
                         />
                         <CustomTable
                             isLoading={isLoading}
@@ -92,17 +74,35 @@ const Post = () => {
                             checkedAllState={checkedAllState}
                             handleCheckedChange={handleCheckedChange}
                             handleCheckedAllChange={handleCheckedAllChange}
+                            openSheet={openSheet}
                             destroy={destroy}
                             refetch={refetch}
                             buttonActions={buttonActions}
+                            flag={true}
                         />
                     </CardContent>
                     <CardFooter>
                         {!isLoading && data[model] && data.links ? <Paginate links={data?.links} pageChange={handlePageChange} /> : null}
                     </CardFooter>
                 </Card>
+                {isSheetOpen && (
+                    <CustomSheet
+                        title={breadcrumb.update.title}
+                        description={breadcrumb.update.description}
+                        isSheetOpen={isSheetOpen.open}
+                        closeSheet={closeSheet}
+                        className="w-[400px] sm:w-[500px]"
+                    >
+                        <Store
+                            refetch={refetch}
+                            closeSheet={closeSheet}
+                            id={isSheetOpen.id}
+                            action={isSheetOpen.action}
+                        />
+                    </CustomSheet>
+                )}
             </div >
         </FilterProvider>
     )
 }
-export default Post
+export default Booking

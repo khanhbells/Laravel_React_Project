@@ -43,4 +43,9 @@ class Schedule extends Model
     {
         return $this->belongsTo(TimeSlot::class, 'time_slot_id', 'id');
     }
+
+    public function bookings()
+    {
+        return $this->hasOne(Booking::class, 'schedule_id', 'id');
+    }
 }

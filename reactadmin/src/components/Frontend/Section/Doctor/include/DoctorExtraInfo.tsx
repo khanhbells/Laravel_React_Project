@@ -3,19 +3,32 @@ import { useDataSchedule } from "@/contexts/DataScheduleContext"
 import { addCommas } from "@/helper/myHelper"
 import { Button } from "@/components/ui/button"
 import { memo } from "react"
+import { Sheet } from "@/hook/useSheet"
 interface IDoctorExtraInfo {
     dataDoctor: any
+    openSheet: (sheet: Sheet) => void
 }
 
 const DoctoExtraInfo = ({
-    dataDoctor
+    dataDoctor,
+    openSheet
 }: IDoctorExtraInfo) => {
 
     const { selectedDataSchedule } = useDataSchedule()
+
+
     const [isShowDetailInfo, setIsoDetailInfo] = useState<boolean>(false)
     const handleShowDetailInfo = (status: boolean) => {
         setIsoDetailInfo(status)
     }
+
+    //openSheet
+    const handleButtonAction = () => {
+        if (openSheet) {
+            openSheet({ open: true, action: '', id: undefined })
+        }
+    }
+
 
     return (
         <>
@@ -68,6 +81,7 @@ const DoctoExtraInfo = ({
                             type="button"
                             variant="outline"
                             className={`py-2 font-normal bg-sky-500 text-[white] mt-[5px]`}
+                            onClick={() => handleButtonAction()}
                         >
                             Đặt lịch ngay
                         </Button>

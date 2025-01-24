@@ -108,7 +108,9 @@ const CustomTable = ({
                                     :
                                     (<></>)
                         ))}
-                        <TableHead className="text-center">Tình trạng</TableHead>
+                        {
+                            !restProps.flag && <TableHead className="text-center">Tình trạng</TableHead>
+                        }
                         <TableHead className="text-center">Tác vụ</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -149,9 +151,12 @@ const CustomTable = ({
                                         (<></>)
 
                             ))}
-                            <TableCell className="text-center">
-                                <Switch value={row.id} checked={columnState[row.id]?.publish} onCheckedChange={() => handleChecked(row.id, 'publish', model)} />
-                            </TableCell>
+                            {
+                                !restProps.flag &&
+                                <TableCell className="text-center">
+                                    <Switch value={row.id} checked={columnState[row.id]?.publish} onCheckedChange={() => handleChecked(row.id, 'publish', model)} />
+                                </TableCell>
+                            }
                             <TableCell className="flex justify-center">
                                 {buttonActions && buttonActions.map((action: any, index: number) => (
                                     action.path ? (

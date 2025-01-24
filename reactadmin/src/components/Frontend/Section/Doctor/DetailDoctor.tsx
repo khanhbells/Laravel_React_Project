@@ -4,14 +4,20 @@ import { useParams } from 'react-router-dom'
 import PageHeading from '../Breadcrumb'
 import DoctorExtraInfo from './include/DoctorExtraInfo'
 import DoctorInfor from './include/DoctorInfor'
+import CustomSheet from "@/components/CustomSheet"
+
 //HOOK
 import useDetailDoctor from '@/hook/useDetailDoctor'
 //CONTEXT
 import { DataScheduleProvider } from '@/contexts/DataScheduleContext'
-import { LoadingSpinner } from '@/components/ui/loading'
+import useSheet from "@/hook/useSheet"
+import StoreBookingPatient from './include/StoreBookingPatient'
+
 const DetailDoctor = () => {
     const { specialId, doctorId, catalogueId, catalogue } = useParams()
     const { dataDoctor, dataSpecialties, schedules, getData, isDoctorLoading, isSpecialtyLoading } = useDetailDoctor(specialId, doctorId);
+    const { isSheetOpen, openSheet, closeSheet } = useSheet()
+
     const breadcrumb = [
         {
             title: `Khám chuyên khoa`,
@@ -28,14 +34,15 @@ const DetailDoctor = () => {
     ]
     return (
         <>
-            <PageHeading breadcrumb={breadcrumb} />
-            <div className="h-[full]">
-                <DoctorInfor
-                    dataDoctor={dataDoctor}
-                    className='px-[200px] py-[10px]'
-                />
-                <div className='schedule-doctor h-[100%] flex px-[200px] py-[10px] min-h-[200px] bg-sky-100'>
-                    <DataScheduleProvider>
+            <DataScheduleProvider>
+                <PageHeading breadcrumb={breadcrumb} />
+                <div className="h-[full]">
+                    <DoctorInfor
+                        dataDoctor={dataDoctor}
+                        className='px-[200px] py-[10px]'
+                    />
+                    <div className='schedule-doctor h-[100%] flex px-[200px] py-[10px] min-h-[200px] bg-sky-100'>
+
                         <div className='content-left w-[50%]'>
                             <DoctorSchedule
                                 options={schedules || []}
@@ -46,20 +53,39 @@ const DetailDoctor = () => {
                         <div className='content-right w-[50%]'>
                             <DoctorExtraInfo
                                 dataDoctor={dataDoctor}
+                                openSheet={openSheet}
                             />
                         </div>
-                    </DataScheduleProvider>
-                </div>
-                <div className='detail-info-doctor px-[200px] bg-[#f9f9f9] py-[10px] border-primary border-y'>
-                    <div
-                        dangerouslySetInnerHTML={{ __html: dataDoctor?.content }}
-                    >
-                    </div>
-                </div>
-                <div className='comment-doctor h-[50px]'>
 
-                </div>
-            </div >
+                    </div>
+                    <div className='detail-info-doctor px-[200px] bg-[#f9f9f9] py-[10px] border-primary border-y'>
+                        <div
+                            dangerouslySetInnerHTML={{ __html: dataDoctor?.content }}
+                        >
+                        </div>
+                    </div>
+                    <div className='comment-doctor h-[50px]'> </div>
+
+                </div >
+
+                {isSheetOpen && (
+                    <div className='z-auto'>
+                        <CustomSheet
+                            title={'Đơn đăng ký khám bệnh'}
+                            description={'Vui lòng điền đầy đủ thông tin cá nhân trước khi xác nhận lịch khám'}
+                            isSheetOpen={isSheetOpen.open}
+                            closeSheet={closeSheet}
+                            className="w-[400px] sm:w-[600px]"
+                        >
+                            <StoreBookingPatient
+                                dataDoctor={dataDoctor}
+                                schedules={schedules}
+                                closeSheet={closeSheet}
+                            />
+                        </CustomSheet>
+                    </div>
+                )}
+            </DataScheduleProvider>
         </>
     )
 }

@@ -3,6 +3,7 @@ import { baseDestroy } from "../BaseService";
 import { baseSave } from "../BaseService";
 import { handleAxiosError } from "@/helper/axiosHelper";
 import { useNavigate } from "react-router-dom";
+import { PayloadBookingInput } from "@/interfaces/types/BookingType";
 export interface GetFrontEnd {
     [key: string]: any
 }
@@ -22,12 +23,20 @@ const pagination = async (queryString: string, endpoint: string) => {
     }
 }
 
+const save = async (payload: PayloadBookingInput, updateParams: { action: string, id: string | undefined }) => {
+    // console.log(payload);
+
+    return baseSave('/frontend/bookings', payload, updateParams)
+}
+
+
 const findById = async (id: string | undefined, endpoint: string): Promise<GetFrontEnd> => {
     const response = await axios.get(`${endpoint}/${id}`)
     return response.data
 }
 
 export {
+    save,
     findById,
     pagination,
 };

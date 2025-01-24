@@ -50,7 +50,7 @@ const DoctorSchedule = ({
 
 
     useEffect(() => {
-        console.log(data);
+        // console.log(data);
 
 
         if (options && options.length > 0) {

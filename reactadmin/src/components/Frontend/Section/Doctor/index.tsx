@@ -1,32 +1,23 @@
-import { useParams } from "react-router-dom"
-import PageHeading from "../Breadcrumb";
-import { useQuery } from "react-query";
-import { findById, pagination } from "@/service/Frontend/FrontEndService";
+import CustomDescriptionContent from "@/components/CustomDescriptionContent";
+import CustomListContent from "@/components/CustomListContent";
+import Paginate from "@/components/paginate";
 import { endpoint } from "@/constant/endpoint";
-import { useEffect, useMemo, useState } from "react";
 import { queryKey } from "@/constant/query";
-import useTableFrontend from "@/hook/useTableFrontend";
-import Select from 'react-select'
-import {
-    Card,
-    CardContent,
-} from "@/components/ui/card";
-import DoctorInfor from "./include/DoctorInfor";
-import { LoadingSpinner } from "@/components/ui/loading";
-import { DataScheduleProvider } from "@/contexts/DataScheduleContext";
-import DoctorSchedule from "./include/DoctorSchedule";
-import DoctorExtraInfo from "./include/DoctorExtraInfo";
 import { getDropdownDate } from '@/helper/myHelper';
-interface IDoctorIndex {
-    [key: string]: any
-}
+import useListContent from "@/hook/useListContent";
+import { findById, pagination } from "@/service/Frontend/FrontEndService";
+import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
+import Select from 'react-select';
+import PageHeading from "../Breadcrumb";
+
 
 const Doctor = () => {
     const model = 'doctors'
     const { catalogueId, catalogue, specialId, specialty } = useParams()
     const query = `&publish=2&specialty_id=${specialId}&permission=true`
-    const { isLoading: isLoadingDoctors, data: dataDoctors, isError, refetch, handlePageChange, handleQueryString } = useTableFrontend({ model, pagination, query, endpoint: endpoint.doctors })
-
+    const { isLoading: isLoadingDoctors, data: dataDoctors, isError, refetch, handlePageChange, handleQueryString } = useListContent({ model, pagination, query, endpoint: endpoint.doctors })
     const { data: dataSpecialties, isLoading: isSpecialtiesLoading } = useQuery(
         [queryKey.specialties, specialId],
         () => findById(specialId, endpoint.specialties),
@@ -71,23 +62,13 @@ const Doctor = () => {
         }
     }, [doctors]);
 
-
     return (
         <>
             <PageHeading breadcrumb={breadcrumb} />
-            <div className="px-[100px] bg-white pb-[10px]">
-                <div
-                    className="page-heading py-[20px] border-b border-[#e7eaec] text-[25px] font-semibold"
-                >
-                    {dataDoctors && dataDoctors.doctors.length > 0 ? dataDoctors.doctors[0].specialties[0].label : (dataSpecialties) ? dataSpecialties.name : 'Loading...'}
-                </div>
-                <div className="my-[10px] text-[18px]"
-                    dangerouslySetInnerHTML={{ __html: dataDoctors && dataDoctors.doctors.length > 0 ? dataDoctors.doctors[0].specialties[0].description : '' }}
-                ></div>
-                <div className=""
-                    dangerouslySetInnerHTML={{ __html: dataDoctors && dataDoctors.doctors.length > 0 ? dataDoctors.doctors[0].specialties[0].content : '' }}
-                ></div>
-            </div>
+            <CustomDescriptionContent
+                dataDoctors={dataDoctors}
+                dataSpecialties={dataSpecialties}
+            />
             <div className="bg-sky-100 min-h-[250px] py-[10px] px-[100px] h-[100%]">
                 <div className="mb-[40px]">
                     <Select
@@ -98,51 +79,18 @@ const Doctor = () => {
                     // value={options?.find(option => option.value === selectedDate) || null}
                     />
                 </div>
-                {
-                    dataDoctors && dataDoctors.doctors.length > 0 ? dataDoctors.doctors.map((value: IDoctorIndex, index: number) => {
-                        return (
-                            <Card className="mb-[20px] h-[100%] " key={index}>
-                                <CardContent className="flex pt-[10px] grid grid-cols-12">
-                                    <div className="border-r border-sky-200 col-span-6">
-                                        <DoctorInfor
-                                            dataDoctor={value}
-                                            params={`/homepage/specialty/${catalogueId}/${catalogue}/${specialId}/${specialty}/${value.id}/${value.canonical}.html`}
-                                        />
-                                    </div>
-                                    <div
-                                        className="ml-[10px] col-span-6"
-                                    >
-                                        <DataScheduleProvider>
-                                            <div>
-                                                <div className="h-[50%]">
-                                                    <DoctorSchedule
-                                                        options={isSchedules[index]?.schedules || []} // Mặc định là mảng rỗng
-                                                        data={isSchedules[index]?.getDatas || []}  // Mặc định là null
-                                                    />
-                                                </div>
-                                                <div className="h-[50%] border-t border-sky-200 pt-[10px]">
-                                                    <DoctorExtraInfo
-                                                        dataDoctor={value}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </DataScheduleProvider>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )
-                    }) : isLoadingDoctors ? (
-                        <div className="flex items-center justify-center w-full">
-                            <LoadingSpinner className="mr-[5px]" />
-                            Loading...
-                        </div>
-                    ) : (
-                        <div className="italic text-[#000] text-center">
-                            Hiện tại chưa có bác sĩ nào của chúng tôi thuộc khoa này xin các bạn thông cảm, chúng tôi sẽ cố gắng tìm kiếm được bác sĩ nhanh nhất có thể trong thời gian sắp tới!
-                        </div>
-                    )
-                }
-
+                <CustomListContent
+                    dataDoctors={dataDoctors}
+                    isLoadingDoctors={isLoadingDoctors}
+                    isSchedules={isSchedules}
+                    catalogue={catalogue}
+                    catalogueId={catalogueId}
+                    specialty={specialty}
+                    specialId={specialId}
+                />
+                <div className="pb-[10px]">
+                    {!isLoadingDoctors && dataDoctors[model] && dataDoctors.links ? <Paginate links={dataDoctors?.links} pageChange={handlePageChange} /> : null}
+                </div>
             </div>
         </>
     )

@@ -81,8 +81,8 @@ class Patient extends Authenticatable implements JWTSubject
         return $this->belongsTo(PatientCatalogue::class, 'patient_catalogue_id', 'id');
     }
 
-    public function doctors()
+    public function bookings()
     {
-        return $this->hasOne(Doctor::class, 'patient_id', 'id');
+        return $this->hasMany(Booking::class, 'patient_id', 'id');
     }
 }

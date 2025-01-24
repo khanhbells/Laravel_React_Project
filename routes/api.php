@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\V1\PatientController;
 use App\Http\Controllers\Api\V1\TimeSlotController;
 use App\Http\Controllers\Api\V1\ScheduleController;
 use App\Http\Controllers\Api\V1\SystemController;
+use App\Http\Controllers\Api\V1\BookingController;
 use App\Http\Resources\DoctorResource;
 use App\Models\SpecialtyCatalogue;
 use Illuminate\Support\Facades\Route;
@@ -225,6 +226,10 @@ Route::group([
     Route::get('doctors', [DoctorController::class, 'index']);
     //GET SCHEDULES
     Route::get('schedules', [ScheduleController::class, 'index']);
+    //BOOKINGS
+    Route::get('bookings', [BookingController::class, 'index']);
+    Route::get('bookings/{id}', [BookingController::class, 'show']);
+    Route::post('bookings', [BookingController::class, 'create']);
 });
 
 

@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from "react-redux"
 import { showToast } from "../../helper/myHelper"
 import Header from "./Header";
 import Footer from "./Footer";
+import '../../assets/scss/HomeHeader.scss'
+import '../../assets/scss/HomePage.scss'
 
 const LayoutFrontend: React.FC = () => {
     const { message, type } = useSelector((state: RootState) => state.toast)

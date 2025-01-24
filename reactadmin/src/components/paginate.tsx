@@ -50,7 +50,7 @@ const Paginate: React.FC<PaginationProps> = ({ links, pageChange }) => {
                         </PaginationItem>
                     )}
                     {filterLinks.map((link, index) => (
-                        <PaginationItem key={index} className={link.active ? 'bg-primary rounded text-white' : null}>
+                        <PaginationItem key={index} className={link.active ? 'bg-sky-400 rounded text-white' : undefined}>
                             {
                                 link.url ? (
                                     <PaginationLink href="#" onClick={(e: any) => {

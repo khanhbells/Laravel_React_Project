@@ -57,6 +57,8 @@ import ScheduleIndex from '@/modules/Schedule/screens';
 import ScheduleCreate from '@/modules/Schedule/screens/Store';
 //System
 import SytemIndex from '@/modules/System/screens';
+//System
+import BookingIndex from '@/modules/Booking/screens';
 /*--------------------------UI/UX------------------------- */
 import LayoutFrontend from './components/Frontend/Layout';
 import HomePage from './components/Frontend';
@@ -112,6 +114,7 @@ const router = createBrowserRouter([
       { path: "/schedule/index", element: <ScheduleIndex /> },
       { path: "/schedule/create", element: <ScheduleCreate /> },
       { path: "/system/index", element: <SytemIndex /> },
+      { path: "/booking/index", element: <BookingIndex /> },
     ]
   },
   {

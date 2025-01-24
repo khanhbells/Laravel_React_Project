@@ -38,6 +38,9 @@ class DoctorController extends Controller
             $doctors = $this->doctorService->paginate($request);
             return response()->json([
                 'doctors' =>  DetailDoctorResource::collection($doctors),
+                'links' => method_exists($doctors, 'items') ? $doctors->linkCollection() : null,
+                'current_page' => method_exists($doctors, 'items') ? $doctors->currentPage() : null,
+                'last_page' => method_exists($doctors, 'items') ? $doctors->lastPage() : null,
             ], Response::HTTP_OK);
         } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
             return response()->json([

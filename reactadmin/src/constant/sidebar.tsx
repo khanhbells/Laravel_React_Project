@@ -6,6 +6,7 @@ import { MdOutlineMedicalServices } from "react-icons/md";
 import { FaUserInjured } from "react-icons/fa6";
 import { IoSettingsOutline } from "react-icons/io5";
 import { GrSchedules } from "react-icons/gr";
+import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
 export const sidebarItem = [
     {
         label: 'MAIN',
@@ -101,8 +102,14 @@ export const sidebarItem = [
             {
                 icon: <GrSchedules className="text-sm mr-2" />,
                 active: ['schedule'],
-                label: 'Quản Lý Lịch Khám',
+                label: 'Quản Lý Lịch Khám BS',
                 path: '/schedule/index'
+            },
+            {
+                icon: <LiaFileInvoiceDollarSolid className="text-sm mr-2" />,
+                active: ['booking'],
+                label: 'Quản Đơn Đặt Lịch Khám',
+                path: '/booking/index'
             },
             {
                 icon: <BsHospital className="text-sm mr-2" />,
@@ -110,12 +117,6 @@ export const sidebarItem = [
                 label: 'Quản Lý Bệnh Viện',
                 path: '/hospital/index'
             },
-            // {
-            //     icon: <CiShoppingTag className="text-sm mr-2" />,
-            //     active: ['tag'],
-            //     label: 'Quản Lý Tags',
-            //     path: '/tag/index'
-            // },
             {
                 icon: <IoSettingsOutline className="text-sm mr-2" />,
                 active: ['setting'],

@@ -12,7 +12,7 @@ interface FilterParam {
     [key: string]: string | number
 }
 
-const useTableFrontEnd = ({ model, pagination, query, endpoint }: UseTableProps) => {
+const useListContent = ({ model, pagination, query, endpoint }: UseTableProps) => {
 
     //get dữ liệu
     const navigate = useNavigate()
@@ -92,4 +92,4 @@ const useTableFrontEnd = ({ model, pagination, query, endpoint }: UseTableProps)
     }
 
 }
-export default useTableFrontEnd
+export default useListContent

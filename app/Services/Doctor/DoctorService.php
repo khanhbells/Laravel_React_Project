@@ -50,7 +50,7 @@ class DoctorService extends BaseService
     private function paginateAgrument($request)
     {
         return [
-            // 'perpage' => $request->input('perpage') ?? 10,
+            'perpage' => $request->input('perpage') ?? 10,
             'keyword' => [
                 'search' => $request->input('keyword') ?? '',
                 'field' => ['mete_title']
@@ -61,7 +61,7 @@ class DoctorService extends BaseService
             'select' => ['*'],
             'orderBy' => $request->input('sort') ? explode(',', $request->input('sort')) : ['id', 'desc'],
             'relations' => ['users', 'specialties', 'tags'],
-            'limit' => 10,
+            // 'limit' => 10,
         ];
     }
 

@@ -5,8 +5,7 @@ import BannerHeader from "./Section/BannerHeader";
 import ContentSlider from "./Section/ContentSlider";
 import About from "./Section/About";
 //SCSS
-import '../../assets/scss/HomeHeader.scss'
-import '../../assets/scss/HomePage.scss'
+
 //COMPONENT
 
 //SETTINGS

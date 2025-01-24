@@ -1,18 +1,15 @@
-import { useParams } from "react-router-dom"
-import PageHeading from "../Breadcrumb";
-import { useQuery } from "react-query";
-import { pagination } from "@/service/Frontend/FrontEndService";
-import { endpoint } from "@/constant/endpoint";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
 import DetailContent from "@/components/DetailContent";
+import Paginate from "@/components/paginate";
+import { endpoint } from "@/constant/endpoint";
+import useListContent from "@/hook/useListContent";
+import { pagination } from "@/service/Frontend/FrontEndService";
+import { useParams } from "react-router-dom";
+import PageHeading from "../Breadcrumb";
 const Specialty = () => {
     const model = 'specialties'
     const { catalogueId, catalogue } = useParams()
-    const { data: dataSpecialties, isLoading: isLoadingSpecialties } = useQuery(
-        [model],
-        () => pagination(`&publish=2&specialty_catalogue_id=${catalogueId}`, endpoint.specialties)
-    );
+    const query = `&publish=2&specialty_catalogue_id=${catalogueId}`
+    const { isLoading: isLoadingSpecialties, data: dataSpecialties, isError, refetch, handlePageChange, handleQueryString } = useListContent({ model, pagination, query, endpoint: endpoint.specialties })
     const breadcrumb = [
         {
             title: `${dataSpecialties ? dataSpecialties.specialties[0].cats[0] : 'Loading...'}`,
@@ -30,6 +27,9 @@ const Specialty = () => {
                 isLoading={isLoadingSpecialties}
                 nameCatalogueParams="specialty"
             />
+            <div className="pb-[10px]">
+                {!isLoadingSpecialties && dataSpecialties[model] && dataSpecialties.links ? <Paginate links={dataSpecialties?.links} pageChange={handlePageChange} /> : null}
+            </div>
         </>
     )
 }
