@@ -23,7 +23,7 @@ const DoctorSchedule = ({
     data,
     className
 }: ISchedules) => {
-    const { setSelectedDataSchedule } = useDataSchedule()
+    const { selectedDataSchedule, setSelectedDataSchedule } = useDataSchedule()
     const [timeSlot, setTimeSlot] = useState<TimeSlot[]>([])
     const [selectedDate, setSelectedDate] = useState<string | undefined>(undefined)
     const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot | null>(null)

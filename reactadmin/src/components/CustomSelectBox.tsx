@@ -59,7 +59,7 @@ const CustomSelectBox = ({
                     render={({ field }) => (
                         <Select
                             options={isLoading ? [] : options}
-                            className="w-[400px]"
+                            className="w-[300px]"
                             placeholder={placeholder ?? ''}
                             onChange={(selected) => {
                                 setSelectedValue(selected)

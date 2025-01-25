@@ -30,7 +30,8 @@ class BookingController extends Controller
     public function index(Request $request)
     {
         try {
-            $bookings = $this->bookingService->paginate($request);
+            $auth = auth()->user();
+            $bookings = $this->bookingService->paginate($request, $auth);
             return response()->json([
                 'bookings' =>  method_exists($bookings, 'items') ? BookingResource::collection($bookings->items()) : $bookings,
                 'links' => method_exists($bookings, 'items') ? $bookings->linkCollection() : null,
@@ -76,6 +77,19 @@ class BookingController extends Controller
             return response()->json(
                 new BookingResource($booking)
             );
+        }
+    }
+
+    public function update(UpdateBookingRequest $request, $id)
+    {
+        $data = $this->bookingService->update($request, $id);
+        return $data;
+        if ($data['code'] == Status::SUCCESS) {
+            return response()->json([
+                'message' => 'Cập nhật bản ghi thành công',
+                'booking' => new BookingResource($data['booking']),
+                'code' => Response::HTTP_OK
+            ], Response::HTTP_OK);
         }
     }
 

@@ -32,12 +32,17 @@ class BookingResource extends JsonResource
             'province_id' => $this->province_id,
             'district_id' => $this->district_id,
             'ward_id' => $this->ward_id,
+            'name_province' => $this->provinces->name,
+            'name_district' => $this->districts->name,
+            'name_ward' => $this->wards->name,
             'address' => $this->address,
             'note' => $this->note,
             'total_price' => $this->total_price,
             'status' => $this->status,
             'payment_status' => $this->payment_status,
             'method' => $this->method,
+            'birthday' => $this->birthday,
+            'gender' => (string)$this->gender,
 
         ];
     }

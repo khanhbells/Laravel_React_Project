@@ -45,7 +45,7 @@ const Doctor = () => {
             const results = await Promise.all(
                 doctors.map(async (doctor: any) => {
                     const data = await pagination(
-                        `&publish=2&doctor_id=${doctor.id}&permission=true`,
+                        `publish=2&doctor_id=${doctor.id}&status=OPEN&permission=true`,
                         endpoint.schedules
                     );
                     return {

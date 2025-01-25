@@ -103,10 +103,9 @@ const CustomTable = ({
                             user?.user_catalogue_id === 1 && column.name === 'Bác sĩ' ? (
                                 <TableHead key={index}>{column.name}</TableHead>
                             ) :
-                                column.name !== 'Bác sĩ' ?
-                                    (<TableHead key={index}>{column.name}</TableHead>)
-                                    :
-                                    (<></>)
+                                column.name !== 'Bác sĩ' &&
+                                (<TableHead key={index}>{column.name}</TableHead>)
+
                         ))}
                         {
                             !restProps.flag && <TableHead className="text-center">Tình trạng</TableHead>
@@ -145,10 +144,8 @@ const CustomTable = ({
                                 user?.user_catalogue_id === 1 && column.name === 'Bác sĩ' ? (
                                     <TableCell key={index}>{column.render(row)}</TableCell>
                                 ) :
-                                    column.name !== 'Bác sĩ' ?
-                                        (<TableCell key={index}>{column.render(row)}</TableCell>)
-                                        :
-                                        (<></>)
+                                    column.name !== 'Bác sĩ' &&
+                                    (<TableCell key={index}>{column.render(row)}</TableCell>)
 
                             ))}
                             {

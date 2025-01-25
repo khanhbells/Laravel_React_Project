@@ -4,8 +4,6 @@ import { baseSave } from "./BaseService";
 import { handleAxiosError } from "@/helper/axiosHelper";
 import { useNavigate } from "react-router-dom";
 export interface IBooking {
-    name: string,
-    canonical: string,
     [key: string]: string | undefined
 }
 
@@ -25,8 +23,6 @@ const pagination = async (queryString: string) => {
 }
 
 const save = async (payload: IBooking, updateParams: { action: string, id: string | undefined }) => {
-
-
     return baseSave(`/${endpoint}`, payload, updateParams)
 }
 

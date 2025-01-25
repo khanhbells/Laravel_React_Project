@@ -18,4 +18,8 @@ class Province extends Model
     {
         return $this->hasMany(District::class, 'province_code', 'code');
     }
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'province_id', 'code');
+    }
 }

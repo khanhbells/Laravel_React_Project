@@ -24,7 +24,7 @@ const useDetailDoctor = (specialId: string | undefined, doctorId: string | undef
 
     const { data: dataSchedule, isLoading: isScheduleLoading } = useQuery(
         [model],
-        () => pagination(`&publish=2&doctor_id=${doctorId}&permission=true`, endpoint.schedules)
+        () => pagination(`&publish=2&doctor_id=${doctorId}&status=OPEN&permission=true`, endpoint.schedules)
     );
 
     const schedules = useMemo(() => {

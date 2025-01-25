@@ -91,7 +91,7 @@ const Booking = () => {
                         description={breadcrumb.update.description}
                         isSheetOpen={isSheetOpen.open}
                         closeSheet={closeSheet}
-                        className="w-[400px] sm:w-[500px]"
+                        className="w-[400px] sm:w-[550px]"
                     >
                         <Store
                             refetch={refetch}

@@ -49,7 +49,8 @@ class ScheduleService extends BaseService
         $permission = $request->input('permission') ?? null;
         if ($permission != null) {
             $findByCondition = [
-                ['date', '>=', Carbon::now()->toDateString()]
+                ['date', '>=', Carbon::now()->toDateString()],
+                ['status', '=', $request->input('status')],
             ];
         }
         return [

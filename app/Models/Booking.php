@@ -35,4 +35,17 @@ class Booking extends Model
     {
         return $this->belongsTo(Schedule::class, 'schedule_id', 'id');
     }
+
+    public function provinces()
+    {
+        return $this->belongsTo(Province::class, 'province_id', 'code');
+    }
+    public function districts()
+    {
+        return $this->belongsTo(District::class, 'district_id', 'code');
+    }
+    public function wards()
+    {
+        return $this->belongsTo(Ward::class, 'ward_id', 'code');
+    }
 }

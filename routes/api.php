@@ -205,6 +205,8 @@ Route::group([
 
     // COMMON REQUEST
     Route::post('sort', [DashboardController::class, 'sort']);
+    //BOOKINGS
+    Route::get('frontend/bookings', [BookingController::class, 'index']);
 });
 
 /*--------------------------------FRONT END--------------------------- */
@@ -227,9 +229,9 @@ Route::group([
     //GET SCHEDULES
     Route::get('schedules', [ScheduleController::class, 'index']);
     //BOOKINGS
-    Route::get('bookings', [BookingController::class, 'index']);
     Route::get('bookings/{id}', [BookingController::class, 'show']);
     Route::post('bookings', [BookingController::class, 'create']);
+    Route::put('bookings/{id}', [BookingController::class, 'update']);
 });
 
 

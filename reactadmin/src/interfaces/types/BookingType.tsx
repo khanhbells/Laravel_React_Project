@@ -16,6 +16,11 @@ export type PayloadBookingInput = {
     total_price: string
 }
 
+export type UpdateStatusBooking = {
+    status: string;
+    payment_status: string;
+}
+
 export type Booking = {
     doctor_id: string,
     schedule_id: string

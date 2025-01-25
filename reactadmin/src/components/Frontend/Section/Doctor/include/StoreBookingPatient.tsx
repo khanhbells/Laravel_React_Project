@@ -27,7 +27,7 @@ import TotalPriceBooking from "@/components/TotalPriceBooking";
 import InforScheduleBooking from "@/components/InforScheduleBooking";
 //img
 
-interface IInforBookingPatient {
+interface IStoreBookingPatient {
     dataDoctor: any
     schedules: { value: string, label: string }[],
     closeSheet: () => void,
@@ -54,20 +54,25 @@ const schema = yup.object().shape({
     total_price: yup.string().required('Chưa có thông tin tổng giá tiền'),
 })
 
-const InforBookingPatient = ({
+const StoreBookingPatient = ({
     dataDoctor,
     schedules,
     closeSheet
-}: IInforBookingPatient) => {
+}: IStoreBookingPatient) => {
 
     const { selectedDataSchedule } = useDataSchedule()
     //Location
     const { provinces, districts, wards, setProvinceId, setDistrictId, isProvinceLoading, isDistrictLoading, isWardLoading } = useLocationState()
 
     const schedule = useMemo(() => {
-        const dateSchedule = schedules.filter((schedule: TimeSlot) => schedule.value === selectedDataSchedule.date)
-        return dateSchedule[0].label
-    }, [schedules])
+        if (!selectedDataSchedule || !selectedDataSchedule.date) return null;
+
+        const dateSchedule = schedules.filter(
+            (schedule: TimeSlot) => schedule.value === selectedDataSchedule.date
+        );
+
+        return dateSchedule.length > 0 ? dateSchedule[0].label : null;
+    }, [schedules, selectedDataSchedule]);
 
     const methods = useForm<PayloadBookingInput>({
         resolver: yupResolver(schema),
@@ -207,7 +212,7 @@ const InforBookingPatient = ({
                             </div>
                             <div className="text-right mt-[20px]">
                                 <LoadingButton
-                                    loading={false}
+                                    loading={loading}
                                     text="Xác nhận đặt khám"
                                 />
                             </div>
@@ -229,4 +234,4 @@ const InforBookingPatient = ({
     )
 }
 
-export default InforBookingPatient
+export default StoreBookingPatient

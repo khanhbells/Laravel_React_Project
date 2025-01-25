@@ -63,7 +63,7 @@ const tableColumn: tableColumn[] = [
     },
     {
         name: 'Ngày khám bệnh',
-        render: (item: Schedule) => <span>{item.date}</span>
+        render: (item: Schedule) => <span>{dayjs(item.date).format('DD/MM/YYYY')}</span>
     },
     {
         name: 'Giá tiền',

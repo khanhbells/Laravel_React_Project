@@ -34,7 +34,7 @@ const CustomSheet = ({
                 <SheetContent className={`${className ?? ''} overflow-scroll`}>
                     <SheetHeader>
                         <SheetTitle>{title}</SheetTitle>
-                        <SheetDescription className="text-[#f00000] text-xs">
+                        <SheetDescription className="text-[#f00000] text-xs italic">
                             {description}
                         </SheetDescription>
                     </SheetHeader>

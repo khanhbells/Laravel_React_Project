@@ -18,7 +18,7 @@ const breadcrumb = {
     },
     update: {
         title: 'Cập nhật thông tin',
-        description: 'Nhập đầy đủ các thông tin dưới đây. Các mục có dấu (*) là bắt buộc',
+        description: 'Dưới đây là thông tin đơn đặt lịch khám của bệnh nhân. Các bác sĩ chú ý xem kỹ rồi xác nhận và sắp xếp thời gian thăm khám bệnh nhân đúng hẹn!',
     },
 
 }
@@ -50,7 +50,7 @@ const tableColumn: tableColumn[] = [
     },
     {
         name: 'Ngày khám',
-        render: (item: Booking) => <span>{item.date}</span>
+        render: (item: Booking) => <span>{dayjs(item.date).format('DD/MM/YYYY')}</span>
     },
     {
         name: 'Thời gian khám',
@@ -62,18 +62,19 @@ const tableColumn: tableColumn[] = [
     },
     {
         name: 'Thời gian đặt lịch',
-        render: (item: Booking) => <span>{item.booking_date}</span>
+        render: (item: Booking) => <span>{dayjs(item.booking_date).format('DD/MM/YYYY - HH:mm:ss')}</span>
     },
     {
         name: 'Trạng thái xác nhận',
-        render: (item: Booking) => <span className="">{
-            item.status === 'pending' ? 'Đang chờ xác nhận' : item.status === 'confirm' ? 'Đã xác nhận' : ''
-        }</span>
+        render: (item: Booking) => <span className={`cursor-pointer cat-item-name mr-[10px] text-[#fff] inline-block rounded px-[5px] py-[0px] text-[12px] ${item.status === 'pending' ? 'bg-[orange]' : item.status === 'confirm' ? 'bg-[green]' : item.status === 'stop' ? 'bg-[red]' : ''
+            }`}>{
+                item.status === 'pending' ? 'Đang chờ xác nhận' : item.status === 'confirm' ? 'Đã xác nhận' : item.status === 'stop' ? 'Đã hủy' : ''
+            }</span>
     },
     {
         name: 'Hình thức thanh toán',
         render: (item: Booking) => <span className="">{
-            item.method === 'cod' ? 'Thanh toán trực tiếp' : item.method === 'memo' ?
+            item.method === 'cod' ? 'Thanh toán trực tiếp' : item.method === 'momo' ?
                 'Thanh toán bằng ví momo' : item.method === 'paypal' ?
                     'Thanh toán bằng paypal' : item.method === 'vnpay' ?
                         'Thanh toán bằng VNPAY' : ''
@@ -81,10 +82,23 @@ const tableColumn: tableColumn[] = [
     },
     {
         name: 'Trạng thái thanh toán',
-        render: (item: Booking) => <span className="">{
-            item.payment_status === 'pending' ? 'Chưa thanh toán' : item.payment_status === 'confirm' ? 'Đã thanh toán' : ''
-        }</span>
+        render: (item: Booking) => <span className={`cursor-pointer cat-item-name mr-[10px] text-[#fff] inline-block rounded px-[5px] py-[0px] text-[12px] ${item.payment_status === 'pending' ? 'bg-[orange]' : item.payment_status === 'confirm' ? 'bg-[green]' : item.payment_status === 'stop' ? 'bg-[red]' : ''
+            }`}>{
+                item.payment_status === 'pending' ? 'Chưa thanh toán' : item.payment_status === 'confirm' ? 'Đã thanh toán' : item.payment_status === 'stop' ? 'Đã hủy' : ''
+            }</span>
     },
+]
+
+const optionStatus = [
+    { value: 'pending', label: 'Đang chờ xác nhận' },
+    { value: 'confirm', label: 'Đã xác nhận' },
+    { value: 'stop', label: 'Đã hủy' },
+]
+
+const optionPaymentStatus = [
+    { value: 'pending', label: 'Chưa thanh toán' },
+    { value: 'confirm', label: 'Đã thanh toán' },
+    { value: 'stop', label: 'Đã hủy' },
 ]
 
 
@@ -104,28 +118,16 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
 
 
 
-const extraFilterItems: Select[] = [
-    {
-        id: 'user_catalogue_Id',
-        placeholder: 'Chọn đơn đặt lịch khám',
-        items: [
-            {
-                value: '0',
-                label: 'Tất cả các nhóm'
-            },
-            {
-                value: '1',
-                label: 'Admin'
-            }
-        ]
-    }
-]
+
 
 
 
 export {
-    breadcrumb, buttonActions,
-    extraFilterItems, model,
-    tableColumn
+    breadcrumb,
+    buttonActions,
+    model,
+    tableColumn,
+    optionStatus,
+    optionPaymentStatus
 };
 
