@@ -43,7 +43,6 @@ class BookingResource extends JsonResource
             'method' => $this->method,
             'birthday' => $this->birthday,
             'gender' => (string)$this->gender,
-
         ];
     }
 }

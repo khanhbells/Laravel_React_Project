@@ -10,9 +10,11 @@ use App\Http\Resources\BookingResource;
 use App\Services\Booking\BookingService;
 use App\Repositories\Booking\BookingRepository;
 use Symfony\Component\HttpFoundation\Response;
-use App\Http\Requests\UpdateByFieldRequest;
 use App\Http\Requests\Booking\StoreBookingRequest;
 use App\Http\Requests\Booking\UpdateBookingRequest;
+use App\Mail\BookingMail;
+use App\Mail\ConfirmBooking;
+use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
@@ -50,11 +52,12 @@ class BookingController extends Controller
     public function create(StoreBookingRequest $request)
     {
         $data = $this->bookingService->create($request);
-        return $data;
         if ($data['code'] == Status::SUCCESS) {
+            $dataBooking = new BookingResource($data['booking']);
+            $this->sendMail($dataBooking);
             return response()->json([
                 'message' => 'Thêm mới bản ghi thành công',
-                'booking' => new BookingResource($data['booking'])
+                'booking' => $dataBooking
             ], Response::HTTP_OK);
         }
         return response()->json([
@@ -83,14 +86,31 @@ class BookingController extends Controller
     public function update(UpdateBookingRequest $request, $id)
     {
         $data = $this->bookingService->update($request, $id);
-        return $data;
         if ($data['code'] == Status::SUCCESS) {
+            $dataBooking = new BookingResource($data['booking']);
+            if ($dataBooking->status == 'confirm' || $dataBooking->status == 'stop') {
+                $this->confirmMail($dataBooking);
+            }
             return response()->json([
                 'message' => 'Cập nhật bản ghi thành công',
-                'booking' => new BookingResource($data['booking']),
+                'booking' => $dataBooking,
                 'code' => Response::HTTP_OK
             ], Response::HTTP_OK);
         }
+    }
+
+    private function sendMail($dataBooking)
+    {
+        $to = $dataBooking->email;
+        $cc = 'dtc2054802010305@ictu.edu.vn';
+        Mail::to($to)->cc($cc)->send(new BookingMail($dataBooking));
+    }
+
+    private function confirmMail($dataBooking)
+    {
+        $to = $dataBooking->email;
+        $cc = 'dtc2054802010305@ictu.edu.vn';
+        Mail::to($to)->cc($cc)->send(new ConfirmBooking($dataBooking));
     }
 
     // public function destroy($id, Request $request)

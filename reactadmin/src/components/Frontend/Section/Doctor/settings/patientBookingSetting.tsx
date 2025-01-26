@@ -1,6 +1,8 @@
 import { PayloadBookingInput } from "@/interfaces/types/BookingType";
 
+export const redirectIfSucces = '/homepage/success'
 export const formField = () => {
+
     const baseField = [
         {
             label: "Họ tên *",

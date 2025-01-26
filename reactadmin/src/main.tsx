@@ -67,6 +67,7 @@ import ScrollToTop from './components/ScrollToTop';
 import SpecialtyFrontEndIndex from './components/Frontend/Section/Specialty';
 import PostFrontEndIndex from './components/Frontend/Section/Post';
 import DoctorFrontEndIndex from './components/Frontend/Section/Doctor';
+import SuccessIndex from './components/Frontend/Section/Success';
 
 const router = createBrowserRouter([
   {
@@ -131,6 +132,7 @@ const router = createBrowserRouter([
       { path: "homepage/specialty/:catalogueId/:catalogue/:specialId/:specialty.html", element: <DoctorFrontEndIndex /> },
       { path: "homepage/specialty/:catalogueId/:catalogue.html", element: <SpecialtyFrontEndIndex /> },
       { path: "homepage/post/:catalogueId/:catalogue.html", element: <PostFrontEndIndex /> },
+      { path: "homepage/success/:id", element: <SuccessIndex /> },
     ]
   },
 ]);

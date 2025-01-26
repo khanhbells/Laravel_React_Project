@@ -89,27 +89,44 @@ const Store = ({ id, action, refetch, closeSheet }: UserCatalogueStoreProps) => 
             />
             <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(onSubmitHanler)}>
-                    <div className="flex flex-wrap">
-                        <CustomSelectBox
-                            name="status"
-                            options={optionStatus}
-                            placeholder="Trạng thái đơn đặt lịch khám"
-                            title="Trạng thái đơn đặt lịch khám"
-                            value={isValueStatus}
-                            control={control} // <-- Thêm thuộc tính control
-                            errors={errors} // <-- Để hiển thị lỗi nếu có
-                        />
-                        <div className="mt-[10px]">
-                            <CustomSelectBox
-                                name="payment_status"
-                                options={optionPaymentStatus}
-                                placeholder="Trạng thái thanh toán"
-                                title="Trạng thái thanh toán"
-                                value={isValuePaymentStatus}
-                                control={control} // <-- Thêm thuộc tính control
-                                errors={errors} // <-- Để hiển thị lỗi nếu có
-                            />
-                        </div>
+                    <div className="">
+                        {
+                            isValueStatus.value === 'confirm' ? (
+                                <div className="font-semibold text-[green]">Đã xác nhận đơn đặt lịch khám</div>
+                            ) : isValueStatus.value === 'stop' ? (
+                                <div className="font-semibold text-[red]">Đã hủy đơn đặt lịch khám</div>
+                            ) : (
+                                <CustomSelectBox
+                                    name="status"
+                                    options={optionStatus}
+                                    placeholder="Trạng thái đơn đặt lịch khám"
+                                    title="Trạng thái đơn đặt lịch khám"
+                                    value={isValueStatus}
+                                    control={control} // <-- Thêm thuộc tính control
+                                    errors={errors} // <-- Để hiển thị lỗi nếu có
+                                />
+                            )
+                        }
+                        {
+                            isValuePaymentStatus.value === 'confirm' ? (
+                                <div className="font-semibold text-[green] mt-[10px]">Đã thanh toán</div>
+                            ) : isValuePaymentStatus.value === 'stop' ? (
+                                <div className="font-semibold text-[red] mt-[10px]">Đã hủy thanh toán</div>
+                            ) : (
+                                <div className="mt-[10px]">
+                                    <CustomSelectBox
+                                        name="payment_status"
+                                        options={optionPaymentStatus}
+                                        placeholder="Trạng thái thanh toán"
+                                        title="Trạng thái thanh toán"
+                                        value={isValuePaymentStatus}
+                                        control={control} // <-- Thêm thuộc tính control
+                                        errors={errors} // <-- Để hiển thị lỗi nếu có
+                                    />
+                                </div>
+                            )
+                        }
+
                     </div>
                     <div className="mt-[30px] float-right">
                         <LoadingButton

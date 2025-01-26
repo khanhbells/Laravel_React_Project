@@ -7,7 +7,9 @@ use App\Repositories\Booking\BookingRepository;
 use App\Repositories\Schedule\ScheduleRepository;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Status;
+
 use Illuminate\Support\Carbon;
+
 
 class BookingService extends BaseService
 {
@@ -23,19 +25,23 @@ class BookingService extends BaseService
 
     public function paginate($request, $auth)
     {
-        $agrument = $this->paginateAgrument($request, $auth);
+        $agrument = $this->paginateAgrument($request);
         if ($auth->user_catalogue_id == 2) {
-            $agrument['whereHas'] = $this->whereHas($auth);
+            $agrument['whereHas'] = $this->whereHas($auth->id);
+        } else {
+            if ($request->input('user_id')) {
+                $agrument['whereHas'] = $this->whereHas($request->input('user_id'));
+            }
         }
         $bookings = $this->bookingRepository->pagination([...$agrument]);
         return $bookings;
     }
 
-    private function whereHas($auth)
+    private function whereHas($user_id)
     {
         return [
-            'doctors' => function ($query) use ($auth) {
-                $query->where('user_id', $auth->id)
+            'doctors' => function ($query) use ($user_id) {
+                $query->where('user_id', $user_id)
                     ->where('publish', 2);
             }
         ];
@@ -46,11 +52,6 @@ class BookingService extends BaseService
         $condition = [
             'publish' => $request->integer('publish'),
         ];
-        if (isset($auth)) {
-            if ($request->input('doctor_id')) {
-                $condition['doctor_id'] = $request->input('doctor_id');
-            }
-        }
         return [
             'perpage' => $request->input('perpage') ?? 10,
             'keyword' => [
@@ -75,6 +76,7 @@ class BookingService extends BaseService
             $payload['payment_status'] = 'pending';
             $booking = $this->bookingRepository->create($payload);
 
+
             DB::commit();
             return [
                 'booking' => $booking,
@@ -88,6 +90,8 @@ class BookingService extends BaseService
             ];
         }
     }
+
+
 
     public function update($request, $id)
     {

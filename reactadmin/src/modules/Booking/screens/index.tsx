@@ -31,11 +31,19 @@ import { SelectConfig } from "@/components/CustomFilter"
 //contexts
 import { FilterProvider } from "@/contexts/FilterContext"
 //
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useUserContext } from "@/contexts/UserContext"
+import { useQuery } from "react-query"
+import { queryKey } from "@/constant/query"
+import { pagination as doctorsPagination } from "@/service/DoctorService"
+import { useCustomFilter } from "@/hook/useCustomFilter"
 const Booking = () => {
     const breadcrumbData: Breadcrumb = breadcrumb.index
     const navigate = useNavigate()
+
+    //CONTEXT
+    const { user } = useUserContext()
 
     //REACT QUERY
     const { isLoading, data, isError, refetch, handlePageChange, handleQueryString } = useTable({ model, pagination })
@@ -43,8 +51,34 @@ const Booking = () => {
     const { checkedState, checkedAllState, handleCheckedChange, handleCheckedAllChange, isAnyChecked } = useCheckBoxState(data, model, isLoading)
     const somethingChecked = isAnyChecked()
     const { isSheetOpen, openSheet, closeSheet } = useSheet()
+    //SELECT FILTER
+    const { data: doctors, isLoading: isDoctorLoading, isError: isDoctorError } = useQuery([queryKey.doctors], () => doctorsPagination(''), {
+        enabled: user?.user_catalogue_id === 1
+    })
 
-    const [customFilter, setCustomFilter] = useState<SelectConfig[]>([]);
+    const filterInitial = useMemo(() => {
+        if (doctors && user?.user_catalogue_id === 1) {
+            return [
+                {
+                    name: 'user_id',
+                    placeholder: 'Chọn tên bác sĩ',
+                    data: doctors?.['users'],
+                    isLoading: isDoctorLoading,
+                    isNested: true,
+                    valueKey: 'id',
+                    labelKey: 'name'
+                }
+            ]
+        } return []
+    }, [doctors, user])
+
+    /* 
+           - Phân loại được là kiểu hiện có hiển thị theo kiểu danh mục cha con không: isNested:true/ false --> false
+           - Key và label thì phải custom được vì có thể là nó sẽ không theo cái tiêu chí là id và name
+           - Trạng thái của dữ liệu: Loading vv...
+        */
+
+    const customFilter = useCustomFilter(filterInitial);
 
     return (
         <FilterProvider customFilters={customFilter}>

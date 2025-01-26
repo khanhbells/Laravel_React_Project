@@ -18,13 +18,14 @@ import { SelectBoxItem } from "@/interfaces/BaseServiceInterface";
 import useSelectBox from "@/hook/useSelectbox";
 import CustomSelectBox from "@/components/CustomSelectBox";
 import useLocationState from "@/hook/useLocationState";
-import { formField } from "../settings/patientBookingSetting";
+import { formField, redirectIfSucces } from "../settings/patientBookingSetting";
 import useFormSubmit from "@/hook/useFormSubmit";
 import { save } from "@/service/Frontend/FrontEndService";
 import CustomRadioGroup from "@/components/CustomRadioGroup";
 import { addCommas } from "@/helper/myHelper";
 import TotalPriceBooking from "@/components/TotalPriceBooking";
 import InforScheduleBooking from "@/components/InforScheduleBooking";
+import { useNavigate } from "react-router-dom";
 //img
 
 interface IStoreBookingPatient {
@@ -61,6 +62,7 @@ const StoreBookingPatient = ({
 }: IStoreBookingPatient) => {
 
     const { selectedDataSchedule } = useDataSchedule()
+    const navigate = useNavigate()
     //Location
     const { provinces, districts, wards, setProvinceId, setDistrictId, isProvinceLoading, isDistrictLoading, isWardLoading } = useLocationState()
 
@@ -81,7 +83,7 @@ const StoreBookingPatient = ({
 
     //useForm
     const { register, handleSubmit, reset, formState: { errors }, setValue, control } = methods
-    const { onSubmitHanler, loading } = useFormSubmit(save, { action: 'create', id: undefined }, null, null, closeSheet)
+    const { onSubmitHanler, loading, isSuccess, data } = useFormSubmit(save, { action: 'create', id: undefined }, null, null, closeSheet)
 
     const [defaultSelectValue, _] = useState<Option | null>(null)
 
@@ -157,6 +159,14 @@ const StoreBookingPatient = ({
             updateSelectBoxValue('ward_id', wards.data, undefined)
         }
     }, [wards.data, updateSelectBoxValue, updateSelectBoxOptions])
+
+    useEffect(() => {
+        if (isSuccess === true && data && data.booking) {
+            const paramIdBooking = data.booking.id
+            navigate(`${redirectIfSucces}/${paramIdBooking}`)
+        }
+
+    }, [isSuccess, data])
     return (
         <>
             <div>
