@@ -9,8 +9,9 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { setAuthLogin } from "../redux/slide/authSlice";
 import LoadingButton from "@/components/LoadingButton";
+import CustomLogin from "@/components/CustomLogin";
 
-type Inputs = {
+export type Inputs = {
     email: string
     password: string
 };
@@ -44,7 +45,6 @@ const Login = () => {
     return (
         <>
             <div className="min-h-screen pt-24 items-center justify-center bg-gray-100">
-
                 <div className="max-w-screen-md mx-auto">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="p-4">
@@ -61,40 +61,12 @@ const Login = () => {
                                 When an unknown printer took a galley of type and scrambled it to make a type specimen book.
                             </p>
                         </div>
-
                         <div className="bg-white p-5 rounded shadow-lg w-full max-w-md">
                             <form onSubmit={handleSubmit(loginHandler)}>
-                                <div className="mb-4">
-                                    <input
-                                        type="text"
-                                        id="email"
-                                        placeholder="Email..."
-                                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus-blue-200 h-11"
-                                        {...register("email", { required: true })}
-                                    />
-                                    {errors.email && <span className="text-red-500 text-xs">Bạn phải nhập vào email</span>}
-                                </div>
-                                <div className="mb-4">
-                                    <input
-                                        type="password"
-                                        id="password"
-                                        placeholder="Mật khẩu..."
-                                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus-blue-200 h-11"
-                                        {...register("password", { required: true })}
-                                    />
-                                    {errors.password && <span className="text-red-500 text-xs">Bạn phải nhập vào mật khẩu</span>}
-                                </div>
-                                <div className="mb-3">
-
-                                </div>
-                                <p className="text-xs mb-2 text-gray-700">
-                                    <a href="/" className="text-blue-700">Quên mật khẩu</a>
-                                </p>
-                                <div className="description text-xs text-gray-700">
-                                    Chào mừng bạn đến với hệ thống bất động sản version 1.0 của Khanh Bells
-                                </div>
-                                <LoadingButton
-                                    loading={loading} text='Đăng nhập'
+                                <CustomLogin
+                                    errors={errors}
+                                    register={register}
+                                    loading={loading}
                                 />
                             </form>
                         </div>

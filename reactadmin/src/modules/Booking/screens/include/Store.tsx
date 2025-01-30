@@ -20,6 +20,7 @@ import { useEffect, useMemo, useState } from "react";
 import BookingDoctorSchedule from "@/components/BookingDoctorSchedule";
 import BookingInforPatient from "@/components/BookingInforPatient";
 import { optionPaymentStatus, optionStatus } from "../../setting";
+import { endpoint } from "@/constant/endpoint";
 
 
 

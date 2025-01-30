@@ -48,13 +48,34 @@ class BookingController extends Controller
             ], Response::HTTP_FORBIDDEN);
         }
     }
+    public function indexHistory(Request $request)
+    {
+        try {
+            $auth = auth('patient')->user();
+            $historys = $this->bookingService->paginate($request, $auth);
+            return response()->json([
+                'historys' =>  method_exists($historys, 'items') ? BookingResource::collection($historys->items()) : $historys,
+                'links' => method_exists($historys, 'items') ? $historys->linkCollection() : null,
+                'current_page' => method_exists($historys, 'items') ? $historys->currentPage() : null,
+                'last_page' => method_exists($historys, 'items') ? $historys->lastPage() : null,
+            ], Response::HTTP_OK);
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            return response()->json([
+                'message' => 'Không có quyền truy cập',
+                'historys' => [],
+                'code' => Status::ERROR
+            ], Response::HTTP_FORBIDDEN);
+        }
+    }
+
+
 
     public function create(StoreBookingRequest $request)
     {
         $data = $this->bookingService->create($request);
         if ($data['code'] == Status::SUCCESS) {
             $dataBooking = new BookingResource($data['booking']);
-            $this->sendMail($dataBooking);
+            $mail = $this->sendMail($dataBooking);
             return response()->json([
                 'message' => 'Thêm mới bản ghi thành công',
                 'booking' => $dataBooking

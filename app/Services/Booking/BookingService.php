@@ -25,8 +25,8 @@ class BookingService extends BaseService
 
     public function paginate($request, $auth)
     {
-        $agrument = $this->paginateAgrument($request);
-        if ($auth->user_catalogue_id == 2) {
+        $agrument = $this->paginateAgrument($request, $auth);
+        if (isset($auth->user_catalogue_id) && $auth->user_catalogue_id == 2) {
             $agrument['whereHas'] = $this->whereHas($auth->id);
         } else {
             if ($request->input('user_id')) {
@@ -47,11 +47,14 @@ class BookingService extends BaseService
         ];
     }
 
-    private function paginateAgrument($request)
+    private function paginateAgrument($request, $auth = null)
     {
         $condition = [
             'publish' => $request->integer('publish'),
         ];
+        if (isset($auth->patient_catalogue_id) && $auth != null) {
+            $condition['patient_id'] = $auth->id;
+        }
         return [
             'perpage' => $request->input('perpage') ?? 10,
             'keyword' => [
@@ -69,11 +72,14 @@ class BookingService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $except = ['price_schedule'];
+            $except = ['price_schedule', 'image', 'name', 'patient_catalogue_id', 'patient_catalogues', 'publish', 'id'];
             $payload = $this->initializePayload($request, $except)->getPayload();
             $payload['booking_date'] = Carbon::now()->toDateTimeString();
             $payload['status'] = 'pending';
             $payload['payment_status'] = 'pending';
+            if ($request->input('id')) {
+                $payload['patient_id'] = $request->input('id');
+            }
             $booking = $this->bookingRepository->create($payload);
 
 

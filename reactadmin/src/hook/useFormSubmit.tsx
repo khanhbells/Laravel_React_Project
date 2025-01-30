@@ -6,7 +6,7 @@ import { useState } from "react"
 type SubmitFunction<T extends FieldValues, R> = (
     data: T,
     updateParams: { action: string, id: string | undefined },
-    album?: string[]
+    endpoint?: string | undefined
 ) => Promise<R>
 
 const useFormSubmit = <T extends FieldValues, R>(
@@ -15,14 +15,14 @@ const useFormSubmit = <T extends FieldValues, R>(
     album?: string[] | null,
     refetch?: any | null,
     closeSheet?: () => void | undefined,
-
+    endpoint?: string
 ) => {
 
     const [isSuccess, setIsSuccess] = useState(false);
     const queryClient = useQueryClient()
 
     const mutation = useMutation<R, Error, T>({
-        mutationFn: (payload) => submitFn(payload, updateParams),
+        mutationFn: (payload) => endpoint ? submitFn(payload, updateParams, endpoint) : submitFn(payload, updateParams),
         onSuccess: (response) => {
             showToast('Cập nhật dữ liệu thành công', 'success');
             if (closeSheet) {

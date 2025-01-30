@@ -25,11 +25,6 @@ const ContentSlider = ({
     nameCatalogueParams
 }: IContentSlider) => {
 
-    useEffect(() => {
-        console.log(data);
-
-    }, [data])
-
     return (
         <>
             <div className={`section-share border-b-2 border-sky-200 rounder-lg ${className ?? ''}`}>

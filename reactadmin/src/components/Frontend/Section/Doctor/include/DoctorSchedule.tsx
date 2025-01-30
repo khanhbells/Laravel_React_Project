@@ -50,9 +50,6 @@ const DoctorSchedule = ({
 
 
     useEffect(() => {
-        // console.log(data);
-
-
         if (options && options.length > 0) {
             const defaultDate = options[0]?.value; // Lấy giá trị của ngày đầu tiên
             handleSelectChange(defaultDate);

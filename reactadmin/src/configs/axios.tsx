@@ -2,6 +2,11 @@ import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 export const baseUrl = 'http://127.0.0.1:8000/api/v1/'
 
+
+export interface CustomAxiosRequestConfig extends AxiosRequestConfig {
+    guard?: 'user' | 'patient'; // Thêm guard
+    _retry?: boolean; // Logic retry
+}
 const apiCall: AxiosInstance = axios.create({
     baseURL: baseUrl,
     withCredentials: true,
@@ -11,26 +16,31 @@ const apiCall: AxiosInstance = axios.create({
     }
 })
 
-const refreshToken = async () => {
+const refreshToken = async (guard: 'user' | 'patient') => {
+    const endpoint = guard === 'patient' ? 'patient/refresh' : 'auth/refresh';
     try {
-        const response = await apiCall.post('auth/refresh')
-
+        const response = await apiCall.post(endpoint)
+        return response.data;
     } catch (error) {
-        throw new Error('Không thể khởi tạo lại access token')
+        throw new Error(`Không thể khởi tạo lại access token cho ${guard}`);
     }
 }
+
 
 axios.interceptors.response.use(
     response => {
         return response
     },
     async (error) => {
-
-        const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+        const originalRequest = error.config as CustomAxiosRequestConfig;
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true
             try {
-                const userData = await refreshToken()
+                console.log(originalRequest);
+                const guard = originalRequest.guard || 'user';
+                const tokenData = await refreshToken(guard);
+                // Cập nhật token mới
+                axios.defaults.headers.common['Authorization'] = `Bearer ${tokenData.access_token}`;
                 return apiCall(originalRequest)
 
             } catch (error) {

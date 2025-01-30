@@ -68,6 +68,12 @@ import SpecialtyFrontEndIndex from './components/Frontend/Section/Specialty';
 import PostFrontEndIndex from './components/Frontend/Section/Post';
 import DoctorFrontEndIndex from './components/Frontend/Section/Doctor';
 import SuccessIndex from './components/Frontend/Section/Success';
+import SignUpIndex from './components/Frontend/Section/Login/SignUp';
+import SignInIndex from './components/Frontend/Section/Login/SignIn';
+//
+import NoAuthPatientMiddleware from './middleware/NoPatientMiddleware';
+import AuthPatienMiddleware from './middleware/AuthPatientMiddleware';
+import HistoryIndex from './components/Frontend/Section/History';
 
 const router = createBrowserRouter([
   {
@@ -119,11 +125,25 @@ const router = createBrowserRouter([
     ]
   },
   {
+    path: "/patient",
+    element: (
+      <NoAuthPatientMiddleware>
+        <LayoutFrontend />
+      </NoAuthPatientMiddleware>
+    ),
+    children: [
+      { path: "signup", element: <SignUpIndex /> },
+      { path: "signin", element: <SignInIndex /> },
+    ]
+  },
+  {
     path: "/",
     element: (
       <>
-        <ScrollToTop />
-        <LayoutFrontend />
+        <AuthPatienMiddleware>
+          <ScrollToTop />
+          <LayoutFrontend />
+        </AuthPatienMiddleware>
       </>
     ),
     children: [
@@ -133,6 +153,7 @@ const router = createBrowserRouter([
       { path: "homepage/specialty/:catalogueId/:catalogue.html", element: <SpecialtyFrontEndIndex /> },
       { path: "homepage/post/:catalogueId/:catalogue.html", element: <PostFrontEndIndex /> },
       { path: "homepage/success/:id", element: <SuccessIndex /> },
+      { path: "homepage/history/:id", element: <HistoryIndex /> },
     ]
   },
 ]);

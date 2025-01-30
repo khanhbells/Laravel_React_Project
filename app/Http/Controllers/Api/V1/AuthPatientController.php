@@ -8,13 +8,13 @@ use App\Http\Requests\AuthRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Symfony\Component\HttpFoundation\Response;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\PatientResource;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Models\User;
+use App\Models\Patient;
 
-class AuthController extends Controller
+class AuthPatientController extends Controller
 {
     public function __construct()
     {
@@ -27,53 +27,66 @@ class AuthController extends Controller
             'password' => $request->input('password')
         ];
 
-        if (!$token = auth()->attempt($credentials)) {
+        if (!$token = auth('patient')->attempt($credentials)) {
             return response()->json(['error' => 'Email hoặc mật khẩu không đúng'], Response::HTTP_UNAUTHORIZED);
         }
 
-        $user = auth()->user();
+        $patient = auth('patient')->user();
 
-        $refreshTokenData = $this->refreshTokenData($user);
+        $refreshTokenData = $this->refreshTokenData($patient);
 
-        $refresh_token = JWTAuth::getJWTProvider()->encode($refreshTokenData);
+        $refresh_patient_token = JWTAuth::getJWTProvider()->encode($refreshTokenData);
 
-        $cookie = $this->setTokenAndRefreshTokenCookie($token, $refresh_token);
+        $cookie = $this->setTokenAndRefreshTokenCookie($token, $refresh_patient_token);
         $tokenCookie = $cookie['tokenCookie'];
         $refreshCookie = $cookie['refreshTokenCookie'];
 
-        return $this->respondWithToken($token, $refresh_token, $user)->withCookie($tokenCookie)->withCookie($refreshCookie);
+        return $this->respondWithToken($token, $refresh_patient_token, $patient)->withCookie($tokenCookie)->withCookie($refreshCookie);
     }
 
     public function refresh(Request $request)
     {
         try {
+
             // Kiểm tra token và xác thực người dùng
+            if ($request->hasCookie('access_patient_token')) {
 
-            if ($request->hasCookie('access_token')) {
-                $token = $request->cookie('access_token');
+                $token = $request->cookie('access_patient_token');
+
                 $request->headers->set('Authorization', 'Bearer ' . $token);
+                // dd($request);
             }
-            $user = JWTAuth::parseToken()->authenticate();
-            $token = auth()->refresh();
-            auth()->invalidate(true);
 
-            $refreshTokenData = $this->refreshTokenData($user);
+
+
+            $patient = JWTAuth::setToken($token)->setTTL(60)->toUser();
+            $token = auth('patient')->refresh();
+
+            auth('patient')->invalidate(true);
+
+            $refreshTokenData = $this->refreshTokenData($patient);
+
+            // dd($refreshTokenData);
             $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
+
             $cookie = $this->setTokenAndRefreshTokenCookie($token, $refreshToken);
             $tokenCookie = $cookie['tokenCookie'];
             $refreshCookie = $cookie['refreshTokenCookie'];
-            return $this->respondWithToken($token, $refreshToken, $user)->withCookie($tokenCookie)->withCookie($refreshCookie);
-        } catch (TokenExpiredException $e) {
-            if ($request->hasCookie('refresh_token')) {
-                if (!$request->cookie('refresh_token')) {
+            return $this->respondWithToken($token, $refreshToken, $patient)->withCookie($tokenCookie)->withCookie($refreshCookie);
+        } catch (JWTException $e) {
+            return response()->json(['message' => 'Token không hợp lệ'], Response::HTTP_UNAUTHORIZED);
+        } catch (\Exception $e) {
+            if ($request->hasCookie('refresh_patient_token')) {
+
+                if (!$request->cookie('refresh_patient_token')) {
                     return response()->json(['message' => 'Token đã hết hạn'], Response::HTTP_UNAUTHORIZED);
                 }
-                $refreshTokenCookie = $request->cookie('refresh_token');
+                $refreshTokenCookie = $request->cookie('refresh_patient_token');
                 $refreshTokenDecode = JWTAuth::getJWTProvider()->decode($refreshTokenCookie);
-                $user = User::find($refreshTokenDecode['user_id']);
-                $token = auth()->login($user);
+                $patient = Patient::find($refreshTokenDecode['patient_id']);
+                $token = auth('patient')->login($patient);
 
-                $refreshTokenData = $this->refreshTokenData($user);
+                $refreshTokenData = $this->refreshTokenData($patient);
 
                 $refreshToken = JWTAuth::getJWTProvider()->encode($refreshTokenData);
 
@@ -81,42 +94,39 @@ class AuthController extends Controller
                 $tokenCookie = $cookie['tokenCookie'];
                 $refreshCookie = $cookie['refreshTokenCookie'];
 
-                return $this->respondWithToken($token, $refreshToken, $user)->withCookie($tokenCookie)->withCookie($refreshCookie);
+                return $this->respondWithToken($token, $refreshToken, $patient)->withCookie($tokenCookie)->withCookie($refreshCookie);
             }
             return response()->json(['message' => 'Token đã hết hạn'], Response::HTTP_UNAUTHORIZED);
-        } catch (JWTException $e) {
-            return response()->json(['message' => 'Token không hợp lệ'], Response::HTTP_UNAUTHORIZED);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Không có token'], Response::HTTP_UNAUTHORIZED);
         }
     }
 
-    protected function respondWithToken($token, $refresh_token, $user)
+    protected function respondWithToken($token, $refresh_patient_token, $patient)
     {
         return response()->json([
-            'user' => new UserResource($user),
-            'access_token' => $token,
-            'refresh_token' => $refresh_token,
+            'patient' => new PatientResource($patient),
+            'access_patient_token' => $token,
+            'refresh_patient_token' => $refresh_patient_token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 1
+            'expires_in' => auth('patient')->factory()->getTTL() * 1
         ]);
     }
 
     public function me(Request $request)
     {
+        // dd(auth()->user());
         return response()->json([
-            'user' => new UserResource(auth()->user())
+            'patient' => new PatientResource(auth('patient')->user())
         ]);
     }
 
 
     //setup cookie
-    private function setTokenAndRefreshTokenCookie($token, $refresh_token)
+    private function setTokenAndRefreshTokenCookie($token, $refresh_patient_token)
     {
         $cookie = Cookie::make(
-            'access_token',
+            'access_patient_token',
             $token,
-            auth()->factory()->getTTL() * 24, //1ngay
+            auth('patient')->factory()->getTTL() * 24, //1ngay
             '/',
             null,
             true,
@@ -126,8 +136,8 @@ class AuthController extends Controller
         );
 
         $refreshCookie = Cookie::make(
-            'refresh_token',
-            $refresh_token,
+            'refresh_patient_token',
+            $refresh_patient_token,
             config('jwt.refresh_ttl'), //2 tuan
             '/',
             null,
@@ -144,10 +154,10 @@ class AuthController extends Controller
     }
 
     //setup token refresh
-    private function refreshTokenData($user)
+    private function refreshTokenData($patient)
     {
         return [
-            'user_id' => $user->id,
+            'patient_id' => $patient->id,
             // 'expires_in' => time() + config('jwt.refresh_ttl'),
             'expires_in' => time() + 1,
             'random' => time() . md5(rand())
@@ -159,11 +169,11 @@ class AuthController extends Controller
     {
         try {
             // Vô hiệu hóa token hiện tại
-            auth()->logout();
+            auth('patient')->logout();
 
             // Xóa cookie chứa token
-            $tokenCookie = Cookie::forget('access_token');
-            $refreshTokenCookie = Cookie::forget('refresh_token');
+            $tokenCookie = Cookie::forget('access_patient_token');
+            $refreshTokenCookie = Cookie::forget('refresh_patient_token');
 
             return response()->json([
                 'message' => 'Đăng xuất thành công'

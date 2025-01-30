@@ -44,6 +44,10 @@ return [
             'driver' => 'jwt',
             'provider' => 'users',
         ],
+        'patient' => [
+            'driver' => 'jwt', // Hoặc 'session' nếu bạn không dùng API
+            'provider' => 'patients', // Sử dụng provider 'customers'
+        ],
     ],
 
     /*
@@ -68,11 +72,10 @@ return [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'patients' => [
+            'driver' => 'eloquent',
+            'model' => env('AUTH_PATIENT_MODEL', App\Models\Patient::class), // Model của bảng customers
+        ],
     ],
 
     /*
@@ -100,6 +103,12 @@ return [
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,
+        ],
+        'patients' => [
+            'provider' => 'patients', // Sử dụng provider 'patients'
+            'table' => env('AUTH_PATIENT_PASSWORD_RESET_TABLE', 'patient_password_reset_tokens'),
+            'expire' => 60, // Thời gian token reset hết hạn (phút)
+            'throttle' => 60, // Giới hạn thời gian giữa các yêu cầu reset (phút)
         ],
     ],
 

@@ -1,8 +1,7 @@
 import axiosInstance from "../configs/axios";
 import { handleAxiosError } from "../helper/axiosHelper";
 import { User } from "../types/User";
-import { useDispatch } from "react-redux";
-import { setAuthLogin } from "../redux/slide/authSlice";
+import { CustomAxiosRequestConfig } from "../configs/axios";
 
 type LoginPayload = {
     email: string,
@@ -27,7 +26,9 @@ const login = async (payload: LoginPayload): Promise<User | null> => {
 const fetchUser = async (): Promise<User | null> => {
 
     try {
-        const response = await axiosInstance.get('/auth/me')
+        const response = await axiosInstance.get('/auth/me', {
+            guard: 'user'
+        } as CustomAxiosRequestConfig)
         return response.data.user
 
     } catch (error) {

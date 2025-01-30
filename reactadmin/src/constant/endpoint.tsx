@@ -7,4 +7,6 @@ export const endpoint = {
     users: 'frontend/users',
     doctors: 'frontend/doctors',
     schedules: 'frontend/schedules',
+    patients: 'frontend/patients',
+    bookings: 'frontend/bookings',
 }

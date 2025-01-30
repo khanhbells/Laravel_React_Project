@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import toastReducer from './slide/toastSlice'
 import authReducer from './slide/authSlice'
+import authPatientReducer from './slide/authPatientSlice'
 
 export const store = configureStore({
     reducer: {
         toast: toastReducer,
         auth: authReducer,
+        patient: authPatientReducer,
     },
 })
 

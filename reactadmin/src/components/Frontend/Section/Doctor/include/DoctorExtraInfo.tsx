@@ -26,9 +26,9 @@ const DoctoExtraInfo = ({
         setIsoDetailInfo(status)
     }
 
-    useEffect(() => {
-        console.log(options);
-    }, [options])
+    // useEffect(() => {
+    //     console.log(options);
+    // }, [options])
 
     //openSheet
     const handleButtonAction = () => {

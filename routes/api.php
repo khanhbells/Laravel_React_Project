@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\V1\TimeSlotController;
 use App\Http\Controllers\Api\V1\ScheduleController;
 use App\Http\Controllers\Api\V1\SystemController;
 use App\Http\Controllers\Api\V1\BookingController;
+use App\Http\Controllers\Api\V1\AuthPatientController;
 use App\Http\Resources\DoctorResource;
 use App\Models\SpecialtyCatalogue;
 use Illuminate\Support\Facades\Route;
@@ -34,13 +35,13 @@ use Illuminate\Http\Request;
 // });
 
 Route::group([
-    'middleware' => 'jwt',
+    'middleware' => 'jwt:api',
     'prefix' => 'v1/auth'
 ], function ($router) {
     Route::get('me', [AuthController::class, 'me']);
 });
 Route::group([
-    'middleware' => 'jwt',
+    'middleware' => 'jwt:api',
     'prefix' => 'v1'
 ], function ($router) {
     //Logout
@@ -151,7 +152,7 @@ Route::group([
     // -------------------------------------------------------------------------------
     // Patient
     Route::get('patients', [PatientController::class, 'index']);
-    Route::get('patients/{id}', [PatientController::class, 'show']);
+
     Route::post('patients', [PatientController::class, 'create']);
     Route::put('patients/{id}', [PatientController::class, 'update']);
     Route::delete('patients/{id}', [PatientController::class, 'destroy']);
@@ -197,7 +198,6 @@ Route::group([
 
     // Location
     Route::get('location', [DashboardController::class, 'location']);
-
     //UPLOAD
     Route::post('upload/tempotary', [UploadController::class, 'uploadToTempotary']);
     Route::post('upload/ckeditor', [UploadController::class, 'uploadCkeditor']);
@@ -208,6 +208,18 @@ Route::group([
     //BOOKINGS
     Route::get('frontend/bookings', [BookingController::class, 'index']);
 });
+
+Route::group([
+    'prefix' => 'v1'
+], function ($router) {
+    // Location
+    Route::get('location', [DashboardController::class, 'location']);
+    // Patient
+    Route::get('patients/{id}', [PatientController::class, 'show']);
+});
+
+Route::post('v1/auth/refresh', [AuthController::class, 'refresh']);
+Route::post('v1/auth/login', [AuthController::class, 'login']);
 
 /*--------------------------------FRONT END--------------------------- */
 Route::group([
@@ -232,8 +244,20 @@ Route::group([
     Route::get('bookings/{id}', [BookingController::class, 'show']);
     Route::post('bookings', [BookingController::class, 'create']);
     Route::put('bookings/{id}', [BookingController::class, 'update']);
+    //SignUp
+    Route::post('patients', [PatientController::class, 'signUp']);
+});
+
+Route::group([
+    'middleware' => 'jwt:patient',
+    'prefix' => 'v1/patient'
+], function ($router) {
+    Route::get('me', [AuthPatientController::class, 'me']);
+    Route::get('logout', [AuthPatientController::class, 'logout']);
+    //History
+    Route::get('historys', [BookingController::class, 'indexHistory']);
 });
 
 
-Route::post('v1/auth/refresh', [AuthController::class, 'refresh']);
-Route::post('v1/auth/login', [AuthController::class, 'login']);
+Route::post('v1/patient/refresh', [AuthPatientController::class, 'refresh']);
+Route::post('v1/patient/login', [AuthPatientController::class, 'login']);

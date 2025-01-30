@@ -26,6 +26,12 @@ import { addCommas } from "@/helper/myHelper";
 import TotalPriceBooking from "@/components/TotalPriceBooking";
 import InforScheduleBooking from "@/components/InforScheduleBooking";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux"
+import { RootState } from "@/redux/store"
+import { useQuery } from "react-query";
+import { PatientBooking } from "@/types/Patient";
+import { getPatientById } from "@/service/PatientService";
+import { endpoint } from "@/constant/endpoint";
 //img
 
 interface IStoreBookingPatient {
@@ -61,7 +67,11 @@ const StoreBookingPatient = ({
     closeSheet
 }: IStoreBookingPatient) => {
 
+    //REDUX
+    const { isAuthenticated, patient: patientRedux } = useSelector((state: RootState) => state.patient)
+
     const { selectedDataSchedule } = useDataSchedule()
+
     const navigate = useNavigate()
     //Location
     const { provinces, districts, wards, setProvinceId, setDistrictId, isProvinceLoading, isDistrictLoading, isWardLoading } = useLocationState()
@@ -83,11 +93,41 @@ const StoreBookingPatient = ({
 
     //useForm
     const { register, handleSubmit, reset, formState: { errors }, setValue, control } = methods
-    const { onSubmitHanler, loading, isSuccess, data } = useFormSubmit(save, { action: 'create', id: undefined }, null, null, closeSheet)
+    const { onSubmitHanler, loading, isSuccess, data } = useFormSubmit(save, { action: 'create', id: undefined }, null, null, closeSheet, endpoint.bookings)
 
     const [defaultSelectValue, _] = useState<Option | null>(null)
 
-    const [validationRules, setValidationRules] = useState(() => formField())
+    //QUERY
+    const { data: dataPatient, isLoading, isError } = useQuery<PatientBooking>(['patient', patientRedux?.id],
+        () => getPatientById(patientRedux?.id),
+        {
+            enabled: !!patientRedux?.id,
+        }
+    )
+
+    const [validationRules, setValidationRules] = useState(() => formField(undefined))
+
+    //follow patient
+    useEffect(() => {
+        if (!isLoading && dataPatient) {
+            setValidationRules(formField(dataPatient))
+            Object.keys(dataPatient).forEach((key) => {
+                const value = dataPatient[key as keyof PatientBooking]
+                if (typeof value === 'string' || value === undefined) {
+                    setValue(key as keyof PayloadBookingInput, value)
+                } else {
+                    setValue(key as keyof PayloadBookingInput, String(value))
+                }
+
+            })
+
+        }
+    }, [dataPatient])
+
+    useEffect(() => {
+        console.log(validationRules);
+
+    }, [validationRules])
 
     const initialSelectBoxs = useMemo<SelectBoxItem[]>(() => [
         {
@@ -130,6 +170,7 @@ const StoreBookingPatient = ({
             isLoading: isWardLoading,
             name: 'ward_id',
             control: control,
+
         },
     ], [defaultSelectValue, setProvinceId, setDistrictId, control])
 
@@ -139,26 +180,32 @@ const StoreBookingPatient = ({
 
         if (provinces.data && provinces.data.length) {
             updateSelectBoxOptions('province_id', provinces.data)
-            updateSelectBoxValue('province_id', provinces.data, undefined)
+            if (dataPatient) {
+                updateSelectBoxValue('province_id', provinces.data, String(dataPatient?.province_id))
+            }
         }
 
-    }, [provinces.data, updateSelectBoxValue, updateSelectBoxOptions])
+    }, [provinces.data, dataPatient, updateSelectBoxValue, updateSelectBoxOptions])
 
     useEffect(() => {
 
         if (districts.data && districts.data.length) {
             updateSelectBoxOptions('district_id', districts.data)
-            updateSelectBoxValue('district_id', districts.data, undefined)
+            if (dataPatient) {
+                updateSelectBoxValue('district_id', districts.data, String(dataPatient?.district_id))
+            }
         }
 
-    }, [districts.data, updateSelectBoxValue, updateSelectBoxOptions])
+    }, [districts.data, dataPatient, updateSelectBoxValue, updateSelectBoxOptions])
 
     useEffect(() => {
         if (wards.data && wards.data.length) {
             updateSelectBoxOptions('ward_id', wards.data)
-            updateSelectBoxValue('ward_id', wards.data, undefined)
+            if (dataPatient) {
+                updateSelectBoxValue('ward_id', wards.data, String(dataPatient?.district_id))
+            }
         }
-    }, [wards.data, updateSelectBoxValue, updateSelectBoxOptions])
+    }, [wards.data, dataPatient, updateSelectBoxValue, updateSelectBoxOptions])
 
     useEffect(() => {
         if (isSuccess === true && data && data.booking) {
@@ -176,7 +223,17 @@ const StoreBookingPatient = ({
                     schedule={schedule}
                 />
                 <div>
-                    <div className="uppercase text-center mt-[10px] text-[16px] font-semibold">Đặt lịch khám ngay</div>
+                    <div className="uppercase text-center mt-[10px] text-[16px] font-semibold">
+                        {
+                            !patientRedux || patientRedux == null ? (
+                                'Đặt lịch khám ngay'
+                            ) : (
+                                <>
+                                    Đặt lịch khám nào <span className="text-red-500">{patientRedux.name}</span> ơi!
+                                </>
+                            )
+                        }
+                    </div>
                     <FormProvider {...methods}>
                         <form
                             onSubmit={handleSubmit(onSubmitHanler)}

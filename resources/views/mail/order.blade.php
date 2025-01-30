@@ -83,15 +83,15 @@
             </div>
             <div class="info-row">
                 <span>Thành phố:</span>
-                <span class="info-value">{{ $data->provinces->name_province }}</span>
+                <span class="info-value">{{ $data->provinces->name }}</span>
             </div>
             <div class="info-row">
                 <span>Quận huyện:</span>
-                <span class="info-value">{{ $data->districts->name_district }}</span>
+                <span class="info-value">{{ $data->districts->name }}</span>
             </div>
             <div class="info-row">
                 <span>Phường xã:</span>
-                <span class="info-value">{{ $data->wards->name_ward }}</span>
+                <span class="info-value">{{ $data->wards->name }}</span>
             </div>
             <div class="info-row">
                 <span>Địa chỉ hiện tại:</span>

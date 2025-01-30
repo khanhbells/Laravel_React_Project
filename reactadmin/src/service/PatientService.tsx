@@ -40,7 +40,7 @@ const destroy = async (id: string) => {
 
 }
 
-const getPatientById = async (patientId: string | undefined): Promise<Patient> => {
+const getPatientById = async (patientId: string | undefined | null | number): Promise<Patient> => {
     const response = await axios.get(`patients/${patientId}`)
     return response.data
 }

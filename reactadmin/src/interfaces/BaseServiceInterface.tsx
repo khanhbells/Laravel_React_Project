@@ -36,7 +36,7 @@ export interface CustomTableProps extends SheetProps {
     checkedAllState: boolean,
     handleCheckedChange: (id: number) => void,
     handleCheckedAllChange: () => void,
-    destroy: (id: string) => void,
+    destroy?: (id: string) => void,
     refetch: any,
     [key: string]: any
 }
@@ -106,8 +106,8 @@ export interface ButtonAction<T extends ActionParam[]> {
 }
 
 export interface StoreProps {
-    refetch: any;
-    closeSheet: () => void,
+    refetch?: any;
+    closeSheet?: () => void,
     id: string | undefined,
     action: string
 }

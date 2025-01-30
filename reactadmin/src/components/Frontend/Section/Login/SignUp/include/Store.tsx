@@ -13,19 +13,22 @@ import useUpload from "@/hook/useUpload";
 import useFormSubmit from "@/hook/useFormSubmit";
 import useSelectBox from "@/hook/useSelectbox";
 //SETTING
-import { formField } from "../../settings/patientSettings";
+import { formField } from "@/modules/Patient/settings/patientSettings";
 import { PayloadInput, Patient } from "@/types/Patient";
 import { Option } from "@/components/CustomSelectBox";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup';
 import { PatientCatalogue } from "@/interfaces/types/PatientCatalogueType";
 //SERVICE
-import { save, getPatientById } from "@/service/PatientService";
+import { save } from "@/service/Frontend/FrontEndService";
+import { getPatientById } from "@/service/PatientService";
 import { pagination } from "@/service/PatientCatalogueService";
 //INTERFACES
 import { SelectBoxItem } from "@/interfaces/BaseServiceInterface";
-import { schema } from "../../validations/patient";
+import { schema } from "@/modules/Patient/validations/patient";
 import { StoreProps } from "@/interfaces/BaseServiceInterface";
+import { endpoint } from "@/constant/endpoint";
+import { useNavigate } from "react-router-dom";
 
 interface PatientStoreProps extends StoreProps {
     patientCatalogueData: { value: string, label: string }[]
@@ -44,6 +47,7 @@ const Store = ({
     //Location
     const { provinces, districts, wards, setProvinceId, setDistrictId, isProvinceLoading, isDistrictLoading, isWardLoading } = useLocationState()
     const { images, handleImageChange } = useUpload(false)
+    const navigate = useNavigate()
 
 
     const methods = useForm<PayloadInput>({
@@ -54,7 +58,7 @@ const Store = ({
 
     //useForm
     const { register, handleSubmit, reset, formState: { errors }, setValue, control } = methods
-    const { onSubmitHanler, loading } = useFormSubmit(save, { action: action, id: id }, null, refetch, closeSheet)
+    const { onSubmitHanler, loading, isSuccess } = useFormSubmit(save, { action: action, id: id }, null, refetch, closeSheet, endpoint.patients)
 
 
 
@@ -66,12 +70,13 @@ const Store = ({
         }
     )
 
-
-
+    useEffect(() => {
+        if (isSuccess) {
+            navigate('/patient/signin')
+        }
+    }, [isSuccess])
 
     const [validationRules, setValidationRules] = useState(() => formField(action, undefined))
-
-
 
     //follow data seen update
     useEffect(() => {
@@ -96,14 +101,6 @@ const Store = ({
     const [defaultSelectValue, _] = useState<Option | null>(null)
 
     const initialSelectBoxs = useMemo<SelectBoxItem[]>(() => [
-        {
-            title: 'Loại thành viên',
-            placeholder: 'Chọn loại thành viên',
-            options: patientCatalogueData,
-            value: defaultSelectValue,
-            name: 'patient_catalogue_id',
-            control: control,
-        },
         {
             title: 'Thành phố',
             placeholder: 'Chọn thành phố',
@@ -247,6 +244,11 @@ const Store = ({
                         text="Lưu thông tin"
                     />
                 </div>
+                <CustomInput
+                    name="patient_catalogue_id"
+                    type="hidden"
+                    value="1"
+                />
             </form>
         </FormProvider>
     )
