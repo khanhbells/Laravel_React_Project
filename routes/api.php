@@ -207,6 +207,8 @@ Route::group([
     Route::post('sort', [DashboardController::class, 'sort']);
     //BOOKINGS
     Route::get('frontend/bookings', [BookingController::class, 'index']);
+    //STATISTIC DOCTOR
+    Route::get('statistic', [DashboardController::class, 'statistic']);
 });
 
 Route::group([

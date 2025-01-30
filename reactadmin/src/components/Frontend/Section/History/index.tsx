@@ -40,6 +40,8 @@ import { useCustomFilter } from "@/hook/useCustomFilter"
 import TableHistoryPatient from "@/components/TableHistoryPatient"
 import { useSelector } from "react-redux"
 import { RootState } from "@/redux/store"
+
+import { status } from "@/constant/general"
 const History = () => {
     const breadcrumbData: Breadcrumb = breadcrumb.index
     const navigate = useNavigate()
@@ -104,6 +106,7 @@ const History = () => {
                             refetch={refetch}
                             handleQueryString={(filters: any) => handleQueryString(filters)}
                             items={filterItems}
+                            status={status}
                         />
                         <TableHistoryPatient
                             isLoading={isLoading}

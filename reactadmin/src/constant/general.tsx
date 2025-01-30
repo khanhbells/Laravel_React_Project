@@ -23,6 +23,25 @@ export const publishs = [
     }
 ]
 
+export const status = [
+    {
+        value: '0',
+        name: 'Tất cả'
+    },
+    {
+        value: 'pending',
+        name: 'Đang chờ xác nhận'
+    },
+    {
+        value: 'confirm',
+        name: 'Đã xác nhận'
+    },
+    {
+        value: 'stop',
+        name: 'Đã hủy'
+    },
+]
+
 export const follows = [
     {
         id: 0,

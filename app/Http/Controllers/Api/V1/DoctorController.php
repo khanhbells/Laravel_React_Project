@@ -68,7 +68,7 @@ class DoctorController extends Controller
 
     public function update(UpdateDoctorRequest $request, $id)
     {
-        $auth = auth()->user();
+        $auth = auth('api')->user();
         $data = $this->doctorService->update($request, $id, $auth);
         return $data;
         if ($data['code'] == Status::SUCCESS) {
@@ -125,6 +125,8 @@ class DoctorController extends Controller
             );
         }
     }
+
+
 
     // public function destroy($id, Request $request)
     // {

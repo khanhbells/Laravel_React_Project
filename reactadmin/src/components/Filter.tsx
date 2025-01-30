@@ -42,7 +42,8 @@ const Filter = ({
         closeAlertDialog,
         confirmAction,
         actionSelectedValue,
-        openAlertDialog, filters,
+        openAlertDialog,
+        filters,
         keyword,
         handleFilter,
         debounceInputSearch
@@ -114,18 +115,35 @@ const Filter = ({
                                     </Select>
                                 </div>
                                 <div className="mr-[10px]">
-                                    <Select onValueChange={(value) => handleFilter(value, 'publish')} defaultValue={filters.publish}>
-                                        <SelectTrigger className="w-[150px]">
-                                            <SelectValue placeholder="Chọn trạng thái" />
-                                        </SelectTrigger>
-                                        <SelectContent >
-                                            {publishs && publishs.map((publish, index) => (
-                                                <SelectItem className="cursor-pointer" value={String(publish.id)} key={index}>
-                                                    {publish.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    {
+                                        restProps.status ? (
+                                            <Select onValueChange={(value) => handleFilter(value, 'status')} defaultValue={filters.status}>
+                                                <SelectTrigger className="w-[150px]">
+                                                    <SelectValue placeholder="Chọn trạng thái" />
+                                                </SelectTrigger>
+                                                <SelectContent >
+                                                    {restProps.status && restProps.status.map((item: { value: string, name: string }, index: number) => (
+                                                        <SelectItem className="cursor-pointer" value={String(item.value)} key={index}>
+                                                            {item.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        ) : (
+                                            <Select onValueChange={(value) => handleFilter(value, 'publish')} defaultValue={filters.publish}>
+                                                <SelectTrigger className="w-[150px]">
+                                                    <SelectValue placeholder="Chọn trạng thái" />
+                                                </SelectTrigger>
+                                                <SelectContent >
+                                                    {publishs && publishs.map((publish, index) => (
+                                                        <SelectItem className="cursor-pointer" value={String(publish.id)} key={index}>
+                                                            {publish.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        )
+                                    }
                                 </div>
                                 <div className="mr-[10px]">
                                     <Select onValueChange={(value) => handleFilter(value, 'sort')} defaultValue={filters.sort}>

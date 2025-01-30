@@ -55,6 +55,9 @@ class BookingService extends BaseService
         if (isset($auth->patient_catalogue_id) && $auth != null) {
             $condition['patient_id'] = $auth->id;
         }
+        if ($request->input('status')) {
+            $condition['status'] = $request->input('status');
+        }
         return [
             'perpage' => $request->input('perpage') ?? 10,
             'keyword' => [

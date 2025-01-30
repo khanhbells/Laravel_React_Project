@@ -151,4 +151,69 @@ class DashboardController extends Controller
             'message' => 'Error!'
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
+
+    public function statistic(Request $request)
+    {
+        try {
+            $month = now()->month;
+            $year = now()->year;
+            $previousMonth = ($month == 1) ? 12 : $month - 1;
+            $previousYear = ($month == 1) ? $year - 1 : $year;
+            $repositoryBooking = $this->customRepository('bookings');
+
+            $totalDoctor = $this->statisticTotal('doctors');
+            $totalPatient = $this->statisticTotal('patients');
+            $totalBooking = $this->statisticTotal('bookings');
+            $totalStopBooking = $repositoryBooking->getStopBooking();
+            $totalPendingBooking = $repositoryBooking->getPendingBooking();
+            $totalBookingCurrentMonth = $repositoryBooking->getBookingByTime($month, $year);
+            $totalBookingPreviousMonth = $repositoryBooking->getBookingByTime($previousMonth, $previousYear);
+            $revenueAll =  $repositoryBooking->getRevenueBookingAll();
+
+
+            $data = [
+                'totalDoctor' => $totalDoctor,
+                'totalPatient' => $totalPatient,
+                'totalBooking' => $totalBooking,
+                'totalStopBooking' => $totalStopBooking,
+                'totalPendingBooking' => $totalPendingBooking,
+                'totalPendingBooking' => $totalPendingBooking,
+                'revenueAll' => $revenueAll,
+                'totalBookingCurrentMonth' => $totalBookingCurrentMonth,
+                'totalBookingPreviousMonth' => $totalBookingPreviousMonth,
+                'growBooking' => growth($totalBookingCurrentMonth, $totalBookingPreviousMonth),
+            ];
+
+            return response()->json([
+                'statistic' => $data,
+                'code' => Response::HTTP_OK
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Có lỗi xảy ra, vui lòng thử lại sau.',
+                'message' => $e->getMessage(),
+                'code' => Status::ERROR
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function customRepository($model)
+    {
+        $customRepository = app($this->callRepository($model));
+        return $customRepository;
+    }
+
+    public function statisticTotal($model)
+    {
+        $repository = $this->customRepository($model);
+        $total = $repository->total();
+
+        if ($total === null || $total === false) {
+            return response()->json([
+                'error' => `Không thể lấy dữ liệu từ {$model}`,
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return $total;
+    }
 }

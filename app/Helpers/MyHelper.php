@@ -2,6 +2,18 @@
 
 use Illuminate\Support\Str;
 
+if (!function_exists('growth')) {
+    function growth($currentValue, $previousValue)
+    {
+        if ($previousValue == 0) {
+            return ($currentValue > 0) ? 100 : 0; // Nếu có đơn hàng thì 100%, còn không thì 0%
+        }
+
+        $grow = ($currentValue - $previousValue) / $previousValue * 100;
+        return number_format($grow, 0);
+    }
+}
+
 if (!function_exists('getImages')) {
     function getImages($image, ?string $thumb = null)
     {

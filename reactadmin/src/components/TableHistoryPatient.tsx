@@ -69,16 +69,6 @@ const TableHistoryPatient = ({
             <Table className="border border-solid border-[#ebebeb]">
                 <TableHeader>
                     <TableRow>
-                        <TableHead>
-                            <Checkbox
-                                id="checkAll"
-                                className="text-white"
-                                checked={checkedAllState}
-                                onCheckedChange={() => {
-                                    handleCheckedAllChange()
-                                }}
-                            />
-                        </TableHead>
                         {tableColumn && tableColumn.map((column, index) => (
                             <TableHead key={index}>{column.name}</TableHead>
                         ))}
@@ -104,13 +94,6 @@ const TableHistoryPatient = ({
                             key={index}
                             className={`${checkedState[row.id] ? 'bg-[#ffc]' : ''} ${dayjs(`${row.date} ${dayjs(row.end_time).format('hh:mm A')}`).isBefore(now) ? 'opacity-50' : ''}`}
                         >
-                            <TableCell className="font-medium">
-                                <Checkbox id="checkAll"
-                                    className="text-white"
-                                    checked={checkedState[row.id] || false}
-                                    onCheckedChange={() => handleCheckedChange(row.id)}
-                                />
-                            </TableCell>
                             {tableColumn && tableColumn.map((column, index) => (
                                 <TableCell key={index}>{column.render(row)}</TableCell>
 

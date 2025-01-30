@@ -14,7 +14,8 @@ import { CheckedState } from "./useCheckBoxState";
 interface FilterInterface {
     perpage: string | undefined,
     publish: string | undefined,
-    sort: string | undefined
+    sort: string | undefined,
+    status?: string | undefined,
 }
 
 const useFilterAction = (checkedState: CheckedState, model: string, refetch: any, debounce: any) => {
@@ -24,6 +25,7 @@ const useFilterAction = (checkedState: CheckedState, model: string, refetch: any
         perpage: searchParams.get('perpage') || '10',
         publish: searchParams.get('publish') || undefined,
         sort: searchParams.get('sort') || undefined,
+        status: searchParams.get('status') || undefined,
         // parent_id: searchParams.get('parent_id') || undefined
     })
     const [keyword, setKeyword] = useState<string>(searchParams.get('keyword') || '')

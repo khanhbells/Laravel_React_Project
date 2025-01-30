@@ -89,16 +89,19 @@ const CustomTable = ({
             <Table className="border border-solid border-[#ebebeb]">
                 <TableHeader>
                     <TableRow>
-                        <TableHead>
-                            <Checkbox
-                                id="checkAll"
-                                className="text-white"
-                                checked={checkedAllState}
-                                onCheckedChange={() => {
-                                    handleCheckedAllChange()
-                                }}
-                            />
-                        </TableHead>
+                        {
+                            !restProps.status &&
+                            <TableHead>
+                                <Checkbox
+                                    id="checkAll"
+                                    className="text-white"
+                                    checked={checkedAllState}
+                                    onCheckedChange={() => {
+                                        handleCheckedAllChange()
+                                    }}
+                                />
+                            </TableHead>
+                        }
                         {tableColumn && tableColumn.map((column, index) => (
                             user?.user_catalogue_id === 1 && column.name === 'Bác sĩ' ? (
                                 <TableHead key={index}>{column.name}</TableHead>
@@ -133,13 +136,16 @@ const CustomTable = ({
                             key={index}
                             className={`${checkedState[row.id] ? 'bg-[#ffc]' : ''} ${dayjs(`${row.date} ${dayjs(row.end_time).format('hh:mm A')}`).isBefore(now) ? 'opacity-50' : ''}`}
                         >
-                            <TableCell className="font-medium">
-                                <Checkbox id="checkAll"
-                                    className="text-white"
-                                    checked={checkedState[row.id] || false}
-                                    onCheckedChange={() => handleCheckedChange(row.id)}
-                                />
-                            </TableCell>
+                            {
+                                !restProps.status &&
+                                <TableCell className="font-medium">
+                                    <Checkbox id="checkAll"
+                                        className="text-white"
+                                        checked={checkedState[row.id] || false}
+                                        onCheckedChange={() => handleCheckedChange(row.id)}
+                                    />
+                                </TableCell>
+                            }
                             {tableColumn && tableColumn.map((column, index) => (
                                 user?.user_catalogue_id === 1 && column.name === 'Bác sĩ' ? (
                                     <TableCell key={index}>{column.render(row)}</TableCell>

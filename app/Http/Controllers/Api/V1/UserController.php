@@ -39,7 +39,7 @@ class UserController extends Controller
             if ($request->input('user_catalogue_id') == null) {
                 $this->authorize('modules', '/user/index');
             }
-            $auth = auth()->user();
+            $auth = auth('api')->user();
             $users = $this->userService->paginate($request, $auth);
             return response()->json([
                 'users' =>  UserResource::collection($users->items()),
@@ -57,7 +57,7 @@ class UserController extends Controller
     }
     public function create(StoreUserRequest $request)
     {
-        $auth = auth()->user();
+        $auth = auth('api')->user();
         $data = $this->userService->create($request, $auth);
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
@@ -149,7 +149,7 @@ class UserController extends Controller
 
     private function baseUpdate($request, $id)
     {
-        $auth = auth()->user();
+        $auth = auth('api')->user();
         $data = $this->userService->update($request, $id, $auth);
 
         if ($data['code'] == Status::SUCCESS) {

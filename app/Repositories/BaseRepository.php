@@ -116,4 +116,8 @@ class BaseRepository
     {
         return $this->model->where($field, '=', $parentId)->get($select);
     }
+    public function total()
+    {
+        return $this->model->count();
+    }
 }

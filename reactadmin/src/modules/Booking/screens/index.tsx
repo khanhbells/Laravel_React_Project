@@ -38,6 +38,7 @@ import { useQuery } from "react-query"
 import { queryKey } from "@/constant/query"
 import { pagination as doctorsPagination } from "@/service/DoctorService"
 import { useCustomFilter } from "@/hook/useCustomFilter"
+import { status } from "@/constant/general"
 const Booking = () => {
     const breadcrumbData: Breadcrumb = breadcrumb.index
     const navigate = useNavigate()
@@ -97,6 +98,7 @@ const Booking = () => {
                             refetch={refetch}
                             handleQueryString={(filters: any) => handleQueryString(filters)}
                             items={filterItems}
+                            status={status}
                         />
                         <CustomTable
                             isLoading={isLoading}
@@ -113,6 +115,7 @@ const Booking = () => {
                             refetch={refetch}
                             buttonActions={buttonActions}
                             flag={true}
+                            status={status}
                         />
                     </CardContent>
                     <CardFooter>
