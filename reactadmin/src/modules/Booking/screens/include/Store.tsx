@@ -97,34 +97,34 @@ const Store = ({ id, action, refetch, closeSheet }: UserCatalogueStoreProps) => 
                             ) : isValueStatus.value === 'stop' ? (
                                 <div className="font-semibold text-[red]">Đã hủy đơn đặt lịch khám</div>
                             ) : (
-                                <CustomSelectBox
-                                    name="status"
-                                    options={optionStatus}
-                                    placeholder="Trạng thái đơn đặt lịch khám"
-                                    title="Trạng thái đơn đặt lịch khám"
-                                    value={isValueStatus}
-                                    control={control} // <-- Thêm thuộc tính control
-                                    errors={errors} // <-- Để hiển thị lỗi nếu có
-                                />
+                                <div className="pb-[30px]">
+                                    <CustomSelectBox
+                                        name="status"
+                                        options={optionStatus}
+                                        placeholder="Trạng thái đơn đặt lịch khám"
+                                        title="Trạng thái đơn đặt lịch khám"
+                                        value={isValueStatus}
+                                        control={control} // <-- Thêm thuộc tính control
+                                        errors={errors} // <-- Để hiển thị lỗi nếu có
+                                    />
+                                </div>
                             )
                         }
                         {
                             isValuePaymentStatus.value === 'confirm' ? (
                                 <div className="font-semibold text-[green] mt-[10px]">Đã thanh toán</div>
-                            ) : isValuePaymentStatus.value === 'stop' ? (
+                            ) : data?.payment_status === 'stop' ? (
                                 <div className="font-semibold text-[red] mt-[10px]">Đã hủy thanh toán</div>
                             ) : (
-                                <div className="mt-[10px]">
-                                    <CustomSelectBox
-                                        name="payment_status"
-                                        options={optionPaymentStatus}
-                                        placeholder="Trạng thái thanh toán"
-                                        title="Trạng thái thanh toán"
-                                        value={isValuePaymentStatus}
-                                        control={control} // <-- Thêm thuộc tính control
-                                        errors={errors} // <-- Để hiển thị lỗi nếu có
-                                    />
-                                </div>
+                                <CustomSelectBox
+                                    name="payment_status"
+                                    options={optionPaymentStatus}
+                                    placeholder="Trạng thái thanh toán"
+                                    title="Trạng thái thanh toán"
+                                    value={isValuePaymentStatus}
+                                    control={control} // <-- Thêm thuộc tính control
+                                    errors={errors} // <-- Để hiển thị lỗi nếu có
+                                />
                             )
                         }
 

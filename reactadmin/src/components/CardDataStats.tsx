@@ -1,14 +1,16 @@
 import React, { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 
 interface CardDataStatsProps {
     title: string;
-    total: string;
-    rate?: string;
+    total: string | ReactNode;
+    rate?: string | ReactNode;
     levelUp?: boolean;
     levelDown?: boolean;
     children: ReactNode;
     previousMonth?: string;
-    classColorName?: string
+    classColorName?: string;
+    route?: string
 }
 
 const CardDataStats: React.FC<CardDataStatsProps> = ({
@@ -19,7 +21,8 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
     levelDown,
     children,
     previousMonth,
-    classColorName
+    classColorName,
+    route
 }) => {
     return (
         <div className='rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark font-satoshi h-[100%]'>
@@ -33,7 +36,13 @@ const CardDataStats: React.FC<CardDataStatsProps> = ({
                     <div className="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4">
                         {children}
                     </div>
-                    <div className='ml-[15px] text-[25px] font-sans text-black dark:text-white'>{total}</div>
+                    {
+                        route ? (
+                            <Link to={route} className='ml-[15px] text-[25px] font-sans text-black dark:text-white cursor-pointer'>{total}</Link>
+                        ) : (
+                            <div className='ml-[15px] text-[25px] font-sans text-black dark:text-white'>{total}</div>
+                        )
+                    }
                 </div>
 
                 {

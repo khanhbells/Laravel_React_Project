@@ -98,7 +98,6 @@ const optionStatus = [
 const optionPaymentStatus = [
     { value: 'pending', label: 'Chưa thanh toán' },
     { value: 'confirm', label: 'Đã thanh toán' },
-    { value: 'stop', label: 'Đã hủy' },
 ]
 
 

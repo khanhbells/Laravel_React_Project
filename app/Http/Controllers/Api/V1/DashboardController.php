@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Str;
 use App\Services\DashboardService;
+use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
 {
@@ -163,13 +164,13 @@ class DashboardController extends Controller
 
             $totalDoctor = $this->statisticTotal('doctors');
             $totalPatient = $this->statisticTotal('patients');
+
             $totalBooking = $this->statisticTotal('bookings');
             $totalStopBooking = $repositoryBooking->getStopBooking();
             $totalPendingBooking = $repositoryBooking->getPendingBooking();
             $totalBookingCurrentMonth = $repositoryBooking->getBookingByTime($month, $year);
             $totalBookingPreviousMonth = $repositoryBooking->getBookingByTime($previousMonth, $previousYear);
             $revenueAll =  $repositoryBooking->getRevenueBookingAll();
-
 
             $data = [
                 'totalDoctor' => $totalDoctor,
@@ -186,6 +187,74 @@ class DashboardController extends Controller
 
             return response()->json([
                 'statistic' => $data,
+                'code' => Response::HTTP_OK
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Có lỗi xảy ra, vui lòng thử lại sau.',
+                'message' => $e->getMessage(),
+                'code' => Status::ERROR
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function chart(Request $request)
+    {
+        try {
+            $repositoryBooking = $this->customRepository('bookings');
+            $type = $request->input('chartType');
+            switch ($type) {
+                case '1':
+                    $year = now()->year;
+                    $chart = convertRevenueChartData($repositoryBooking->revenueByYear($year));
+                    break;
+                case '7':
+                    $year = now()->year;
+                    $chart = convertRevenueChartData($repositoryBooking->revenue7Day(), 'daily_revenue', 'date', 'Ngày');
+                    break;
+                case '30':
+                    $currentMonth = now()->month;
+                    $currentYear = now()->year;
+                    $dayInMonth = Carbon::createFromDate($currentYear, $currentMonth, 1)->daysInMonth;
+                    $allDays = range(1, $dayInMonth);
+                    $temp = $repositoryBooking->revenueCurrentMonth($currentMonth, $currentYear);
+
+                    $label = [];
+                    $data = [];
+                    $temp2 = array_map(function ($day) use ($temp, &$label, &$data) {
+                        $found = collect($temp)->first(function ($record) use ($day) {
+                            return $record['day'] == $day;
+                        });
+                        $label[] = 'Ngày ' . $day;
+                        $data[] = $found ? $found['daily_revenue'] : 0;
+                    }, $allDays);
+                    $chart = [
+                        'label' => $label,
+                        'data' => $data
+                    ];
+                    break;
+            }
+            return response()->json([
+                'chart' => $chart,
+                'code' => Response::HTTP_OK
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Có lỗi xảy ra, vui lòng thử lại sau.',
+                'message' => $e->getMessage(),
+                'code' => Status::ERROR
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function analytics(Request $request)
+    {
+        try {
+            $repositoryBooking = $this->customRepository('bookings');
+            $analytics = $repositoryBooking->getAnalytics();
+
+            return response()->json([
+                'analytics' => $analytics,
                 'code' => Response::HTTP_OK
             ], Response::HTTP_OK);
         } catch (\Exception $e) {
