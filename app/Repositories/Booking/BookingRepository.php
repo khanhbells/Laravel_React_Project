@@ -77,6 +77,54 @@ class BookingRepository extends BaseRepository
         ;
     }
 
+    public function revenue24Hours()
+    {
+        return $this->model
+            ->select(DB::raw('
+            hours.hour,
+            COALESCE(SUM(total_price), 0) as hourly_revenue
+        '))
+            ->from(DB::raw('(
+            SELECT DATE_FORMAT(NOW() - INTERVAL a.a HOUR, "%Y-%m-%d %H:00:00") as hour
+            FROM (
+                SELECT 0 AS a UNION ALL
+                SELECT 1 UNION ALL
+                SELECT 2 UNION ALL
+                SELECT 3 UNION ALL
+                SELECT 4 UNION ALL
+                SELECT 5 UNION ALL
+                SELECT 6 UNION ALL
+                SELECT 7 UNION ALL
+                SELECT 8 UNION ALL
+                SELECT 9 UNION ALL
+                SELECT 10 UNION ALL
+                SELECT 11 UNION ALL
+                SELECT 12 UNION ALL
+                SELECT 13 UNION ALL
+                SELECT 14 UNION ALL
+                SELECT 15 UNION ALL
+                SELECT 16 UNION ALL
+                SELECT 17 UNION ALL
+                SELECT 18 UNION ALL
+                SELECT 19 UNION ALL
+                SELECT 20 UNION ALL
+                SELECT 21 UNION ALL
+                SELECT 22 UNION ALL
+                SELECT 23
+            ) as a
+        ) as hours'))
+            ->leftJoin('bookings', function ($join) {
+                $join->on(DB::raw('DATE_FORMAT(bookings.created_at, "%Y-%m-%d %H:00:00")'), '=', DB::raw('hours.hour'))
+                    ->where('bookings.status', '=', 'confirm')
+                    ->where('bookings.payment_status', '=', 'confirm');
+            })
+            ->where(DB::raw('hours.hour'), '>=', DB::raw('DATE_FORMAT(NOW() - INTERVAL 23 HOUR, "%Y-%m-%d %H:00:00")'))
+            ->groupBy(DB::raw('hours.hour'))
+            ->orderBy(DB::raw('hours.hour'), 'ASC')
+            ->get();
+    }
+
+
     public function revenue7Day()
     {
         return $this->model
@@ -151,6 +199,7 @@ class BookingRepository extends BaseRepository
             ->orderBy(DB::raw('DAY(created_at)'))
             ->get()->toArray();
     }
+
 
     public function getAnalytics()
     {

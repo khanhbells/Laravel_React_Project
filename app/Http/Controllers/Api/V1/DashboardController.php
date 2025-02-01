@@ -209,7 +209,7 @@ class DashboardController extends Controller
                     $chart = convertRevenueChartData($repositoryBooking->revenueByYear($year));
                     break;
                 case '7':
-                    $year = now()->year;
+                    // dd($repositoryBooking->revenue7Day());
                     $chart = convertRevenueChartData($repositoryBooking->revenue7Day(), 'daily_revenue', 'date', 'Ngày');
                     break;
                 case '30':
@@ -233,6 +233,9 @@ class DashboardController extends Controller
                         'data' => $data
                     ];
                     break;
+                case '24':
+                    $chart = convertRevenueChartData($repositoryBooking->revenue24Hours(), 'hourly_revenue', 'hour', 'Giờ');
+                    break;
             }
             return response()->json([
                 'chart' => $chart,
@@ -255,6 +258,28 @@ class DashboardController extends Controller
 
             return response()->json([
                 'analytics' => $analytics,
+                'code' => Response::HTTP_OK
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Có lỗi xảy ra, vui lòng thử lại sau.',
+                'message' => $e->getMessage(),
+                'code' => Status::ERROR
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function topDoctors(Request $request)
+    {
+        try {
+            $repositoryDoctors = $this->customRepository('doctors');
+            $topDoctors = $repositoryDoctors->getTopDoctors()->toArray();
+            foreach ($topDoctors as $key => $value) {
+                $topDoctors[$key]['image'] = getImages($value['image']);
+            }
+
+            return response()->json([
+                'topDoctors' => $topDoctors,
                 'code' => Response::HTTP_OK
             ], Response::HTTP_OK);
         } catch (\Exception $e) {

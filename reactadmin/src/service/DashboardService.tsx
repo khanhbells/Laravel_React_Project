@@ -41,9 +41,23 @@ const analytics = async () => {
     }
 }
 
+const topDoctors = async () => {
+    try {
+        const response = await axios.get(`topDoctors`)
+        return response.data
+    } catch (error: any) {
+        handleAxiosError(error)
+        return {
+            code: error?.response.status,
+            message: 'Không có quyền truy cập',
+        };
+    }
+}
+
 
 export {
     statistic,
     chart,
-    analytics
+    analytics,
+    topDoctors
 };

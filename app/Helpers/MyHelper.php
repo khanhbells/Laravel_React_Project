@@ -75,7 +75,7 @@ if (!function_exists('convertRevenueChartData')) {
         if (!is_null($chartData) && count($chartData)) {
             foreach ($chartData as $key => $val) {
                 $newArray['data'][] = $val->{$data};
-                $newArray['label'][] = $text . ' ' . $val->{$label};
+                $newArray['label'][] = $text != 'Giờ' ? $text . ' ' . $val->{$label} : $val->{$label};
             }
         }
         return $newArray;

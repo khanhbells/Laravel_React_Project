@@ -213,6 +213,8 @@ Route::group([
     Route::get('chart', [DashboardController::class, 'chart']);
     //Analytics
     Route::get('analytics', [DashboardController::class, 'analytics']);
+    //TopDoctors
+    Route::get('topDoctors', [DashboardController::class, 'topDoctors']);
 });
 
 Route::group([

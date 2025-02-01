@@ -29,21 +29,35 @@ class BookingService extends BaseService
     {
         $agrument = $this->paginateAgrument($request, $auth);
         if (isset($auth->user_catalogue_id) && $auth->user_catalogue_id == 2) {
-            $agrument['whereHas'] = $this->whereHas($auth->id);
+            $agrument['whereHas'] = $this->whereHasDoctor($auth->id);
         } else {
             if ($request->input('user_id')) {
-                $agrument['whereHas'] = $this->whereHas($request->input('user_id'));
+                $agrument['whereHas'] = $this->whereHasDoctor($request);
             }
+        }
+        if ($request->input('date')) {
+            $agrument['whereHas'] = $this->whereHasDate($request);
         }
         $bookings = $this->bookingRepository->pagination([...$agrument]);
         return $bookings;
     }
 
-    private function whereHas($user_id)
+
+
+    private function whereHasDate($request)
     {
         return [
-            'doctors' => function ($query) use ($user_id) {
-                $query->where('user_id', $user_id)
+            'schedules' => function ($query) use ($request) {
+                $query->where('date', $request->input('date'));
+            }
+        ];
+    }
+
+    private function whereHasDoctor($request)
+    {
+        return [
+            'doctors' => function ($query) use ($request) {
+                $query->where('user_id', $request->input('user_id'))
                     ->where('publish', 2);
             }
         ];

@@ -99,6 +99,7 @@ const Booking = () => {
                             handleQueryString={(filters: any) => handleQueryString(filters)}
                             items={filterItems}
                             status={status}
+                            filterDate={true}
                         />
                         <CustomTable
                             isLoading={isLoading}
