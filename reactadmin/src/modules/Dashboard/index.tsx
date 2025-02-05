@@ -8,6 +8,7 @@ import { useQuery } from "react-query"
 import PageHeading from "../../components/heading"
 import { tableColumn } from "./settings"
 import ChartTwo from "@/components/Charts/ChartTwo"
+import ChatCard from "@/components/Chat/ChatCard"
 const Dashboard = () => {
     const breadcrumb = {
         title: 'Thống kê chung',
@@ -42,7 +43,7 @@ const Dashboard = () => {
                 <TableOne
                     tableColumn={tableColumn}
                 />
-                {/* <ChatCard /> */}
+                <ChatCard />
             </div>
         </>
     )
