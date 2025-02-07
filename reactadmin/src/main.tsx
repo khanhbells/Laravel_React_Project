@@ -57,8 +57,15 @@ import ScheduleIndex from '@/modules/Schedule/screens';
 import ScheduleCreate from '@/modules/Schedule/screens/Store';
 //System
 import SytemIndex from '@/modules/System/screens';
-//System
+//Booking
 import BookingIndex from '@/modules/Booking/screens';
+import BookingMedicine from './modules/Booking/screens/include/StoreBookingMedicine';
+//Medicine
+import MedicineIndex from './modules/Medicine/screens';
+import MedicineStore from './modules/Medicine/screens/Store';
+//Medicine Catalogue
+import MedicineCatalogueIndex from './modules/MedicineCatalogue/screens';
+import MedicineCatalogueStore from './modules/MedicineCatalogue/screens/Store';
 /*--------------------------UI/UX------------------------- */
 import LayoutFrontend from './components/Frontend/Layout';
 import HomePage from './components/Frontend';
@@ -74,6 +81,7 @@ import SignInIndex from './components/Frontend/Section/Login/SignIn';
 import NoAuthPatientMiddleware from './middleware/NoPatientMiddleware';
 import AuthPatienMiddleware from './middleware/AuthPatientMiddleware';
 import HistoryIndex from './components/Frontend/Section/History';
+
 
 const router = createBrowserRouter([
   {
@@ -122,6 +130,13 @@ const router = createBrowserRouter([
       { path: "/schedule/create", element: <ScheduleCreate /> },
       { path: "/system/index", element: <SytemIndex /> },
       { path: "/booking/index", element: <BookingIndex /> },
+      { path: "/booking/medicine/:id", element: <BookingMedicine /> },
+      { path: "/medicine/index", element: <MedicineIndex /> },
+      { path: "/medicine/create", element: <MedicineStore /> },
+      { path: "/medicine/update/:id", element: <MedicineStore /> },
+      { path: "/medicine/catalogue/index", element: <MedicineCatalogueIndex /> },
+      { path: "/medicine/catalogue/create", element: <MedicineCatalogueStore /> },
+      { path: "/medicine/catalogue/update/:id", element: <MedicineCatalogueStore /> },
     ]
   },
   {

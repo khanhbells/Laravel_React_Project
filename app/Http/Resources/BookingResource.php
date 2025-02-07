@@ -43,6 +43,15 @@ class BookingResource extends JsonResource
             'method' => $this->method,
             'birthday' => $this->birthday,
             'gender' => (string)$this->gender,
+            'medicines' => $this->medicines->map(function ($medicine) {
+                return [
+                    'id' => $medicine->id,
+                    'name' => $medicine->name,
+                    'dosage' => $medicine->pivot->dosage,
+                    'qty' => $medicine->pivot->qty,
+                    'usage' => $medicine->pivot->usage,
+                ];
+            }) ?? null
         ];
     }
 }

@@ -9,6 +9,7 @@ import { ActionParam, ButtonAction, OpenSheetFunction, Select } from "@/interfac
 //HOOK
 import dayjs from "dayjs";
 
+export const redirectIfSuccess = '/booking/index'
 
 const breadcrumb = {
 
@@ -19,6 +20,11 @@ const breadcrumb = {
     update: {
         title: 'Cập nhật thông tin',
         description: 'Dưới đây là thông tin đơn đặt lịch khám của bệnh nhân. Các bác sĩ chú ý xem kỹ rồi xác nhận và sắp xếp thời gian thăm khám bệnh nhân đúng hẹn!',
+    },
+    create: {
+        title: 'Thêm mới đơn thuốc khám',
+        description: 'Dưới đây là thông tin các thuốc khám. Các bác sĩ chú ý xem kỹ tình trạng của bệnh nhân rồi lựa chọn thuốc hợp lý!',
+        route: 'booking/medicine/:id'
     },
 
 }
@@ -127,6 +133,6 @@ export {
     model,
     tableColumn,
     optionStatus,
-    optionPaymentStatus
+    optionPaymentStatus,
 };
 

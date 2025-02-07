@@ -2,10 +2,14 @@
 import { useQuery } from "react-query";
 //COMPONENT
 import LoadingButton from "@/components/LoadingButton";
+import { Button } from "@/components/ui/button";
+import BookingDoctorSchedule from "@/components/BookingDoctorSchedule";
+import BookingInforPatient from "@/components/BookingInforPatient";
 //HOOK
 import useFormSubmit from "@/hook/useFormSubmit";
 import useSetFormValue from "@/hook/useSetFormValue";
 import { FormProvider, useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 //SETTING
 import { UpdateStatusBooking } from "@/interfaces/types/BookingType";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -17,14 +21,18 @@ import CustomSelectBox from "@/components/CustomSelectBox";
 import { UserCatalogueStoreProps } from "@/interfaces/UserCatalogueInterface";
 import { useEffect, useMemo, useState } from "react";
 //SETTINGS
-import BookingDoctorSchedule from "@/components/BookingDoctorSchedule";
-import BookingInforPatient from "@/components/BookingInforPatient";
-import { optionPaymentStatus, optionStatus } from "../../setting";
+
+import { optionPaymentStatus, optionStatus } from "../../settings";
+
 import { endpoint } from "@/constant/endpoint";
+import BookingMedicine from "@/components/BookingMedicine";
 
 
 
 const Store = ({ id, action, refetch, closeSheet }: UserCatalogueStoreProps) => {
+
+    const navigate = useNavigate();
+
     const schema = yup.object().shape({
         status: yup.string().required('Bạn chưa chọn trạng thái đơn đặt lịch khám'),
         payment_status: yup.string().required('Bạn chưa chọn trạng thái thanh toán')
@@ -73,13 +81,17 @@ const Store = ({ id, action, refetch, closeSheet }: UserCatalogueStoreProps) => 
     }, [status, paymentStatus])
 
     //follow data seen update
-    //Set value cho input update để gửi dữ liệu
     useSetFormValue({
         isLoading,
         data,
         action,
         setValue
     })
+
+    //handle booking medicine
+    const handleBookingMedicine = () => {
+        navigate(`/booking/medicine/${data?.id}`)
+    }
     return (
         <>
             <BookingInforPatient
@@ -88,6 +100,12 @@ const Store = ({ id, action, refetch, closeSheet }: UserCatalogueStoreProps) => 
             <BookingDoctorSchedule
                 data={data}
             />
+            {
+                data && data.medicines && data.medicines.length > 0 &&
+                <BookingMedicine
+                    data={data}
+                />
+            }
             <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(onSubmitHanler)}>
                     <div className="">
@@ -129,11 +147,27 @@ const Store = ({ id, action, refetch, closeSheet }: UserCatalogueStoreProps) => 
                         }
 
                     </div>
-                    <div className="mt-[30px] float-right">
-                        <LoadingButton
-                            loading={loading}
-                            text="Lưu thông tin"
-                        />
+                    <div className="flex justify-between">
+                        {
+                            isValueStatus.value === 'confirm' && isValuePaymentStatus.value === 'confirm' && data?.medicines?.length === 0 &&
+                            (
+                                <div className="mt-[30px] float-right">
+                                    <Button
+                                        type="button"
+                                        className="text-xs bg-yellow-500 text-white hover:bg-orange-500 py-2 rounded-md"
+                                        onClick={() => handleBookingMedicine()}
+                                    >
+                                        Kê đơn thuốc
+                                    </Button>
+                                </div>
+                            )
+                        }
+                        <div className="mt-[30px] float-right">
+                            <LoadingButton
+                                loading={loading}
+                                text="Lưu thông tin"
+                            />
+                        </div>
                     </div>
                 </form>
             </FormProvider>

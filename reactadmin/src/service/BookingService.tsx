@@ -3,11 +3,12 @@ import { baseDestroy } from "./BaseService";
 import { baseSave } from "./BaseService";
 import { handleAxiosError } from "@/helper/axiosHelper";
 import { useNavigate } from "react-router-dom";
+import { BookingMedicinePayloadInput, BookingPayloadForSubmit } from "@/interfaces/types/BookingMedicineType";
 export interface IBooking {
     [key: string]: string | undefined
 }
 
-const endpoint = 'frontend/bookings'
+const endpoint = 'bookings'
 
 const pagination = async (queryString: string) => {
     try {
@@ -26,12 +27,14 @@ const save = async (payload: IBooking, updateParams: { action: string, id: strin
     return baseSave(`/${endpoint}`, payload, updateParams)
 }
 
-const update = async (payload: IBooking) => {
-    //     header: {
-    //         'Content-Type': 'multipart/form-data'
-    //     }
-}
+const saveBookingMedicine = async (payload: BookingMedicinePayloadInput, updateParams: { action: string, id: string | undefined }, endpoint?: string): Promise<any> => {
+    const payloadSubmit: BookingPayloadForSubmit = {
+        ...payload,
+        medicines: JSON.stringify(payload.medicines)
+    }
 
+    return baseSave(`${endpoint}`, payloadSubmit, updateParams)
+}
 const destroy = async (id: string) => {
 
 
@@ -40,7 +43,7 @@ const destroy = async (id: string) => {
 }
 
 const getBookingById = async (id: string | undefined): Promise<IBooking> => {
-    const response = await axios.get(`${endpoint}/${id}`)
+    const response = await axios.get(`frontend/${endpoint}/${id}`)
     return response.data
 }
 
@@ -48,5 +51,6 @@ export {
     destroy,
     getBookingById,
     pagination,
-    save
+    save,
+    saveBookingMedicine
 };

@@ -40,12 +40,19 @@ class Booking extends Model
     {
         return $this->belongsTo(Province::class, 'province_id', 'code');
     }
+
     public function districts()
     {
         return $this->belongsTo(District::class, 'district_id', 'code');
     }
+
     public function wards()
     {
         return $this->belongsTo(Ward::class, 'ward_id', 'code');
+    }
+
+    public function medicines(): BelongsToMany
+    {
+        return $this->belongsToMany(Medicine::class, 'booking_medicine', 'booking_id', 'medicine_id')->withPivot('dosage', 'qty', 'usage')->withTimestamps();
     }
 }

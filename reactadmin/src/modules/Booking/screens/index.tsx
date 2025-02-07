@@ -25,7 +25,7 @@ import useCheckBoxState from "@/hook/useCheckBoxState"
 import useSheet from "@/hook/useSheet"
 import CustomSheet from "@/components/CustomSheet"
 //settings
-import { breadcrumb, tableColumn, model, buttonActions } from "../setting"
+import { breadcrumb, tableColumn, model, buttonActions } from "../settings"
 import { filterItems } from "@/settings/globalSettings"
 import { SelectConfig } from "@/components/CustomFilter"
 //contexts

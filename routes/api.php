@@ -20,6 +20,9 @@ use App\Http\Controllers\Api\V1\ScheduleController;
 use App\Http\Controllers\Api\V1\SystemController;
 use App\Http\Controllers\Api\V1\BookingController;
 use App\Http\Controllers\Api\V1\AuthPatientController;
+use App\Http\Controllers\Api\V1\MedicineCatalogueController;
+use App\Http\Controllers\Api\V1\MedicineController;
+
 use App\Http\Resources\DoctorResource;
 use App\Models\SpecialtyCatalogue;
 use Illuminate\Support\Facades\Route;
@@ -190,6 +193,24 @@ Route::group([
     Route::put('systems/{id}/status', [SystemController::class, 'updateStatusByField']);
 
     // -------------------------------------------------------------------------------
+    // Medicine Catalogue
+    Route::get('medicine_catalogues', [MedicineCatalogueController::class, 'index']);
+    Route::get('medicine_catalogues/{id}', [MedicineCatalogueController::class, 'show']);
+    Route::post('medicine_catalogues', [MedicineCatalogueController::class, 'create']);
+    Route::put('medicine_catalogues/{id}', [MedicineCatalogueController::class, 'update']);
+    Route::delete('medicine_catalogues/{id}', [MedicineCatalogueController::class, 'destroy']);
+    Route::put('medicine_catalogues/{id}/status', [MedicineCatalogueController::class, 'updateStatusByField']);
+
+    // -------------------------------------------------------------------------------
+    // Medicine
+    Route::get('medicines', [MedicineController::class, 'index']);
+    Route::get('medicines/{id}', [MedicineController::class, 'show']);
+    Route::post('medicines', [MedicineController::class, 'create']);
+    Route::put('medicines/{id}', [MedicineController::class, 'update']);
+    Route::delete('medicines/{id}', [MedicineController::class, 'destroy']);
+    Route::put('medicines/{id}/status', [MedicineController::class, 'updateStatusByField']);
+
+    // -------------------------------------------------------------------------------
 
     //ALL
     Route::delete('records/delete/batch', [DashboardController::class, 'deleteBatch']);
@@ -206,7 +227,10 @@ Route::group([
     // COMMON REQUEST
     Route::post('sort', [DashboardController::class, 'sort']);
     //BOOKINGS
-    Route::get('frontend/bookings', [BookingController::class, 'index']);
+    Route::get('bookings', [BookingController::class, 'index']);
+    Route::post('bookings', [BookingController::class, 'create']);
+    Route::put('bookings/{id}', [BookingController::class, 'update']);
+    Route::put('bookings/medicine/{id}', [BookingController::class, 'storeBookingMedicine']);
     //STATISTIC
     Route::get('statistic', [DashboardController::class, 'statistic']);
     //Chart
@@ -250,8 +274,7 @@ Route::group([
     Route::get('schedules', [ScheduleController::class, 'index']);
     //BOOKINGS
     Route::get('bookings/{id}', [BookingController::class, 'show']);
-    Route::post('bookings', [BookingController::class, 'create']);
-    Route::put('bookings/{id}', [BookingController::class, 'update']);
+
     //SignUp
     Route::post('patients', [PatientController::class, 'signUp']);
 });

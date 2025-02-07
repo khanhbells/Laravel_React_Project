@@ -43,7 +43,7 @@ const Dashboard = () => {
                 <TableOne
                     tableColumn={tableColumn}
                 />
-                <ChatCard />
+                {/* <ChatCard /> */}
             </div>
         </>
     )

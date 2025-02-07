@@ -1,5 +1,5 @@
 //REACT
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
 import { useFormContext } from "react-hook-form";
 //COMPONENT
@@ -12,6 +12,7 @@ import {
 import Select from "react-select";
 //INTERFACE
 import { Option } from "@/components/CustomSelectBox";
+import { useDispatch } from "react-redux";
 
 
 interface IParentProps {
@@ -19,7 +20,8 @@ interface IParentProps {
     options: Option[],
     showMultiple?: boolean,
     showMultipleName?: string,
-    label?: string
+    label?: string,
+    [key: string]: any
 }
 
 const Parent = ({
@@ -27,13 +29,31 @@ const Parent = ({
     options = [],
     showMultiple = false,
     showMultipleName,
-    label
+    label,
+    ...restProps
 }: IParentProps) => {
-
-    const { register, formState: { errors } } = useFormContext()
+    const dispatch = useDispatch()
+    const {
+        register,
+        formState: { errors },
+        control,
+        getValues
+    } = useFormContext()
     const errorMessage = errors[name]?.message
 
     const [defaultSelectValue, _] = useState<Option | null>(null)
+
+    useEffect(() => {
+        // Lấy giá trị hiện tại của field
+        const currentValue = getValues(name);
+
+        // Nếu không có giá trị, dispatch setId('')
+        if (!currentValue) {
+            setTimeout(() => {
+                restProps.setId && dispatch(restProps.setId(null));
+            }, 10); // Chờ 10ms để tránh delay render
+        }
+    }, [name, getValues, dispatch, restProps]);
 
     const combinedOptions = [
         ...options.filter(option => option.value !== '0')
@@ -52,15 +72,17 @@ const Parent = ({
                     <span className="text-[#f00] text-[12px] mb-[10px] block">{label ? '' : '*Chọn Root nếu không có danh mục cha'}</span>
                     <Controller
                         name={name}
-                        // control={control}
-                        // defaultValue={defaultParentValue?.value || null}
+                        control={control}
+                        defaultValue={getValues(name) || null}
                         render={({ field }) => (
                             <Select
                                 options={combinedOptions}
                                 className="w-full text-[12px]"
                                 placeholder={label ?? 'Danh mục chính'}
                                 onChange={(selected) => {
-                                    field.onChange(selected?.value)
+                                    const selectedValue = selected?.value || ''; // Nếu không có giá trị, gán thành ''
+                                    field.onChange(selectedValue);
+                                    restProps.setId && dispatch(restProps.setId(selectedValue));
                                 }}
                                 value={combinedOptions?.find(option => option.value === field.value) || null}
                             />

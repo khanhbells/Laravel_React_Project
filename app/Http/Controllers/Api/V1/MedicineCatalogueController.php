@@ -4,42 +4,42 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Post\DeletePostCatalogueRequest;
+use App\Http\Requests\Medicine\DeleteMedicineCatalogueRequest;
 use Illuminate\Http\Request;
-use App\Http\Resources\PostCatalogueResource;
-use App\Services\Post\PostCatalogueService;
-use App\Repositories\Post\PostCatalogueRepository;
+use App\Http\Resources\MedicineCatalogueResource;
+use App\Services\Medicine\MedicineCatalogueService;
+use App\Repositories\Medicine\MedicineCatalogueRepository;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UpdateByFieldRequest;
-use App\Http\Requests\Post\StorePostCatalogueRequest;
+use App\Http\Requests\Medicine\StoreMedicineCatalogueRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class PostCatalogueController extends Controller
+class MedicineCatalogueController extends Controller
 {
     use AuthorizesRequests;
-    protected $postCatalogueService;
-    protected $postCatalogueRepository;
+    protected $medicineCatalogueService;
+    protected $medicineCatalogueRepository;
     protected $auth;
 
     public function __construct(
-        PostCatalogueService $postCatalogueService,
-        PostCatalogueRepository $postCatalogueRepository,
+        MedicineCatalogueService $medicineCatalogueService,
+        MedicineCatalogueRepository $medicineCatalogueRepository,
     ) {
-        $this->postCatalogueService = $postCatalogueService;
-        $this->postCatalogueRepository = $postCatalogueRepository;
+        $this->medicineCatalogueService = $medicineCatalogueService;
+        $this->medicineCatalogueRepository = $medicineCatalogueRepository;
         $this->auth = auth('api')->user();
     }
 
     public function index(Request $request)
     {
         try {
-            $this->authorize('modules', '/post/catalogue/index');
-            $postCatalogues = $this->postCatalogueService->paginate($request);
+            $this->authorize('modules', '/medicine/catalogue/index');
+            $medicineCatalogues = $this->medicineCatalogueService->paginate($request);
             return response()->json([
-                'post_catalogues' =>  method_exists($postCatalogues, 'items') ? PostCatalogueResource::collection($postCatalogues->items()) : $postCatalogues,
-                'links' => method_exists($postCatalogues, 'items') ? $postCatalogues->linkCollection() : null,
-                'current_page' => method_exists($postCatalogues, 'items') ? $postCatalogues->currentPage() : null,
-                'last_page' => method_exists($postCatalogues, 'items') ? $postCatalogues->lastPage() : null,
+                'medicine_catalogues' =>  method_exists($medicineCatalogues, 'items') ? MedicineCatalogueResource::collection($medicineCatalogues->items()) : $medicineCatalogues,
+                'links' => method_exists($medicineCatalogues, 'items') ? $medicineCatalogues->linkCollection() : null,
+                'current_page' => method_exists($medicineCatalogues, 'items') ? $medicineCatalogues->currentPage() : null,
+                'last_page' => method_exists($medicineCatalogues, 'items') ? $medicineCatalogues->lastPage() : null,
             ], Response::HTTP_OK);
         } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
             return response()->json([
@@ -53,12 +53,12 @@ class PostCatalogueController extends Controller
     public function create(Request $request)
     {
         $auth = auth('api')->user();
-        $data = $this->postCatalogueService->create($request, $auth);
+        $data = $this->medicineCatalogueService->create($request, $auth);
 
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
                 'message' => 'Thêm mới bản ghi thành công',
-                'post_catalogues' => new PostCatalogueResource($data['postCatalogue'])
+                'medicine_catalogues' => new MedicineCatalogueResource($data['medicineCatalogue'])
             ], Response::HTTP_OK);
         }
         return response()->json([
@@ -69,12 +69,12 @@ class PostCatalogueController extends Controller
     public function update(Request $request, $id)
     {
         $auth = auth('api')->user();
-        $data = $this->postCatalogueService->update($request, $id, $auth);
+        $data = $this->medicineCatalogueService->update($request, $id, $auth);
         // return $data;
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
                 'message' => 'Cập nhật bản ghi thành công',
-                'post_catalogues' => new PostCatalogueResource($data['postCatalogue']),
+                'medicine_catalogues' => new MedicineCatalogueResource($data['medicineCatalogue']),
                 'code' => Response::HTTP_OK
             ], Response::HTTP_OK);
         }
@@ -90,9 +90,9 @@ class PostCatalogueController extends Controller
                     'message' => 'Không tìm thấy dữ liệu phù hợp'
                 ], Response::HTTP_NOT_FOUND);
             }
-            $postCatalogue = $this->postCatalogueRepository->findById($id);
+            $medicineCatalogue = $this->medicineCatalogueRepository->findById($id);
             return response()->json(
-                new PostCatalogueResource($postCatalogue)
+                new MedicineCatalogueResource($medicineCatalogue)
             );
         } catch (\Exception $e) {
             return response()->json([
@@ -102,17 +102,17 @@ class PostCatalogueController extends Controller
         }
     }
 
-    public function destroy($id, DeletePostCatalogueRequest $request)
+    public function destroy($id, DeleteMedicineCatalogueRequest $request)
     {
-        $postCatalogue = $this->postCatalogueRepository->findById($id);
-        if (!$postCatalogue) {
+        $medicineCatalogue = $this->medicineCatalogueRepository->findById($id);
+        if (!$medicineCatalogue) {
             return response()->json([
                 'message' => 'Không tìm thấy bản ghi cần xóa',
                 'code' => Status::SUCCESS
             ], Response::HTTP_NOT_FOUND);
         }
 
-        if ($this->postCatalogueService->delete($id, $this->auth)) {
+        if ($this->medicineCatalogueService->delete($id, $this->auth)) {
             return response()->json([
                 'message' => 'Xóa bản ghi thành công',
                 'code' => Status::SUCCESS
@@ -126,8 +126,8 @@ class PostCatalogueController extends Controller
 
     public function updateStatusByField(UpdateByFieldRequest $request, $id)
     {
-        $respository = 'App\Repositories\Post\PostCatalogueRepository';
-        if ($this->postCatalogueService->updateByField($request, $id, $respository)) {
+        $respository = 'App\Repositories\Medicine\MedicineCatalogueRepository';
+        if ($this->medicineCatalogueService->updateByField($request, $id, $respository)) {
 
             return response()->json([
                 'message' =>  'Cập nhật dữ liệu thành công',

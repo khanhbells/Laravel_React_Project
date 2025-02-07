@@ -10,6 +10,7 @@ export const queryKey = {
     hospitals: 'hospitals',
     doctors: 'doctors',
     timeSlots: 'timeSlots',
-    systems: 'systems'
+    systems: 'systems',
+    medicineCatalogues: 'medicine_catalogues',
 
 }

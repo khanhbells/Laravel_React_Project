@@ -27,7 +27,7 @@ class PostController extends Controller
     ) {
         $this->postService = $postService;
         $this->postRepository = $postRepository;
-        $this->auth = auth()->user();
+        $this->auth = auth('api')->user();
     }
 
     public function index(Request $request)
@@ -54,7 +54,7 @@ class PostController extends Controller
 
     public function create(StorePostRequest $request)
     {
-        $auth = auth()->user();
+        $auth = auth('api')->user();
         $data = $this->postService->create($request, $auth);
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
@@ -69,7 +69,7 @@ class PostController extends Controller
 
     public function update(UpdatePostRequest $request, $id)
     {
-        $auth = auth()->user();
+        $auth = auth('api')->user();
         $data = $this->postService->update($request, $id, $auth);
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([

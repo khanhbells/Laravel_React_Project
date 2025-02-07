@@ -12,9 +12,6 @@ use App\Repositories\Booking\BookingRepository;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Booking\StoreBookingRequest;
 use App\Http\Requests\Booking\UpdateBookingRequest;
-use App\Mail\BookingMail;
-use App\Mail\ConfirmBooking;
-use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
@@ -109,6 +106,19 @@ class BookingController extends Controller
             return response()->json([
                 'message' => 'Cập nhật bản ghi thành công',
                 'booking' => new BookingResource($data['booking']),
+                'code' => Response::HTTP_OK
+            ], Response::HTTP_OK);
+        }
+    }
+
+    public function storeBookingMedicine(Request $request, $id)
+    {
+        $data = $this->bookingService->createBookingMedicine($request, $id);
+        return $data;
+        if ($data['code'] == Status::SUCCESS) {
+            return response()->json([
+                'message' => 'Tạo bản ghi thành công',
+                'booking' => $data['bookingMedicine'],
                 'code' => Response::HTTP_OK
             ], Response::HTTP_OK);
         }

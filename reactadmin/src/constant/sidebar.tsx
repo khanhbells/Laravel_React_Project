@@ -7,6 +7,7 @@ import { FaUserInjured } from "react-icons/fa6";
 import { IoSettingsOutline } from "react-icons/io5";
 import { GrSchedules } from "react-icons/gr";
 import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
+import { GiMedicines } from "react-icons/gi";
 export const sidebarItem = [
     {
         label: 'MAIN',
@@ -82,6 +83,21 @@ export const sidebarItem = [
                         title: 'Bài viết',
                         to: '/post/index'
                     },
+                ]
+            },
+            {
+                icon: <GiMedicines className="text-sm mr-2" />,
+                active: ['medicine'],
+                label: 'Quản Lý Thuốc',
+                links: [
+                    {
+                        title: 'Loại thuốc',
+                        to: '/medicine/catalogue/index'
+                    },
+                    {
+                        title: 'Thuốc',
+                        to: '/medicine/index'
+                    }
                 ]
             },
             {

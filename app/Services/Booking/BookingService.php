@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Enums\Status;
 use App\Http\Resources\BookingResource;
 use App\Mail\BookingMail;
+use App\Mail\BookingMedicineMail;
 use App\Mail\ConfirmBooking;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -179,6 +180,44 @@ class BookingService extends BaseService
         }
     }
 
+    public function createBookingMedicine($request, $id)
+    {
+
+        DB::beginTransaction();
+        try {
+            $replaceMedicine = json_decode($request->input('medicines'), true);
+            $booking = $this->bookingRepository->findById($id);
+            $temp = [];
+            if (!is_null($replaceMedicine)) {
+                foreach ($replaceMedicine as $key => $value) {
+                    $temp[] = [
+                        'booking_id' => $id,
+                        ...$value
+                    ];
+                }
+            }
+
+            $pivotBookingMedicine = $booking->medicines()->sync($temp);
+            if (count($pivotBookingMedicine['attached'])) {
+                $dataBooking = new BookingResource($booking);
+                if ($dataBooking->status == 'confirm' || $dataBooking->status == 'stop') {
+                    $this->sendMedicineMail($dataBooking);
+                }
+            }
+            DB::commit();
+            return [
+                'bookingMedicine' => $temp,
+                'code' => Status::SUCCESS
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return [
+                'code' => Status::ERROR,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
     private function confirmMail($dataBooking)
     {
         $to = $dataBooking->email;
@@ -191,5 +230,12 @@ class BookingService extends BaseService
         $to = $dataBooking->email;
         $cc = 'dtc2054802010305@ictu.edu.vn';
         Mail::to($to)->cc($cc)->send(new BookingMail($dataBooking));
+    }
+
+    private function sendMedicineMail($dataBooking)
+    {
+        $to = $dataBooking->email;
+        $cc = 'dtc2054802010305@ictu.edu.vn';
+        Mail::to($to)->cc($cc)->send(new BookingMedicineMail($dataBooking));
     }
 }
