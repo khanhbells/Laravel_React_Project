@@ -3,7 +3,7 @@ import { baseDestroy } from "./BaseService";
 import { baseSave } from "./BaseService";
 import { handleAxiosError } from "@/helper/axiosHelper";
 import { useNavigate } from "react-router-dom";
-export interface IBooking {
+export interface IHistory {
     [key: string]: string | undefined
 }
 
@@ -23,12 +23,12 @@ const pagination = async (queryString: string) => {
 }
 
 
-const getBookingById = async (id: string | undefined): Promise<IBooking> => {
+const getHistoryById = async (id: string | undefined): Promise<IHistory> => {
     const response = await axios.get(`${endpoint}/${id}`)
     return response.data
 }
 
 export {
-    getBookingById,
+    getHistoryById,
     pagination,
 };

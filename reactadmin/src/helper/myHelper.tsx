@@ -134,3 +134,27 @@ export const formatCatalogueName = (catalogue: { [key: string]: any }, labelKey:
 export const removeHtmlTags = (input: any) => {
     return input.replace(/<[^>]*>/g, '')
 }
+
+export const writeUrl = (
+    canonical: string = '',
+    model: string = '',
+    id: string = '',
+    subCanonical: string[] = [],
+    subId: string[] = [],
+    html: boolean = true
+) => {
+    let url = `/homepage/${model}/${id}/${canonical}`;
+
+    // Nếu có subCanonical, subModel, subId thì nối thêm vào URL
+    if (subId.length > 0) {
+        const subPaths = subId.map((sub, index) => {
+            const subCan = subCanonical[index] || '';
+            return `${sub}/${subCan}`;
+        });
+
+        url += '/' + subPaths.join('/');
+    }
+
+    // Nếu html = true, thêm ".html" vào cuối URL
+    return html ? `${url}.html` : url;
+};

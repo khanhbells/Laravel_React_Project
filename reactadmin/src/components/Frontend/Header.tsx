@@ -4,17 +4,33 @@ import { Link } from 'react-router-dom';
 import { RootState } from '@/redux/store'
 import { useSelector } from "react-redux"
 import { usePatientContext } from '@/contexts/PatientContext';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { LoadingSpinner } from '../ui/loading';
 import { Button } from '../ui/button';
 import { logout } from '@/service/Frontend/AuthPatientService';
 import { setAuthPatientLogout } from "@/redux/slide/authPatientSlice";
 import { useDispatch } from "react-redux";
-
+import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from 'react-query';
+import { menus } from '@/service/Frontend/FrontEndService';
+import { endpoint } from '@/constant/endpoint';
+import { RiTiktokLine } from 'react-icons/ri';
+import { writeUrl } from '@/helper/myHelper';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { CgProfile } from "react-icons/cg";
+import { IoExitOutline } from "react-icons/io5";
 const Header = () => {
+    //-------------REDUX-CONTEXT-----------------------
     const { isAuthenticated, patient: patientRedux } = useSelector((state: RootState) => state.patient)
     const { patient: patientContext, setPatient } = usePatientContext()
-    const dispatch = useDispatch();
     const handleLogout = async () => {
         try {
             const response = await logout();
@@ -25,45 +41,129 @@ const Header = () => {
         } catch (error) {
             console.error('Logout failed:', error);
         }
-
     }
-
+    //---------------QUERY---------------------
+    const { data, isLoading, isError } = useQuery(['menus'],
+        () => menus('', endpoint.menus)
+    )
+    const menuData = useMemo(() => {
+        if (data && !isLoading && data.menus) {
+            return [
+                {
+                    title: 'Dịch vụ khám',
+                    subItems: data.menus.specialty_catalogues,
+                    model: 'specialty'
+                },
+                {
+                    title: 'Cơ sở y tế',
+                    subItems: data.menus.hospitals,
+                    model: 'hospital'
+                },
+                {
+                    title: 'Bài viết',
+                    subItems: data.menus.post_catalogues,
+                    model: 'post'
+                },
+                {
+                    title: 'Giới thiệu',
+                },
+                {
+                    title: 'Liên hệ',
+                },
+            ]
+        }
+        return []
+    }, [data, isLoading])
     useEffect(() => {
-        console.log(patientContext, patientRedux);
-    }, [patientContext, patientRedux])
+        console.log(menuData);
+    }, [menuData])
+    const dispatch = useDispatch();
+
+    const [openIndex, setOpenIndex] = useState(null); // Lưu ID của menu đang mở
+
+    const handleMouseEnter = (index: any) => {
+        setOpenIndex(index);
+    };
+
+    const handleMouseLeave = () => {
+        setOpenIndex(null);
+    };
 
     return (
         <>
             <header className="bg-sky-50 ">
-                <div className='w-[100%] h-[100%] flex justify-between'>
-                    <div className=' w-[25%] flex items-center'>
+                <div className='grid grid-cols-12 h-[100%]'>
+                    <div className='col-span-3 flex items-center'>
                         <Link to={`/homepage`}>
-                            <img src={logo} className=' w-[100%] h-[100%] bg-contain cursor-pointer transform scale-50' />
+                            <img src={logo} className='w-[70%] h-[70%] bg-contain cursor-pointer transform scale-50' />
                         </Link>
-                        <div className='w-[100%] h-[100%] bg-contain cursor-pointer transform scale-50'></div>
+                        {/* <div className='w-[100%] h-[100%] bg-contain cursor-pointer transform scale-50'></div> */}
                     </div>
-                    {/* <div className=' w-[50%] flex justify-between items-center'>
-                        <div className='child-content'>
-                            <div><b>Chuyên khoa</b></div>
-                            <div className='subs-title text-[12px] font-normal'>Tìm bác sĩ theo chuyên khoa</div>
-                        </div>
-                        <div className='child-content'>
-                            <div><b>Cơ sở y tế</b></div>
-                            <div className='subs-title text-[12px] font-normal'>Chọn bệnh viện phòng khám</div>
-                        </div>
-                        <div className='child-content'>
-                            <div><b>Bác sĩ</b></div>
-                            <div className='subs-title text-[12px] font-normal'>Chọn bác sĩ giỏi</div>
-                        </div>
-                        <div className='child-content'>
-                            <div><b>Gói khám</b></div>
-                            <div className='subs-title text-[12px] font-normal'>Khám sức khỏe tổng quát</div>
-                        </div>
-                    </div> */}
+                    <div className='col-span-7 flex justify-between items-center'>
+                        <ul className="relative w-full justify-between md:flex md:items-center">
+                            {menuData.map((item, index) => (
+                                <li
+                                    key={index}
+                                    className="relative"
+                                    onMouseEnter={() => handleMouseEnter(index)}
+                                    onMouseLeave={handleMouseLeave}
+                                >
+                                    <a href="#">
+                                        <span className="flex items-center gap-2 text-base font-medium hover:text-sky-400">
+                                            <p className="text-primary mb-0 font-montserrat font-semibold hover:text-sky-400">
+                                                {item.title}
+                                            </p>
+                                            {
+                                                item.subItems &&
+                                                <motion.span
+                                                    animate={{ rotate: openIndex === index ? 180 : 0 }}
+                                                    transition={{ duration: 0.3 }}
+                                                    className="w-[20px] h-[20px]"
+                                                >
+                                                    <svg viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path
+                                                            d="M5.25383 15.7071C5.64435 16.0976 6.27752 16.0976 6.66804 15.7071L12.9609 9.41421L19.2538 15.7071C19.6444 16.0976 20.2775 16.0976 20.668 15.7071C21.0586 15.3166 21.0586 14.6834 20.668 14.2929L13.668 7.29289C13.2775 6.90237 12.6444 6.90237 12.2538 7.29289L5.25383 14.2929C4.86331 14.6834 4.86331 15.3166 5.25383 15.7071Z"
+                                                            fill="currentColor"
+                                                        ></path>
+                                                    </svg>
+                                                </motion.span>
+                                            }
+                                        </span>
+                                    </a>
+                                    {/* Dropdown menu với hiệu ứng mượt */}
+                                    {
+                                        item.subItems &&
+                                        <AnimatePresence>
+                                            {openIndex === index && (
+                                                <motion.div
+                                                    className="bg-white min-w-[180px] absolute z-50 rounded-lg mt-[15px] border border-sky-400 shadow-md"
+                                                    initial={{ opacity: 0, y: -10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: 10 }}
+                                                    transition={{ duration: 0.3 }}
+                                                >
+                                                    <ul className="text-[#003553] font-roboto text-[12px]">
+                                                        {item.subItems && item.subItems.map((subItem: any, idx: number) => (
+                                                            <li
+                                                                key={idx}
+                                                                className="hover:bg-sky-100 hover:rounded-lg hover:text-sky-400 p-[10px]"
+                                                            >
+                                                                <Link to={writeUrl(subItem.canonical, item.model, subItem.id)}>{subItem.name}</Link>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    }
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                     {
                         patientRedux && patientRedux !== null ? (
-                            <div className='flex items-center w-[17%] mr-[10px]'>
-                                <Link className='w-[50%] flex items-center cursor-pointer justify-end font-semibold' to={`/homepage/history/${patientRedux.id}`}>
+                            <div className='col-span-2 items-center grid place-items-center'>
+                                {/* <Link className='w-[50%] flex items-center cursor-pointer justify-end font-semibold' to={`/homepage/history/${patientRedux.id}`}>
                                     <FaHistory
                                         className='mr-[10px]'
                                     />
@@ -73,19 +173,48 @@ const Header = () => {
                                     <Button onClick={() => handleLogout()} className='hover:text-[white] text-white px-[10px] py-[5px] bg-sky-300 rounded-lg font-semibold hover:bg-sky-400'>
                                         Đăng xuất
                                     </Button>
-                                </div>
+                                </div> */}
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger className="flex">
+                                        <Avatar className="mr-3">
+                                            <AvatarImage src={patientRedux.image} />
+                                            <AvatarFallback>CN</AvatarFallback>
+                                        </Avatar>
+                                        <div className="profile-content text-left">
+                                            <div className="font-semibold">{patientRedux.name}</div>
+                                            <div className="role text-xs text-[#536485]">{patientRedux.patient_catalogues}</div>
+                                        </div>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="top-[1px]">
+                                        <DropdownMenuLabel>Cài đặt tài khoản</DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem className="flex items-center text-[#333335] cursor-pointer">
+                                            <CgProfile className="mr-2 text-[18px]" />
+                                            <Link to={`/user/doctor/update/${patientRedux.id}`}>Thay đổi thông tin</Link>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem className="flex items-center text-[#333335] cursor-pointer">
+                                            <FaHistory className="mr-2 text-[18px]" />
+                                            <Link to={`/homepage/history/${patientRedux.id}`}>Lịch sử khám</Link>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem className="flex items-center text-[#333335] cursor-pointer" onClick={() => { handleLogout() }}>
+                                            <IoExitOutline className="mr-2 text-[18px]" />
+                                            Đăng xuất
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </div>
                         ) : patientRedux === null && patientContext !== null ? (
-                            <div className='flex items-center justify-items-center w-[15%] mr-[10px]'>
-                                <Link className='hover:text-[white] text-white text-center px-[10px] mr-[10px] w-[50%] py-[5px] bg-sky-300 rounded-lg font-semibold hover:bg-sky-400' to={`/patient/signin`}>
-                                    Đăng nhập
+                            <div className='col-span-2 items-center grid place-items-end'>
+                                <Link className='hover:text-[white] flex text-white text-center px-[10px] mr-[10px] w-[50%] py-[5px] bg-sky-300 rounded-lg font-semibold hover:bg-sky-400' to={`/patient/signin`}>
+                                    <CgProfile className="mr-2 text-[18px]" />
+                                    Tài khoản
                                 </Link>
-                                <Link className='hover:text-[white] text-white px-[10px] text-center w-[50%] py-[5px] bg-sky-300 rounded-lg font-semibold hover:bg-sky-400' to={`/patient/signup`}>
+                                {/* <Link className='hover:text-[white] text-white px-[10px] text-center w-[50%] py-[5px] bg-sky-300 rounded-lg font-semibold hover:bg-sky-400' to={`/patient/signup`}>
                                     Đăng ký
-                                </Link>
+                                </Link> */}
                             </div>
                         ) : patientContext === undefined || patientContext === null && (
-                            <div className="flex items-center w-[17%] mr-[10px] text-[10px]">
+                            <div className="col-span-2 items-center grid place-items-center">
                                 <LoadingSpinner className="mr-[5px]" />
                                 Loading...
                             </div>

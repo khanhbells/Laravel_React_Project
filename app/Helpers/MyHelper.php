@@ -82,5 +82,20 @@ if (!function_exists('convertRevenueChartData')) {
     }
 }
 
+if (!function_exists('callRepository')) {
+    function callRepository($model, $isFolder = true)
+    {
+        // Singular xóa chữ s ở cuối chuỗi
+        // Studly viết hoa chữ cái đầu
+        $singularModel = Str::singular($model);
+        $modelClass = Str::studly($singularModel);
+        $folder = Str::studly(current(explode('_', $singularModel)));
+
+        $repository = $isFolder ? "App\Repositories\\{$folder}\\{$modelClass}Repository"
+            : "App\Repositories\\{$modelClass}Repository";
+        return $repository;
+    }
+}
+
 // tác dụng của studly chuyển chuỗi thành kiểu chữ "StudlyCase" (còn gọi là PascalCase), trong đó mỗi từ bắt đầu bằng chữ cái viết hoa và không có dấu gạch dưới hoặc khoảng trắng.
 // tác dụng của singular chuyển đổi một chuỗi từ số nhiều (plural) thành số ít (singular).

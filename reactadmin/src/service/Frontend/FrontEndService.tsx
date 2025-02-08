@@ -22,6 +22,18 @@ const pagination = async (queryString: string, endpoint: string) => {
         };
     }
 }
+const menus = async (queryString: string, endpoint: string) => {
+    try {
+        const response = await axios.get(`/${endpoint}?${queryString}`)
+        return response.data
+    } catch (error: any) {
+        handleAxiosError(error)
+        return {
+            code: error?.response.status,
+            message: 'Không có quyền truy cập',
+        };
+    }
+}
 
 const save = async (payload: GetFrontEnd, updateParams: { action: string, id: string | undefined }, endpoint?: string): Promise<any> => {
     // console.log(payload);
@@ -39,4 +51,5 @@ export {
     save,
     findById,
     pagination,
+    menus
 };

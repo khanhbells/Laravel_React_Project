@@ -3,13 +3,12 @@ import React, { useEffect, useState } from "react"
 import { Checkbox } from "../components/ui/checkbox"
 import { Switch } from "../components/ui/switch"
 
-
 import { LoadingSpinner } from "../components/ui/loading"
 
 import useColumnState from "../hook/useColumnState"
 
 import useDialog from "@/hook/useDialog"
-import { CustomTableProps } from "@/interfaces/BaseServiceInterface"
+import { CustomTableProps, Row, ParamsToTuple } from "@/interfaces/BaseServiceInterface"
 import dayjs from "dayjs"
 import {
     Table,
@@ -19,6 +18,7 @@ import {
     TableHeader,
     TableRow,
 } from "../components/ui/table"
+import { Button } from "./ui/button"
 
 
 const TableHistoryPatient = ({
@@ -40,28 +40,32 @@ const TableHistoryPatient = ({
     //     console.log(data);
     // }, [data])
     const now = dayjs();
-
+    const { buttonActions } = restProps;
     //CONTEXT
 
     const { columnState, handleChecked, setInitialColumnState } = useColumnState()
     const { confirmAction, openAlertDialog, closeAlertDialog, alertDialogOpen, isLoading: isDialogLoading } = useDialog(refetch)
 
 
-    const [setDialogComponent] = useState<React.ComponentType<any> | null>(null)
+    const [DialogComponent, setDialogComponent] = useState<React.ComponentType<any> | null>(null)
 
-    const [setIsDialogOpen] = useState<boolean>(false)
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
 
 
 
     const handleAlertDialog = (id: string, callback: any) => {
         openAlertDialog(id, callback)
+    }
 
-        //Follow theo isLoading và data
-        useEffect(() => {
-            if (!isLoading && data[model]) {
-                setInitialColumnState(data[model], 'publish')
-            }
-        }, [isLoading, data])
+    const handleDialog = (id: string, callback: Function, Component: React.ComponentType<any>) => {
+        setDialogComponent(() => (props: any) =>
+            <Component
+                id={id}
+                callback={callback}
+                {...props}
+            />
+        );
+        setIsDialogOpen(true)
     }
 
     return (
@@ -72,6 +76,7 @@ const TableHistoryPatient = ({
                         {tableColumn && tableColumn.map((column, index) => (
                             <TableHead key={index}>{column.name}</TableHead>
                         ))}
+                        <TableHead className="text-center">Chi tiết</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -98,6 +103,39 @@ const TableHistoryPatient = ({
                                 <TableCell key={index}>{column.render(row)}</TableCell>
 
                             ))}
+                            <TableCell className="flex justify-center">
+                                {buttonActions && buttonActions.map((action: any, index: number) => (
+                                    <Button
+                                        key={index} className={`${action.className} p-[15px]`}
+                                        onClick={
+                                            action.onClick && action.params ? (e: React.
+                                                MouseEvent<HTMLButtonElement>) => {
+                                                const args = action.params?.map((param: any) => {
+                                                    if (typeof param === 'string' && (param.endsWith(':f') || param.endsWith(':pf') || param.endsWith(':c'))) {
+                                                        if (param.endsWith(':f')) {
+                                                            return eval(param.slice(0, -2))
+                                                        } else if (param.endsWith(':pf')) {
+                                                            const functionName = param.slice(0, -3)
+                                                            return restProps[functionName]
+                                                        } else if (param.endsWith(':c')) {
+                                                            return action.component
+                                                        }
+                                                    }
+                                                    else {
+                                                        return row[param as keyof Row]
+                                                    }
+                                                }) as ParamsToTuple<typeof action.params>
+                                                if (action.onClick) {
+                                                    action.onClick(...args)
+                                                }
+                                            } : undefined
+                                        }
+                                    >
+                                        {action.icon}
+                                    </Button>
+
+                                ))}
+                            </TableCell>
                         </TableRow>
                     ))
                     ) : data === undefined ? (

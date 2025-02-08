@@ -1,7 +1,6 @@
 //REACT
 //COMPONENTS
 import { FaRegEdit } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
 //SETTINGS
 import { Booking } from "@/interfaces/types/BookingType";
 //INTERFACE & TYPE

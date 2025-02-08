@@ -44,6 +44,7 @@ export type Booking = {
     image: any,
     start_time: string,
     end_time: string,
-    date: string
+    date: string,
+    medicines: string
 
 }

@@ -112,7 +112,7 @@
 }
 
 .home-header-banner {
-    background-image: url('../../assets/banner.png');
+    background-image: url('../../assets/banner1.jpg');
 
     height: 80vh;
     background-repeat: no-repeat;
@@ -149,15 +149,13 @@
         .search {
             // text-align: center;
             // border: 1px solid red;
-            width: fit-content;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            // width: fit-content;
+            // display: flex;
+            // justify-content: center;
+            // align-items: center;
             margin: 0 auto;
             padding: 10px;
             // width: 400px;
-            border-radius: 25px;
-            background: #f7d800;
 
             i {
                 margin: 0 5px;
@@ -190,7 +188,7 @@
             justify-content: center;
 
             .option-child {
-                width: 125px;
+                // width: 125px;
                 display: flex;
                 /* Sử dụng flexbox */
                 flex-direction: column;
@@ -209,9 +207,7 @@
                     /* Đặt kích thước cho hình tròn */
                     height: 60px;
                     /* Đặt kích thước cho hình tròn */
-                    background-color: #f0f0f0;
                     /* Màu nền của hình tròn */
-                    border-radius: 50%;
                     /* Tạo hình tròn */
                     display: flex;
                     /* Sử dụng flexbox để căn giữa icon */
@@ -229,11 +225,11 @@
                 }
 
                 .text-child {
-                    font-size: 15px;
-                    font-weight: 600;
+                    // font-size: 15px;
+                    // font-weight: 600;
 
                     &:hover {
-                        color: #49bce2;
+                        // color: #49bce2;
                         cursor: pointer;
                     }
                 }

@@ -3,7 +3,7 @@ export type Patient = {
     name: string,
     full_name?: string
     email: string,
-    image: string | null,
+    image: string | undefined,
     phone: string | null,
     address: string | null,
     created_at: string | null,

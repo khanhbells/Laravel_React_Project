@@ -1,7 +1,7 @@
 //REACT
 //COMPONENTS
-import { FaRegEdit } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
+import { IoEyeOutline } from "react-icons/io5";
+
 //SETTINGS
 import { Booking } from "@/interfaces/types/BookingType";
 //INTERFACE & TYPE
@@ -14,6 +14,11 @@ const breadcrumb = {
 
     index: {
         title: 'Lịch sử đặt lịch hẹn khám bệnh',
+        route: ''
+    },
+    medicines: {
+        title: 'Đơn dặt lịch khám',
+        description: 'Đây là thông tin chi tiết đơn đặt lịch khám của bạn, Vui lòng đọc kỹ thông tin và đến hẹn đúng giờ, để mọi lịch khám diễn ra thuận lợi. Xin cảm ơn!',
         route: ''
     },
 
@@ -82,18 +87,23 @@ const tableColumn: tableColumn[] = [
 ]
 
 
-
-
-
-
-
-
-
+const buttonActions: ButtonAction<ActionParam[]>[] = [
+    {
+        icon: <IoEyeOutline className="text-white" />,
+        className: 'flex mr-[5px]',
+        method: 'create',
+        params: ['id', 'openSheet:f'],
+        onClick: (id: string, openSheet: OpenSheetFunction) => {
+            openSheet({ open: true, action: 'update', id: id })
+        }
+    },
+]
 
 
 export {
     breadcrumb,
     model,
     tableColumn,
+    buttonActions
 };
 

@@ -1,13 +1,10 @@
 //Create Store
 //pagination
-import { pagination } from "@/service/HistoryService"
 import Paginate from "@/components/paginate"
+import { pagination } from "@/service/HistoryService"
 //breadcrumb
-import PageHeading from "@/components/heading"
 import { Breadcrumb } from "@/types/Breadcrumb"
 //table
-import CustomTable from "@/components/customTable"
-import useTable from "@/hook/useTable"
 import {
     Card,
     CardContent,
@@ -16,32 +13,28 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import useTable from "@/hook/useTable"
 //filter
 import Filter from "@/components/Filter"
 //Checkbox
 import useCheckBoxState from "@/hook/useCheckBoxState"
 //Sheet Create
 import useSheet from "@/hook/useSheet"
-import CustomSheet from "@/components/CustomSheet"
 //settings
-import { breadcrumb, tableColumn, model } from "./settings"
 import { filterItems } from "@/settings/globalSettings"
-import { SelectConfig } from "@/components/CustomFilter"
+import { breadcrumb, model, tableColumn, buttonActions } from "./settings"
 //contexts
 import { FilterProvider } from "@/contexts/FilterContext"
 //
-import { useEffect, useMemo, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { useUserContext } from "@/contexts/UserContext"
-import { useQuery } from "react-query"
-import { queryKey } from "@/constant/query"
-import { pagination as doctorsPagination } from "@/service/DoctorService"
-import { useCustomFilter } from "@/hook/useCustomFilter"
 import TableHistoryPatient from "@/components/TableHistoryPatient"
-import { useSelector } from "react-redux"
+import { useCustomFilter } from "@/hook/useCustomFilter"
 import { RootState } from "@/redux/store"
-
+import { useEffect, useMemo } from "react"
+import { useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
 import { status } from "@/constant/general"
+import CustomSheet from "@/components/CustomSheet"
+import Store from "./include/Store"
 const History = () => {
     const breadcrumbData: Breadcrumb = breadcrumb.index
     const navigate = useNavigate()
@@ -83,6 +76,11 @@ const History = () => {
         }
     }, [patientRedux, navigate])
 
+    useEffect(() => {
+        console.log(openSheet);
+
+    }, [openSheet])
+
     const customFilter = useCustomFilter(filterInitial);
 
     return (
@@ -121,12 +119,29 @@ const History = () => {
                             openSheet={openSheet}
                             refetch={refetch}
                             flag={true}
+                            buttonActions={buttonActions}
                         />
                     </CardContent>
                     <CardFooter>
                         {!isLoading && data[model] && data.links ? <Paginate links={data?.links} pageChange={handlePageChange} /> : null}
                     </CardFooter>
                 </Card>
+                {isSheetOpen && (
+                    <CustomSheet
+                        title={breadcrumb.medicines.title}
+                        description={breadcrumb.medicines.description}
+                        isSheetOpen={isSheetOpen.open}
+                        closeSheet={closeSheet}
+                        className="w-[400px] sm:w-[550px]"
+                    >
+                        <Store
+                            refetch={refetch}
+                            closeSheet={closeSheet}
+                            id={isSheetOpen.id}
+                            action={isSheetOpen.action}
+                        />
+                    </CustomSheet>
+                )}
             </div >
         </FilterProvider>
     )

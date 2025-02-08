@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\V1\BookingController;
 use App\Http\Controllers\Api\V1\AuthPatientController;
 use App\Http\Controllers\Api\V1\MedicineCatalogueController;
 use App\Http\Controllers\Api\V1\MedicineController;
+use App\Http\Controllers\Api\V1\HomePageController;
 
 use App\Http\Resources\DoctorResource;
 use App\Models\SpecialtyCatalogue;
@@ -274,9 +275,10 @@ Route::group([
     Route::get('schedules', [ScheduleController::class, 'index']);
     //BOOKINGS
     Route::get('bookings/{id}', [BookingController::class, 'show']);
-
     //SignUp
     Route::post('patients', [PatientController::class, 'signUp']);
+    //MENU
+    Route::get('menus', [HomePageController::class, 'menus']);
 });
 
 Route::group([
@@ -287,6 +289,7 @@ Route::group([
     Route::get('logout', [AuthPatientController::class, 'logout']);
     //History
     Route::get('historys', [BookingController::class, 'indexHistory']);
+    Route::get('historys/{id}', [BookingController::class, 'show']);
 });
 
 

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { LoadingSpinner } from '@/components/ui/loading';
 import { memo } from "react";
+import { writeUrl } from "@/helper/myHelper";
 interface IContentSlider {
     settings: Object,
     className?: string,
@@ -82,7 +83,7 @@ const ContentSlider = ({
                                                             <div className="w-[80%] mt-[5px]">
                                                                 <Link
                                                                     key={index}
-                                                                    to={`${nameCatalogueParams}/${dataCatalogue?.id}/${dataCatalogue?.canonical}/${value.id}/${value.canonical}.html`}
+                                                                    to={writeUrl(dataCatalogue?.canonical, nameCatalogueParams, dataCatalogue?.id, [value.canonical], [value.id], true)}
                                                                     className="mt-[10px] text-[13px] "
                                                                 >
                                                                     <span>
