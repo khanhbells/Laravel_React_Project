@@ -1,15 +1,18 @@
+import { Link } from "react-router-dom"
 import LoadingButton from "./LoadingButton"
 
 interface ICustomLogin {
     errors: any,
     register: any,
-    loading: boolean
+    loading: boolean,
+    forgotPassword?: boolean
 }
 
 const CustomLogin = ({
     errors,
     register,
-    loading
+    loading,
+    forgotPassword
 }: ICustomLogin) => {
     return (
         <>
@@ -37,9 +40,17 @@ const CustomLogin = ({
 
             </div>
             <p className="text-xs mb-2 text-gray-700">
-                <a href="/" className="text-blue-700">Quên mật khẩu</a>
+                {
+                    forgotPassword &&
+                    (
+                        <div className="flex justify-between">
+                            <Link className="text-blue-700" to={`/patient/forgotPassword`}>Quên mật khẩu</Link>
+                            <span>Chưa có tài khoản? <Link className="text-blue-700" to={`/patient/signup`}>Đăng ký ngay</Link></span>
+                        </div>
+                    )
+                }
             </p>
-            <div className="description text-xs text-gray-700">
+            <div className="description text-xs text-gray-700 mb-[10px]">
                 Chào mừng bạn đến với hệ thống đặt lịch khám bệnh version 1.0 của Khanh Bells
             </div>
             <LoadingButton

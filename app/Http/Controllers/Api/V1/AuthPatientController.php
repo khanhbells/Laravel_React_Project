@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthRequest;
+use App\Http\Requests\ForgotPatientRequest;
+use App\Http\Requests\Patient\ChangePasswordPatientRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +15,8 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Patient;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\ValidationException;
 
 class AuthPatientController extends Controller
 {
@@ -28,7 +32,7 @@ class AuthPatientController extends Controller
         ];
 
         if (!$token = auth('patient')->attempt($credentials)) {
-            return response()->json(['error' => 'Email hoặc mật khẩu không đúng'], Response::HTTP_UNAUTHORIZED);
+            return response()->json(['message' => 'Email hoặc mật khẩu không đúng'], Response::HTTP_UNAUTHORIZED);
         }
 
         $patient = auth('patient')->user();
@@ -184,5 +188,38 @@ class AuthPatientController extends Controller
                 'error' => $e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    //forgot password
+    public function sendResetLinkEmail(ForgotPatientRequest $request)
+    {
+        $status = Password::broker('patients')->sendResetLink($request->only('email'));
+        return response()->json([
+            'message' => $status === Password::RESET_LINK_SENT ? 'Email gửi thành công!' : 'Gửi email thất bại!',
+            'status' => $status
+        ], $status === Password::RESET_LINK_SENT ? 200 : 400);
+    }
+    //reset Password
+    public function resetPassword(ChangePasswordPatientRequest $request)
+    {
+        $status = Password::broker('patients')->reset(
+            $request->only('email', 'password', 'token'),
+            function ($patient, $password) {
+                $patient->forceFill([
+                    'password' => bcrypt($password)
+                ])->save();
+            }
+        );
+        if ($status === Password::PASSWORD_RESET) {
+            return response()->json(
+                [
+                    'message' => 'Mật khẩu đã được đặt lại thành công!',
+                    'code' => Response::HTTP_OK
+                ],
+                Response::HTTP_OK
+            );
+        }
+
+        throw ValidationException::withMessages(['email' => [__($status)]]);
     }
 }

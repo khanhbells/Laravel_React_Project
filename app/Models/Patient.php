@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\QueryTrait;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
+use App\Notifications\ResetPasswordNotification;
 
 class Patient extends Authenticatable implements JWTSubject
 {
-    use HasFactory, Notifiable, QueryTrait;
+    use HasFactory, Notifiable, QueryTrait, CanResetPasswordTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -33,6 +36,7 @@ class Patient extends Authenticatable implements JWTSubject
         'patient_catalogue_id',
         'password'
     ];
+    protected $table = 'patients';
 
     /**
      * The attributes that should be hidden for serialization.
@@ -74,6 +78,11 @@ class Patient extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 
     public function patient_catalogues()

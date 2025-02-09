@@ -36,7 +36,8 @@ class HospitalResource extends JsonResource
                     'label' => $special->name,
                     'value' => $special->id,
                 ];
-            })
+            }),
+            'model' => 'hospital'
         ];
     }
 }

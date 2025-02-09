@@ -75,12 +75,16 @@ import SpecialtyFrontEndIndex from './components/Frontend/Section/Specialty';
 import PostFrontEndIndex from './components/Frontend/Section/Post';
 import DoctorFrontEndIndex from './components/Frontend/Section/Doctor';
 import SuccessIndex from './components/Frontend/Section/Success';
+//Login
 import SignUpIndex from './components/Frontend/Section/Login/SignUp';
 import SignInIndex from './components/Frontend/Section/Login/SignIn';
+import ForgotPasswordIndex from './components/Frontend/Section/Login/ForgotPassword';
+import ResetPasswordIndex from './components/Frontend/Section/Login/ResetPassword/ResetPassword';
 //
 import NoAuthPatientMiddleware from './middleware/NoPatientMiddleware';
 import AuthPatienMiddleware from './middleware/AuthPatientMiddleware';
 import HistoryIndex from './components/Frontend/Section/History';
+
 
 
 const router = createBrowserRouter([
@@ -149,6 +153,8 @@ const router = createBrowserRouter([
     children: [
       { path: "signup", element: <SignUpIndex /> },
       { path: "signin", element: <SignInIndex /> },
+      { path: "forgotPassword", element: <ForgotPasswordIndex /> },
+      { path: "resetPassword", element: <ResetPasswordIndex /> },
     ]
   },
   {

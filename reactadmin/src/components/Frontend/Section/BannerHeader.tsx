@@ -1,20 +1,40 @@
-import { GiMedicinePills } from "react-icons/gi";
-import { AiFillMedicineBox } from "react-icons/ai";
-import { FaRegHospital } from "react-icons/fa6";
-import { MdLocalPharmacy } from "react-icons/md";
-import { PiAmbulanceBold } from "react-icons/pi";
-import { MdOutlineSick } from "react-icons/md";
-import { CiSearch } from "react-icons/ci";
-import { useEffect, useState } from "react";
 import calendarImage from "@/assets/calendar.jpg";
 import doctorImage from "@/assets/examination.jpg";
-import videoImage from "@/assets/video.jpg";
 import syringeImage from "@/assets/syringe.jpg";
+import videoImage from "@/assets/video.jpg";
+import useDebounce from "@/hook/useReplaceDebounce";
+import { useEffect, useState } from "react";
+import { CiSearch } from "react-icons/ci";
+import { Link } from "react-router-dom";
+import { searchInput } from "@/service/Frontend/FrontEndService";
+import { writeUrl } from "@/helper/myHelper";
+import { motion, AnimatePresence } from "framer-motion";
 const BannerHeader = () => {
     const placeholderText = "Tìm chuyên khoa khám bệnh";
     const [displayText, setDisplayText] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
     const [index, setIndex] = useState(0);
+    const [keyword, setKeyword] = useState<string>('')
+    const [isDataSearch, setDataSearch] = useState([])
+
+    const debounceInputSearch = useDebounce(keyword, 300)
+
+    useEffect(() => {
+        if (debounceInputSearch !== '') {
+            const fetchData = async () => {
+                const data = await searchInput(`keyword=${debounceInputSearch}`, 'frontend/search');
+
+                // Làm phẳng dữ liệu, lấy phần tử thực bên trong
+                const dataSearch = data.searchAll.flat();
+
+                console.log(dataSearch); // Kiểm tra dữ liệu có đúng không
+                setDataSearch(dataSearch);
+            };
+            fetchData();
+        } else {
+            setDataSearch([])
+        }
+    }, [debounceInputSearch]);
 
     useEffect(() => {
         const typingSpeed = isDeleting ? 50 : 100; // Tốc độ gõ và xóa
@@ -47,13 +67,56 @@ const BannerHeader = () => {
                 <div className='content-up'>
                     <div className='text-shadow-sm font-montserrat  text-[40px] text-center font-semibold my-[10px]'>Nền tảng y tế</div>
                     <div className='text-shadow-sm font-montserrat  text-[40px] text-center font-semibold my-[20px]'>Chăm sóc sức khỏe toàn diện</div>
-                    <div className='w-fit bg-white rounded-lg flex justify-center items-center mx-auto p-[10px]'>
-                        <CiSearch className=" mr-[10px] text-[20px]" />
-                        <input
-                            type='text'
-                            className="w-[360px] col-span-3 focus-visible:ring-0 focus:outline-none focus:border-sky-500 focus:ring-2"
-                            placeholder={displayText}
-                        ></input>
+                    <div className='w-fit bg-white rounded-lg  items-center mx-auto p-[10px] relative'>
+                        <div className="flex">
+                            <CiSearch className=" mr-[10px] text-[20px]" />
+                            <input
+                                type='text'
+                                className="w-[360px] col-span-3 focus-visible:ring-0 focus:outline-none focus:border-sky-500 focus:ring-2"
+                                placeholder={displayText}
+                                onChange={(e) => setKeyword(e.target.value)}
+                                value={keyword}
+                            ></input>
+                        </div>
+                        <div className="absolute mt-[20px] w-full rounded-lg z-99">
+                            <AnimatePresence>
+                                {
+                                    isDataSearch && isDataSearch.length > 0 && isDataSearch.map((value: any, index: number) => {
+                                        const isFirst = index === 0;
+                                        const isLast = index === isDataSearch.length - 1;
+                                        const isOnly = isDataSearch.length === 1;
+                                        return (
+                                            (
+                                                <motion.div
+                                                    className={`flex flex-col gap-4 bg-white ${isOnly ? "rounded-lg" : isFirst ? "rounded-t-lg" : isLast ? "rounded-b-lg" : ""
+                                                        }`}
+                                                    initial={{ opacity: 0, y: -10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: 10 }}
+                                                    transition={{ duration: 0.3 }}
+                                                    key={value.id}
+                                                >
+                                                    <Link
+                                                        to={
+                                                            value.canonical_catalogue ? writeUrl(value.canonical_catalogue, value.model, value[`${value.model}_catalogue_id`], [value.canonical], [value.id]) : writeUrl(value.canonical, value.model, value.id)
+                                                        }
+                                                        className="flex items-center hover:bg-sky-200 hover:rounded-lg p-[10px]">
+                                                        <div className="block mr-[10px]">
+                                                            <img className=" object-cover h-[50px] w-[80px] rounded cursor-pointer" src={value.image} alt="" />
+                                                        </div>
+                                                        <div>
+                                                            <div className="name">
+                                                                <span className="text-[#003553] font-roboto font-normal text-[17px]">{value.name}</span>
+                                                            </div>
+                                                        </div>
+                                                    </Link>
+                                                </motion.div>
+                                            )
+                                        )
+                                    })
+                                }
+                            </AnimatePresence>
+                        </div>
                     </div>
                 </div>
                 <div className='content-down'>

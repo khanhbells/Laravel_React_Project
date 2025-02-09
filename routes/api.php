@@ -279,6 +279,8 @@ Route::group([
     Route::post('patients', [PatientController::class, 'signUp']);
     //MENU
     Route::get('menus', [HomePageController::class, 'menus']);
+    //SEARCH
+    Route::get('search', [HomePageController::class, 'search']);
 });
 
 Route::group([
@@ -295,3 +297,5 @@ Route::group([
 
 Route::post('v1/patient/refresh', [AuthPatientController::class, 'refresh']);
 Route::post('v1/patient/login', [AuthPatientController::class, 'login']);
+Route::post('v1/patient/forgot_password', [AuthPatientController::class, 'sendResetLinkEmail']);
+Route::put('v1/patient/reset_password', [AuthPatientController::class, 'resetPassword'])->name('password.reset');

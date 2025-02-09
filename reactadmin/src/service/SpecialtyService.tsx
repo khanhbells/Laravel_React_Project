@@ -21,6 +21,7 @@ const pagination = async (queryString: string) => {
     }
 }
 
+
 const save = async (payload: SpecialtyPayloadInput, updateParams: { action: string, id: string | undefined }) => {
 
 

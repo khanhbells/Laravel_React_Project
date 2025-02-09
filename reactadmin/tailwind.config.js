@@ -2,6 +2,7 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 const colors = require('tailwindcss/colors');
 /** @type {import('tailwindcss').Config} */
+const plugin = require("tailwindcss/plugin");
 export default {
 	darkMode: ["class"],
 	content: [
@@ -374,18 +375,22 @@ export default {
 			},
 		}
 	},
-	plugins: [function ({ addUtilities }) {
-		addUtilities({
-			".text-shadow-sm": {
-				textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
-			},
-			".text-shadow-md": {
-				textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
-			},
-			".text-shadow-lg": {
-				textShadow: "3px 3px 6px rgba(0, 0, 0, 0.6)",
-			},
-		});
-	},],
+	plugins: [
+		require("tailwindcss-animate"),
+		plugin(function ({ addUtilities }) {
+			addUtilities({
+				".text-shadow-sm": {
+					textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
+				},
+				".text-shadow-md": {
+					textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+				},
+				".text-shadow-lg": {
+					textShadow: "3px 3px 6px rgba(0, 0, 0, 0.6)",
+				},
+			});
+		}),
+	],
+
 }
 

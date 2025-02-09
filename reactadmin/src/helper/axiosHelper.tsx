@@ -5,6 +5,8 @@ const handleAxiosError = (error: unknown) => {
     console.log(error);
 
     if (axios.isAxiosError(error)) {
+        console.log(error.response?.data.message);
+
         showToast(error.response?.data.message, 'error')
     }
     else {

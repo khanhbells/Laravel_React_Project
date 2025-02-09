@@ -47,7 +47,9 @@ class SpecialtyResource extends JsonResource
                     'label' => $tag->name,
                     'value' => $tag->id,
                 ];
-            })
+            }),
+            'model' => 'specialty',
+            'canonical_catalogue' => $this->specialty_catalogues->pluck('canonical')->toArray(),
         ];
     }
 }

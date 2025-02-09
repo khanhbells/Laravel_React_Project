@@ -29,7 +29,7 @@ const SignIn = () => {
                 dispatch(setToast({ message: 'Đăng nhập vào hệ thống thành công', type: 'success' }))
                 dispatch(setAuthPatientLogin(authPatient))
                 // setMessage('Đăng nhập vào hệ thống thành công', 'success')-- > context
-                navigate(-1)
+                navigate(`/homepage`)
             }
         } catch (error) {
         } finally {
@@ -48,6 +48,7 @@ const SignIn = () => {
                                 errors={errors}
                                 register={register}
                                 loading={loading}
+                                forgotPassword={true}
                             />
                         </form>
                     </CardContent>
