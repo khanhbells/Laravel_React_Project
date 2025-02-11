@@ -96,6 +96,13 @@ if (!function_exists('callRepository')) {
         return $repository;
     }
 }
+if (!function_exists('customRepository')) {
+    function customRepository($model)
+    {
+        $customRepository = app(callRepository($model));
+        return $customRepository;
+    }
+}
 
 if (!function_exists('vnpayConfig')) {
     function vnpayConfig($bookingId)
@@ -111,5 +118,40 @@ if (!function_exists('vnpayConfig')) {
     }
 }
 
+if (!function_exists('momoConfig')) {
+    function momoConfig()
+    {
+        return [
+            'partnerCode' => 'MOMOBKUN20180529',
+            'accessKey' => 'klm05TvNBzhg7h7j',
+            'secretKey' => 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa'
+        ];
+    }
+}
+
+if (!function_exists('execPostRequest')) {
+    function execPostRequest($url, $data)
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt(
+            $ch,
+            CURLOPT_HTTPHEADER,
+            array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data)
+            )
+        );
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        //execute post
+        $result = curl_exec($ch);
+        //close connection
+        curl_close($ch);
+        return $result;
+    }
+}
 // tác dụng của studly chuyển chuỗi thành kiểu chữ "StudlyCase" (còn gọi là PascalCase), trong đó mỗi từ bắt đầu bằng chữ cái viết hoa và không có dấu gạch dưới hoặc khoảng trắng.
 // tác dụng của singular chuyển đổi một chuỗi từ số nhiều (plural) thành số ít (singular).

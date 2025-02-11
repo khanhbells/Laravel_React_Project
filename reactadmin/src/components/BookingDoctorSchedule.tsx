@@ -19,6 +19,10 @@ const BookingDoctorSchedule = ({
                             <span className="font-semibold">{data?.name_doctor}</span>
                         </div>
                         <div className="flex justify-between mb-[5px]">
+                            <span>Mã đơn khám:</span>
+                            <span className="font-semibold">{data?.code}</span>
+                        </div>
+                        <div className="flex justify-between mb-[5px]">
                             <span>Ngày khám:</span>
                             <span className="font-semibold">{dayjs(data?.date).format('DD/MM/YYYY')}</span>
                         </div>

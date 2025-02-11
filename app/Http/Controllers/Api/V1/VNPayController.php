@@ -41,7 +41,7 @@ class VNPayController extends Controller
         $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
         if ($secureHash == $vnp_SecureHash) {
             if ($queryParams['vnp_ResponseCode'] == '00') {
-                $repositoryBooking = $this->customRepository('bookings');
+                $repositoryBooking = customRepository('bookings');
                 $payload['payment_status'] = 'confirm';
                 $repositoryBooking->update($booking->id, $payload);
                 return response()->json([
@@ -61,11 +61,5 @@ class VNPayController extends Controller
                 'error' => Status::ERROR,
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }
-
-    public function customRepository($model)
-    {
-        $customRepository = app(callRepository($model));
-        return $customRepository;
     }
 }

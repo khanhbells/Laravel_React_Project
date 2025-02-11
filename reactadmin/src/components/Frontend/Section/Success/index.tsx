@@ -5,6 +5,8 @@ import { IBooking, getBookingById } from "@/service/BookingService"
 import BookingDoctorSchedule from "@/components/BookingDoctorSchedule"
 import { useEffect } from "react"
 import BookingInforPaymentVNPay from "@/components/BookingInforPaymentVNPay"
+import BookingInforPaymentMomo from "@/components/BookingInforPaymentMomo"
+import BookingInforPaymentPaypal from "@/components/BookingInforPaymentPaypal"
 
 const Success = () => {
 
@@ -32,12 +34,22 @@ const Success = () => {
                         data={data?.bookings}
                     />
                     {
-                        queryParams.vnp_BankCode &&
-                        <BookingInforPaymentVNPay
-                            secureHash={data?.secureHash || ''}
-                            vnp_SecureHash={data?.vnp_SecureHash || ''}
-                            queryParams={queryParams}
-                        />
+                        queryParams.vnp_BankCode ?
+                            (
+                                <BookingInforPaymentVNPay
+                                    secureHash={data?.secureHash || ''}
+                                    vnp_SecureHash={data?.vnp_SecureHash || ''}
+                                    queryParams={queryParams}
+                                />
+                            ) : queryParams.signature ?
+                                (
+                                    <BookingInforPaymentMomo
+                                        dataMomo={typeof data?.momo === 'object' ? data.momo : { m2signature: undefined, partnerSignature: undefined, message: undefined }}
+                                    />
+                                ) : queryParams.PayerID && (
+                                    <BookingInforPaymentPaypal />
+                                )
+
                     }
                     <BookingDoctorSchedule
                         data={data?.bookings}

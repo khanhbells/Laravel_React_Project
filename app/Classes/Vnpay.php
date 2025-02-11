@@ -6,11 +6,11 @@ class Vnpay
 {
 
     public function __construct() {}
-    public function payment($order)
+    public function payment($booking)
     {
 
-        $configVnpay = vnpayConfig($order->id);
-        // dd($order);
+        $configVnpay = vnpayConfig($booking->id);
+        // dd($booking);
 
 
         $vnp_TmnCode = $configVnpay['vnp_TmnCode']; //Mã website tại VNPAY 
@@ -18,10 +18,10 @@ class Vnpay
         $vnp_Url = $configVnpay['vnp_Url'];
         $vnp_Returnurl = $configVnpay['vnp_Returnurl'];
 
-        $vnp_TxnRef = $order->code; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
-        $vnp_OrderInfo = 'Thanh toán đơn đặt lịch khám #' . $order->code . ' qua ví VNPAY';
+        $vnp_TxnRef = $booking->code; //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
+        $vnp_OrderInfo = 'Thanh toán đơn đặt lịch khám #' . $booking->code . ' qua ví VNPAY';
         $vnp_OrderType = 'billpayment';
-        $vnp_Amount = ($order->total_price) * 100;
+        $vnp_Amount = ($booking->total_price) * 100;
         $vnp_Locale = 'vn';
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
 

@@ -13,7 +13,11 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Booking\StoreBookingRequest;
 use App\Http\Requests\Booking\UpdateBookingRequest;
 use App\Classes\Vnpay;
+use App\Classes\Momo;
+use App\Classes\Paypal;
 use App\Http\Controllers\Api\V1\VNPayController;
+use App\Http\Controllers\Api\V1\MomoController;
+use App\Http\Controllers\Api\V1\PaypalController;
 
 class BookingController extends Controller
 {
@@ -21,18 +25,30 @@ class BookingController extends Controller
     protected $bookingService;
     protected $bookingRepository;
     protected $vnpay;
+    protected $momo;
+    protected $paypal;
     protected $vnpayController;
+    protected $momoController;
+    protected $paypalController;
 
     public function __construct(
         BookingService $bookingService,
         BookingRepository $bookingRepository,
         Vnpay $vnpay,
-        VNPayController $vnpayController
+        Momo $momo,
+        Paypal $paypal,
+        VNPayController $vnpayController,
+        MomoController $momoController,
+        PaypalController $paypalController
     ) {
         $this->bookingService = $bookingService;
         $this->bookingRepository = $bookingRepository;
         $this->vnpay = $vnpay;
+        $this->momo = $momo;
+        $this->paypal = $paypal;
         $this->vnpayController = $vnpayController;
+        $this->momoController = $momoController;
+        $this->paypalController = $paypalController;
     }
 
     public function index(Request $request)
@@ -80,21 +96,8 @@ class BookingController extends Controller
     {
         $data = $this->bookingService->create($request);
         if ($data['code'] == Status::SUCCESS) {
-            if ($data['booking']->method == 'vnpay') {
-                $response = $this->vnpay->payment($data['booking']);
-                if ($response['errorCode'] == 0) {
-                    return response()->json([
-                        'message' => 'Thêm mới bản ghi thành công',
-                        'booking' => new BookingResource($data['booking']),
-                        'payUrl' => $response['url'] ?? null // Trả về link thanh toán nếu có
-                    ], Response::HTTP_OK);
-                } else {
-                    $data['booking']->delete();
-                    return response()->json([
-                        'message' => 'Không thể tạo thanh toán VNPay, vui lòng thử lại!',
-                        'error' => $response['message'] ?? 'Lỗi không xác định'
-                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
-                }
+            if ($data['booking']->method != 'cod') {
+                return $this->paymentOnline($data['booking']);
             }
             return response()->json([
                 'message' => 'Thêm mới bản ghi thành công',
@@ -106,28 +109,74 @@ class BookingController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
+    public function paymentOnline($booking)
+    {
+        $class = $booking->method;
+        $response = $this->{$class}->payment($booking);
+        return $this->responsePaymentOnline($response, $booking);
+    }
+
+    public function responsePaymentOnline($response, $booking)
+    {
+        if ($response['errorCode'] == 0) {
+            return response()->json([
+                'message' => 'Thêm mới bản ghi thành công',
+                'booking' => new BookingResource($booking),
+                'payUrl' => $response['url'] ?? null // Trả về link thanh toán nếu có
+            ], Response::HTTP_OK);
+        } else {
+            $booking->delete();
+            return response()->json([
+                'message' => 'Không thể tạo thanh toán, vui lòng thử lại!',
+                'error' => $response['message'] ?? 'Lỗi không xác định'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public function show(Request $request, $id)
     {
         if (empty($id) || $id < 0) {
             return $this->returnIfIdValidateFail();
         }
         $booking = $this->bookingRepository->findById($id);
-
         if (!$booking) {
             return response()->json([
                 'code' => Status::ERROR,
                 'message' => 'Không có dữ liệu phù hợp'
             ], Response::HTTP_NOT_FOUND);
         }
-        // Lấy vnp_ResponseCode từ query params
+        // Lấy GET từ query params
         $queryParams = $request->query();
-        // Nếu có tham số vnp_ResponseCode, nghĩa là VNPay đang callback
-        if ($request->has('vnp_ResponseCode')) {
-            return $this->vnpayController->vnpay_return($booking, $queryParams);
+        if (count($queryParams)) {
+            return $this->paymentReturn($request, $queryParams, $booking);
         }
+
         return response()->json([
             'bookings' => new BookingResource($booking),
         ], Response::HTTP_OK);
+    }
+
+    public function paymentReturn($request, $queryParams, $booking)
+    {
+        switch ($booking->method) {
+            case 'vnpay':
+                if ($request->has('vnp_ResponseCode')) {
+                    return $this->vnpayController->vnpay_return($booking, $queryParams);
+                }
+                break;
+            case 'momo':
+                if ($request->has('responseTime')) {
+                    $this->momoController->momo_ipn($booking, $queryParams);
+                    return $this->momoController->momo_return($booking, $queryParams);
+                }
+                break;
+            case 'paypal':
+                return $this->paypalController->success($request, $booking);
+                break;
+            default:
+                # code...
+                break;
+        }
     }
 
     public function update(UpdateBookingRequest $request, $id)
