@@ -97,5 +97,19 @@ if (!function_exists('callRepository')) {
     }
 }
 
+if (!function_exists('vnpayConfig')) {
+    function vnpayConfig($bookingId)
+    {
+        return [
+            'vnp_Url' => 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
+            'vnp_Returnurl' => url(env('FRONTEND_URL') . "homepage/success/{$bookingId}"),
+            'vnp_TmnCode' => '18FMRWD4',
+            'vnp_HashSecret' => 'I512616ZHQMGFMQF4EZ4L70WWUJ4YYLS',
+            'vnp_apiUrl' => 'http://sandbox.vnpayment.vn/merchant_webapi/merchant.html',
+            'apiUrl' => 'https://sandbox.vnpayment.vn/merchant_webapi/api/transaction'
+        ];
+    }
+}
+
 // tác dụng của studly chuyển chuỗi thành kiểu chữ "StudlyCase" (còn gọi là PascalCase), trong đó mỗi từ bắt đầu bằng chữ cái viết hoa và không có dấu gạch dưới hoặc khoảng trắng.
 // tác dụng của singular chuyển đổi một chuỗi từ số nhiều (plural) thành số ít (singular).

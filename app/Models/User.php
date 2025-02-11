@@ -3,15 +3,18 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Notifications\ResetPasswordAuthNotification;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\QueryTrait;
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory, Notifiable, QueryTrait;
+    use HasFactory, Notifiable, QueryTrait, CanResetPasswordTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -33,6 +36,7 @@ class User extends Authenticatable implements JWTSubject
         'user_catalogue_id',
         'password'
     ];
+    protected $table = 'users';
 
     /**
      * The attributes that should be hidden for serialization.
@@ -74,6 +78,11 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordAuthNotification($token));
     }
 
     public function user_catalogues()

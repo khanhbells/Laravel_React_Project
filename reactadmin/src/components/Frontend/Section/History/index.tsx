@@ -1,6 +1,6 @@
 //Create Store
 //pagination
-import Paginate from "@/components/paginate"
+import Paginate from "@/components/Paginate"
 import { pagination } from "@/service/HistoryService"
 //breadcrumb
 import { Breadcrumb } from "@/types/Breadcrumb"

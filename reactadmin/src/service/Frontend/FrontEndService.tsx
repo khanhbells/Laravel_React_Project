@@ -49,8 +49,6 @@ const searchInput = async (queryString: string, endpoint: string) => {
 }
 
 const save = async (payload: GetFrontEnd, updateParams: { action: string, id: string | undefined }, endpoint?: string): Promise<any> => {
-    // console.log(payload);
-
     return baseSave(`${endpoint}`, payload, updateParams)
 }
 

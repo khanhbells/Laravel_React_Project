@@ -1,5 +1,5 @@
 import CustomLogin from "@/components/CustomLogin";
-import { Inputs } from "@/modules/Login";
+import { Inputs } from "@/modules/Login/SignIn";
 import { login } from "@/service/Frontend/AuthPatientService";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -29,7 +29,7 @@ const SignIn = () => {
                 dispatch(setToast({ message: 'Đăng nhập vào hệ thống thành công', type: 'success' }))
                 dispatch(setAuthPatientLogin(authPatient))
                 // setMessage('Đăng nhập vào hệ thống thành công', 'success')-- > context
-                navigate(`/homepage`)
+                navigate(-1)
             }
         } catch (error) {
         } finally {

@@ -14,9 +14,13 @@ import {
 } from 'react-query'
 import AuthMiddleware from './middleware/AuthMiddleware';
 import NoAuthMiddleware from './middleware/NoAuthMiddleware';
-import Layout from './components/layout';
+import Layout from './components/Layout';
 import Dashboard from './modules/Dashboard';
-import Login from './modules/Login';
+//LOGIN ADMIN
+import SignInAdminIndex from './modules/Login/SignIn';
+import SignUpAdminIndex from './modules/Login/SignUp';
+import ForgotPasswordAdminIndex from './modules/Login/ForgotPassword';
+import ResetPasswordAdminIndex from './modules/Login/ResetPassword/ResetPassword';
 //User
 import UserIndex from '@/modules/User/screens/View'
 //Patient
@@ -75,11 +79,11 @@ import SpecialtyFrontEndIndex from './components/Frontend/Section/Specialty';
 import PostFrontEndIndex from './components/Frontend/Section/Post';
 import DoctorFrontEndIndex from './components/Frontend/Section/Doctor';
 import SuccessIndex from './components/Frontend/Section/Success';
-//Login
-import SignUpIndex from './components/Frontend/Section/Login/SignUp';
-import SignInIndex from './components/Frontend/Section/Login/SignIn';
-import ForgotPasswordIndex from './components/Frontend/Section/Login/ForgotPassword';
-import ResetPasswordIndex from './components/Frontend/Section/Login/ResetPassword/ResetPassword';
+//Login Patient
+import SignUpPatientIndex from './components/Frontend/Section/Login/SignUp';
+import SignInPatientIndex from './components/Frontend/Section/Login/SignIn';
+import ForgotPasswordPatientIndex from './components/Frontend/Section/Login/ForgotPassword';
+import ResetPasswordIPatientndex from './components/Frontend/Section/Login/ResetPassword/ResetPassword';
 //
 import NoAuthPatientMiddleware from './middleware/NoPatientMiddleware';
 import AuthPatienMiddleware from './middleware/AuthPatientMiddleware';
@@ -90,11 +94,13 @@ import HistoryIndex from './components/Frontend/Section/History';
 const router = createBrowserRouter([
   {
     path: "/admin",
-    element: (
-      <NoAuthMiddleware>
-        <Login />
-      </NoAuthMiddleware>
-    )
+    element: <NoAuthMiddleware />, // Middleware chung
+    children: [
+      { path: "", element: <SignInAdminIndex /> },
+      { path: "signUp", element: <SignUpAdminIndex /> },
+      { path: "forgotPassword", element: <ForgotPasswordAdminIndex /> },
+      { path: "resetPassword", element: <ResetPasswordAdminIndex /> },
+    ],
   },
   {
     path: "/",
@@ -151,10 +157,10 @@ const router = createBrowserRouter([
       </NoAuthPatientMiddleware>
     ),
     children: [
-      { path: "signup", element: <SignUpIndex /> },
-      { path: "signin", element: <SignInIndex /> },
-      { path: "forgotPassword", element: <ForgotPasswordIndex /> },
-      { path: "resetPassword", element: <ResetPasswordIndex /> },
+      { path: "signup", element: <SignUpPatientIndex /> },
+      { path: "signin", element: <SignInPatientIndex /> },
+      { path: "forgotPassword", element: <ForgotPasswordPatientIndex /> },
+      { path: "resetPassword", element: <ResetPasswordIPatientndex /> },
     ]
   },
   {

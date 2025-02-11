@@ -1,11 +1,11 @@
 //pagination
-import Paginate from "@/components/paginate"
+import Paginate from "@/components/Paginate"
 import { destroy, pagination } from "@/service/PostService"
 //breadcrumb
 import PageHeading from "@/components/heading"
 import { Breadcrumb } from "@/types/Breadcrumb"
 //table
-import CustomTable from "@/components/customTable"
+import CustomTable from "@/components/CustomTable"
 import {
     Card,
     CardContent,

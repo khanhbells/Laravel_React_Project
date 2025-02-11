@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import UserCataloguePermission from "@/components/UserCataloguePermission";
 import PageHeading from "@/components/heading";
 import { CardFooter } from "@/components/ui/card";
-import Paginate from "@/components/paginate";
+import Paginate from "@/components/Paginate";
 //SETTINGS
 import { queryKey } from "@/constant/query";
 import { breadcrumb } from "../settings/UserCatalogueSettings";

@@ -5,14 +5,16 @@ interface ICustomLogin {
     errors: any,
     register: any,
     loading: boolean,
-    forgotPassword?: boolean
+    forgotPassword?: boolean,
+    [key: string]: any
 }
 
 const CustomLogin = ({
     errors,
     register,
     loading,
-    forgotPassword
+    forgotPassword,
+    restProps
 }: ICustomLogin) => {
     return (
         <>
@@ -40,15 +42,15 @@ const CustomLogin = ({
 
             </div>
             <p className="text-xs mb-2 text-gray-700">
-                {
-                    forgotPassword &&
-                    (
-                        <div className="flex justify-between">
-                            <Link className="text-blue-700" to={`/patient/forgotPassword`}>Quên mật khẩu</Link>
-                            <span>Chưa có tài khoản? <Link className="text-blue-700" to={`/patient/signup`}>Đăng ký ngay</Link></span>
-                        </div>
-                    )
-                }
+                <div className="flex justify-between">
+                    <Link
+                        className="text-blue-700"
+                        to={`/${forgotPassword ? 'patient' : 'admin'}/forgotPassword`}
+                    >
+                        Quên mật khẩu
+                    </Link>
+                    <span>Chưa có tài khoản? <Link className="text-blue-700" to={`/${forgotPassword ? 'patient' : 'admin'}/signup`}>Đăng ký ngay</Link></span>
+                </div>
             </p>
             <div className="description text-xs text-gray-700 mb-[10px]">
                 Chào mừng bạn đến với hệ thống đặt lịch khám bệnh version 1.0 của Khanh Bells

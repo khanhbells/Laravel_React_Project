@@ -42,6 +42,7 @@ class BookingResource extends JsonResource
             'payment_status' => $this->payment_status,
             'method' => $this->method,
             'birthday' => $this->birthday,
+            'code' => $this->code,
             'gender' => (string)$this->gender,
             'medicines' => $this->medicines->map(function ($medicine) {
                 return [

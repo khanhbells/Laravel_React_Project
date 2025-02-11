@@ -1,12 +1,12 @@
 import React, { act, ReactNode, useEffect, useState } from "react"
 import { Link, useSearchParams, useNavigate } from "react-router-dom"
 
-import { Checkbox } from "../components/ui/checkbox"
-import { Switch } from "../components/ui/switch"
-import { Button } from "../components/ui/button"
+import { Checkbox } from "./ui/checkbox"
+import { Switch } from "./ui/switch"
+import { Button } from "./ui/button"
 
 
-import { LoadingSpinner } from "../components/ui/loading"
+import { LoadingSpinner } from "./ui/loading"
 
 import useColumnState from "../hook/useColumnState"
 
@@ -17,7 +17,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "../components/ui/table"
+} from "./ui/table"
 import CustomAlertDialog from "@/components/CustomAlertDialog";
 import useDialog from "@/hook/useDialog"
 import { CustomTableProps, Row, ParamsToTuple } from "@/interfaces/BaseServiceInterface"

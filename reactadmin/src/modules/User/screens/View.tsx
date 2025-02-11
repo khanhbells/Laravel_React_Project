@@ -3,12 +3,12 @@ import { useQuery } from "react-query"
 import UserStore from "./include/Store"
 //pagination
 import { pagination, destroy, changePassword } from "@/service/UserService"
-import Paginate from "@/components/paginate"
+import Paginate from "@/components/Paginate"
 //breadcrumb
 import PageHeading from "@/components/heading"
 import { Breadcrumb } from "@/types/Breadcrumb"
 //table
-import CustomTable from "@/components/customTable"
+import CustomTable from "@/components/CustomTable"
 import useTable from "@/hook/useTable"
 import {
     Card,

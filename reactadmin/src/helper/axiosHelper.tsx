@@ -14,4 +14,11 @@ const handleAxiosError = (error: unknown) => {
     }
 
 }
-export { handleAxiosError }
+const handleAxiosSuccess = (message: string) => {
+    if (message) {
+        showToast(message, 'success')
+    } else {
+        showToast('Có vấn đề xảy ra vui lòng thực hiện lại!', 'error')
+    }
+}
+export { handleAxiosError, handleAxiosSuccess }

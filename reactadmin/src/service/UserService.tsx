@@ -24,6 +24,7 @@ const save = async (payload: PayloadInput, updateParams: { action: string, id: s
     return baseSave('/users', payload, updateParams)
 }
 
+
 const update = async (payload: PayloadInput) => {
     //     header: {
     //         'Content-Type': 'multipart/form-data'
@@ -65,5 +66,5 @@ export {
     save,
     getUserById,
     destroy,
-    changePassword
+    changePassword,
 }

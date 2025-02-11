@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Patient;
+namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ChangePasswordPatientTokenRequest extends FormRequest
+class ChangePasswordUserTokenRequest extends FormRequest
 {
     /**
-     * Determine if the patient is authorized to make this request.
+     * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
@@ -25,7 +25,7 @@ class ChangePasswordPatientTokenRequest extends FormRequest
             'password' => 'required',
             'confirmPassword' => 'required|same:password',
             'token' => 'required',
-            'email' => 'required|email|exists:patients,email',
+            'email' => 'required|email|exists:users,email',
         ];
     }
     public function messages(): array

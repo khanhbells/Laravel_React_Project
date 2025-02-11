@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ResetPasswordNotification extends Notification
+class ResetPasswordPatientNotification extends Notification
 {
     use Queueable;
     protected $token;

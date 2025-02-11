@@ -5,7 +5,7 @@ import { RootState } from "../redux/store"
 import { useSelector, useDispatch } from "react-redux"
 import { showToast } from "../helper/myHelper"
 import Header from "./header"
-import Aside from "./aside"
+import Aside from "./Aside";
 import '../assets/scss/Style.scss'
 
 const Layout: React.FC = () => {

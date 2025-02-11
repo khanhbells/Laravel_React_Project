@@ -4,13 +4,12 @@ import {
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-} from "../components/ui/accordion"
+} from "./ui/accordion"
 import { Link } from "react-router-dom";
 import "../assets/scss/Accordion.scss"
 import "../assets/scss/Aside.scss"
 import { sidebarItem } from "../constant/sidebar";
 import { Logo } from "./logo"
-import { useEffect } from "react";
 
 const Aside = () => {
     const location = useLocation()
@@ -68,7 +67,7 @@ const Aside = () => {
                                                                 >
                                                                     {link.title}
                                                                     <span
-                                                                        className="absolute left-2 top-1/2 transform -translate-y-1/2 w-1 h-1 border border-solid border-primary rounded-full border-white"
+                                                                        className="absolute left-2 top-1/2 transform -translate-y-1/2 w-1 h-1 border border-solid border-primary rounded-full"
                                                                     ></span>
                                                                 </Link>
                                                             </li>

@@ -23,7 +23,7 @@ use App\Http\Controllers\Api\V1\AuthPatientController;
 use App\Http\Controllers\Api\V1\MedicineCatalogueController;
 use App\Http\Controllers\Api\V1\MedicineController;
 use App\Http\Controllers\Api\V1\HomePageController;
-
+use App\Http\Controllers\Api\V1\VNPayController;
 use App\Http\Resources\DoctorResource;
 use App\Models\SpecialtyCatalogue;
 use Illuminate\Support\Facades\Route;
@@ -229,7 +229,7 @@ Route::group([
     Route::post('sort', [DashboardController::class, 'sort']);
     //BOOKINGS
     Route::get('bookings', [BookingController::class, 'index']);
-    Route::post('bookings', [BookingController::class, 'create']);
+
     Route::put('bookings/{id}', [BookingController::class, 'update']);
     Route::put('bookings/medicine/{id}', [BookingController::class, 'storeBookingMedicine']);
     //STATISTIC
@@ -249,10 +249,17 @@ Route::group([
     Route::get('location', [DashboardController::class, 'location']);
     // Patient
     Route::get('patients/{id}', [PatientController::class, 'show']);
+    //Bookings
+    Route::post('bookings', [BookingController::class, 'create']);
+    //VNPAY
+    Route::get('vnpay-return', [VNPayController::class, 'vnpay_return']);
 });
 
 Route::post('v1/auth/refresh', [AuthController::class, 'refresh']);
 Route::post('v1/auth/login', [AuthController::class, 'login']);
+Route::post('v1/auth/sign_up', [AuthController::class, 'signUp']);
+Route::post('v1/auth/forgot_password', [AuthController::class, 'sendResetLinkEmail']);
+Route::put('v1/auth/reset_password', [AuthController::class, 'resetPassword'])->name('password.reset');
 
 /*--------------------------------FRONT END--------------------------- */
 Route::group([

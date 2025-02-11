@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthRequest;
 use App\Http\Requests\ForgotPatientRequest;
 use App\Http\Requests\Patient\ChangePasswordPatientRequest;
+use App\Http\Requests\Patient\ChangePasswordPatientTokenRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Symfony\Component\HttpFoundation\Response;
@@ -200,7 +201,7 @@ class AuthPatientController extends Controller
         ], $status === Password::RESET_LINK_SENT ? 200 : 400);
     }
     //reset Password
-    public function resetPassword(ChangePasswordPatientRequest $request)
+    public function resetPassword(ChangePasswordPatientTokenRequest $request)
     {
         $status = Password::broker('patients')->reset(
             $request->only('email', 'password', 'token'),

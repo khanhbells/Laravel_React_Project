@@ -71,7 +71,7 @@ export const slug = (str: string): string => {
     return str;
 };
 
-export const addCommas = (nStr: string | undefined): string | undefined => {
+export const addCommas = (nStr: string | number | undefined): string | undefined => {
 
     nStr = String(nStr);
     nStr = nStr.replace(/[^0-9]/g, "");

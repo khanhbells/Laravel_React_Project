@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\Status;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthRequest;
+use App\Http\Requests\ForgotAuthRequest;
+use App\Http\Requests\User\ChangePasswordUserRequest;
+use App\Http\Requests\User\ChangePasswordUserTokenRequest;
+use App\Http\Requests\User\StoreUserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,11 +18,16 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
+use App\Services\User\UserService;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    public function __construct()
+    protected $userService;
+    public function __construct(UserService $userService)
     {
+        $this->userService = $userService;
         // $this->middleware('auth:api', ['except' => ['login']]);
     }
     public function login(AuthRequest $request)
@@ -27,11 +37,11 @@ class AuthController extends Controller
             'password' => $request->input('password')
         ];
 
-        if (!$token = auth()->attempt($credentials)) {
+        if (!$token = auth('api')->attempt($credentials)) {
             return response()->json(['error' => 'Email hoặc mật khẩu không đúng'], Response::HTTP_UNAUTHORIZED);
         }
 
-        $user = auth()->user();
+        $user = auth('api')->user();
 
         $refreshTokenData = $this->refreshTokenData($user);
 
@@ -71,7 +81,7 @@ class AuthController extends Controller
                 $refreshTokenCookie = $request->cookie('refresh_token');
                 $refreshTokenDecode = JWTAuth::getJWTProvider()->decode($refreshTokenCookie);
                 $user = User::find($refreshTokenDecode['user_id']);
-                $token = auth()->login($user);
+                $token = auth('api')->login($user);
 
                 $refreshTokenData = $this->refreshTokenData($user);
 
@@ -105,7 +115,7 @@ class AuthController extends Controller
     public function me(Request $request)
     {
         return response()->json([
-            'user' => new UserResource(auth()->user())
+            'user' => new UserResource(auth('api')->user())
         ]);
     }
 
@@ -159,7 +169,7 @@ class AuthController extends Controller
     {
         try {
             // Vô hiệu hóa token hiện tại
-            auth()->logout();
+            auth('api')->logout();
 
             // Xóa cookie chứa token
             $tokenCookie = Cookie::forget('access_token');
@@ -174,5 +184,53 @@ class AuthController extends Controller
                 'error' => $e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    //forgot password
+    public function sendResetLinkEmail(ForgotAuthRequest $request)
+    {
+        $status = Password::sendResetLink($request->only('email'));
+        return response()->json([
+            'message' => $status === Password::RESET_LINK_SENT ? 'Email gửi thành công!' : 'Gửi email thất bại!',
+            'status' => $status
+        ], $status === Password::RESET_LINK_SENT ? 200 : 400);
+    }
+    //reset Password
+    public function resetPassword(ChangePasswordUserTokenRequest $request)
+    {
+        $status = Password::reset(
+            $request->only('email', 'password', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => bcrypt($password)
+                ])->save();
+            }
+        );
+        if ($status === Password::PASSWORD_RESET) {
+            return response()->json(
+                [
+                    'message' => 'Mật khẩu đã được đặt lại thành công!',
+                    'code' => Response::HTTP_OK
+                ],
+                Response::HTTP_OK
+            );
+        }
+
+        throw ValidationException::withMessages(['email' => [__($status)]]);
+    }
+
+    public function signUp(StoreUserRequest $request)
+    {
+        $auth = $request->input('email');
+        $data = $this->userService->create($request, $auth);
+        if ($data['code'] == Status::SUCCESS) {
+            return response()->json([
+                'message' => 'Thêm mới bản ghi thành công',
+                'user' => new UserResource($data['user'])
+            ], Response::HTTP_OK);
+        }
+        return response()->json([
+            'message' => $data['message']
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

@@ -1,5 +1,5 @@
 import DetailContent from "@/components/DetailContent";
-import Paginate from "@/components/paginate";
+import Paginate from "@/components/Paginate";
 import { endpoint } from "@/constant/endpoint";
 import useListContent from "@/hook/useListContent";
 import { pagination } from "@/service/Frontend/FrontEndService";

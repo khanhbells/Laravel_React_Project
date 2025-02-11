@@ -84,10 +84,10 @@ const StoreBookingMedicine = ({
 
 
 
-    //Tra ve view
-    // useEffect(() => {
-    //     isSuccess === true && navigate(redirectIfSuccess)
-    // }, [isSuccess])
+    // Tra ve view
+    useEffect(() => {
+        isSuccess === true && navigate(redirectIfSuccess)
+    }, [isSuccess])
 
     //useQuery
     const { data: dropdown, isLoading: isDropdownLoading, isError: isDropDownError } = useQuery([queryKey.medicineCatalogues], () => pagination(''))

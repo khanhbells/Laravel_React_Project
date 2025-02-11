@@ -97,6 +97,7 @@ class BookingService extends BaseService
             $payload['booking_date'] = Carbon::now()->toDateTimeString();
             $payload['status'] = 'pending';
             $payload['payment_status'] = 'pending';
+            $payload['code'] = time();
             if ($request->input('id')) {
                 $payload['patient_id'] = $request->input('id');
             }

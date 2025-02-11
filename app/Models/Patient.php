@@ -8,9 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\QueryTrait;
-use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
-use App\Notifications\ResetPasswordNotification;
+use App\Notifications\ResetPasswordPatientNotification;
 
 class Patient extends Authenticatable implements JWTSubject
 {
@@ -82,7 +81,7 @@ class Patient extends Authenticatable implements JWTSubject
 
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new ResetPasswordNotification($token));
+        $this->notify(new ResetPasswordPatientNotification($token));
     }
 
     public function patient_catalogues()

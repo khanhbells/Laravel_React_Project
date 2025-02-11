@@ -1,15 +1,22 @@
 import BookingInforPatient from "@/components/BookingInforPatient"
 import { useQuery } from "react-query"
-import { useParams } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
 import { IBooking, getBookingById } from "@/service/BookingService"
 import BookingDoctorSchedule from "@/components/BookingDoctorSchedule"
+import { useEffect } from "react"
+import BookingInforPaymentVNPay from "@/components/BookingInforPaymentVNPay"
 
 const Success = () => {
 
     const { id } = useParams()
+    const location = useLocation();
+
+    // Lấy tất cả query params từ URL
+    const searchParams = new URLSearchParams(location.search);
+    const queryParams = Object.fromEntries(searchParams.entries()); // Chuyển thành object
 
     const { data, isLoading, isError } = useQuery<IBooking>(['bookings', id],
-        () => getBookingById(id),
+        () => getBookingById(id, Object.keys(queryParams).length ? queryParams : undefined),
         {
             enabled: !!id,
         }
@@ -22,10 +29,18 @@ const Success = () => {
                 <div className="text-center italic px-[450px] text-[15px]">Chúng tôi đã gửi đơn đặt lịch khám đến email của bạn để có thể kiểm tra lại. Vui lòng để ý email, bác sĩ sẽ phản hồi trong thời gian sớm nhất! Xin chân thành cảm ơn!</div>
                 <div className="px-[500px]">
                     <BookingInforPatient
-                        data={data}
+                        data={data?.bookings}
                     />
+                    {
+                        queryParams.vnp_BankCode &&
+                        <BookingInforPaymentVNPay
+                            secureHash={data?.secureHash || ''}
+                            vnp_SecureHash={data?.vnp_SecureHash || ''}
+                            queryParams={queryParams}
+                        />
+                    }
                     <BookingDoctorSchedule
-                        data={data}
+                        data={data?.bookings}
                     />
                 </div>
             </div>

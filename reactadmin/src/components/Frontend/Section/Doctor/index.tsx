@@ -1,6 +1,6 @@
 import CustomDescriptionContent from "@/components/CustomDescriptionContent";
 import CustomListContent from "@/components/CustomListContent";
-import Paginate from "@/components/paginate";
+import Paginate from "@/components/Paginate";
 import { endpoint } from "@/constant/endpoint";
 import { queryKey } from "@/constant/query";
 import { getDropdownDate } from '@/helper/myHelper';

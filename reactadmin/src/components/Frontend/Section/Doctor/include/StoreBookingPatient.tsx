@@ -209,8 +209,12 @@ const StoreBookingPatient = ({
 
     useEffect(() => {
         if (isSuccess === true && data && data.booking) {
-            const paramIdBooking = data.booking.id
-            navigate(`${redirectIfSucces}/${paramIdBooking}`)
+            if (data.payUrl) {
+                window.location.href = data.payUrl;
+            } else {
+                const paramIdBooking = data.booking.id
+                navigate(`${redirectIfSucces}/${paramIdBooking}`)
+            }
         }
 
     }, [isSuccess, data])

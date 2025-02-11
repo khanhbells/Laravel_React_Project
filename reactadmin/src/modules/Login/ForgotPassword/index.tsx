@@ -1,40 +1,27 @@
-import CustomLogin from "@/components/CustomLogin";
 import { Inputs } from "@/modules/Login/SignIn";
-import { forgotPassword } from "@/service/Frontend/AuthPatientService";
+import { forgotPassword } from "@/service/AuthService";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-// import { useToast } from "../contexts/ToastContext";
-import { setAuthPatientLogin } from "@/redux/slide/authPatientSlice";
+import LoadingButton from "@/components/LoadingButton";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { setToast } from "@/redux/slide/toastSlice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import LoadingButton from "@/components/LoadingButton";
+import { IForgotPassword } from "@/interfaces/ForgotPasswordInterface";
 
-export interface ForgotPassword {
-    email: string
-}
 
 const ForgotPassword = () => {
-    const navigate = useNavigate()
 
     const dispatch = useDispatch()
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
     } = useForm<Inputs>()
     const [loading, setLoading] = useState<boolean>(false)
-    const loginHandler: SubmitHandler<ForgotPassword> = async (payload) => {
+    const loginHandler: SubmitHandler<IForgotPassword> = async (payload) => {
         setLoading(true)
         try {
-            const authPatient = await forgotPassword(payload)
-            console.log(authPatient);
-
-            if (authPatient) {
-                dispatch(setToast({ message: authPatient.message, type: 'success' }))
-            }
+            const auth = await forgotPassword(payload)
         } catch (error) {
         } finally {
             setLoading(false)
@@ -43,7 +30,7 @@ const ForgotPassword = () => {
 
     return (
         <>
-            <div className="bg-sky-100 px-[550px] py-[50px]">
+            <div className="bg-sky-100 px-[550px] py-[50px] min-h-screen">
                 <Card className="pt-[20px]">
                     <CardTitle className="mb-[10px] text-center text-[20px]">Nhập email quên mật khẩu</CardTitle>
                     <CardContent>
@@ -62,7 +49,6 @@ const ForgotPassword = () => {
                                 loading={loading} text='Gửi email'
                             />
                         </form>
-
                     </CardContent>
                 </Card>
             </div>

@@ -46,13 +46,21 @@ const Store = ({ id, action, refetch, closeSheet }: UserCatalogueStoreProps) => 
     });
     const { register, handleSubmit, reset, formState: { errors }, setValue, control } = methods
     const { onSubmitHanler, loading } = useFormSubmit(save, { action: action, id: id }, null, refetch, closeSheet)
+    const [data, setData] = useState<any>();
 
-    const { data, isLoading, isError } = useQuery<IBooking>(['bookings', id],
+
+    const { data: dataBooking, isLoading, isError } = useQuery<IBooking>(['bookings', id],
         () => getBookingById(id),
         {
             enabled: action === 'update' && !!id,
         }
     )
+
+    useEffect(() => {
+        if (!isLoading && dataBooking && dataBooking.bookings) {
+            setData(dataBooking.bookings)
+        }
+    }, [dataBooking, isLoading])
 
     const [isValueStatus, setValueStatus] = useState({ value: '', label: '' })
     const [isValuePaymentStatus, setValuePaymentStatus] = useState({ value: '', label: '' })

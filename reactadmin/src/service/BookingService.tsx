@@ -42,8 +42,8 @@ const destroy = async (id: string) => {
 
 }
 
-const getBookingById = async (id: string | undefined): Promise<IBooking> => {
-    const response = await axios.get(`frontend/${endpoint}/${id}`)
+const getBookingById = async (id: string | undefined, queryParams: Record<string, string> = {}): Promise<IBooking> => {
+    const response = await axios.get(`frontend/${endpoint}/${id}`, { params: queryParams })
     return response.data
 }
 
