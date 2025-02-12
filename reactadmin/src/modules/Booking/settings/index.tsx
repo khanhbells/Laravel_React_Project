@@ -82,7 +82,7 @@ const tableColumn: tableColumn[] = [
             item.method === 'cod' ? 'Thanh toán trực tiếp' : item.method === 'momo' ?
                 'Thanh toán bằng ví momo' : item.method === 'paypal' ?
                     'Thanh toán bằng paypal' : item.method === 'vnpay' ?
-                        'Thanh toán bằng VNPAY' : ''
+                        'Thanh toán bằng VNPAY' : 'Thanh toán bằng Zalopay'
         }</span>
     },
     {

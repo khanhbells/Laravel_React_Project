@@ -67,7 +67,7 @@ const ContentSlider = ({
                                                                 </span>
                                                                 <Link
                                                                     key={index}
-                                                                    to={`${dataCatalogue?.id}/${dataCatalogue?.canonical}/${value.specialties[0].value}/${value.specialties[0].canonical}.html`}
+                                                                    to={`/homepage/specialty/${dataCatalogue?.id}/${dataCatalogue?.canonical}/${value.specialties[0].value}/${value.specialties[0].canonical}.html`}
                                                                 >
                                                                     <span className="font-semibold">
                                                                         {value.specialties && value.specialties.length > 0 ? value.specialties[0].label : ""}

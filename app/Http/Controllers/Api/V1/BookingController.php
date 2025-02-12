@@ -15,9 +15,11 @@ use App\Http\Requests\Booking\UpdateBookingRequest;
 use App\Classes\Vnpay;
 use App\Classes\Momo;
 use App\Classes\Paypal;
+use App\Classes\Zalopay;
 use App\Http\Controllers\Api\V1\VNPayController;
 use App\Http\Controllers\Api\V1\MomoController;
 use App\Http\Controllers\Api\V1\PaypalController;
+use App\Http\Controllers\Api\V1\ZaloPayController;
 
 class BookingController extends Controller
 {
@@ -27,9 +29,11 @@ class BookingController extends Controller
     protected $vnpay;
     protected $momo;
     protected $paypal;
+    protected $zalopay;
     protected $vnpayController;
     protected $momoController;
     protected $paypalController;
+    protected $zalopayController;
 
     public function __construct(
         BookingService $bookingService,
@@ -37,18 +41,22 @@ class BookingController extends Controller
         Vnpay $vnpay,
         Momo $momo,
         Paypal $paypal,
+        Zalopay $zalopay,
         VNPayController $vnpayController,
         MomoController $momoController,
-        PaypalController $paypalController
+        PaypalController $paypalController,
+        ZaloPayController $zalopayController,
     ) {
         $this->bookingService = $bookingService;
         $this->bookingRepository = $bookingRepository;
         $this->vnpay = $vnpay;
         $this->momo = $momo;
         $this->paypal = $paypal;
+        $this->zalopay = $zalopay;
         $this->vnpayController = $vnpayController;
         $this->momoController = $momoController;
         $this->paypalController = $paypalController;
+        $this->zalopayController = $zalopayController;
     }
 
     public function index(Request $request)
@@ -172,6 +180,11 @@ class BookingController extends Controller
                 break;
             case 'paypal':
                 return $this->paypalController->success($request, $booking);
+                break;
+            case 'zalopay':
+                if ($request->has('checksum')) {
+                    return $this->zalopayController->zalopay_return($booking);
+                }
                 break;
             default:
                 # code...

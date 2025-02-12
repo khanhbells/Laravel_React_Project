@@ -3,6 +3,7 @@ import cod from "@/assets/COD.svg";
 import momo from "@/assets/momo-icon.webp";
 import paypal from "@/assets/paypal.ico";
 import vnpay from "@/assets/Icon-VNPAY-QR.webp";
+import zalopay from "@/assets/zalopay.png";
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Controller } from "react-hook-form";
@@ -64,7 +65,7 @@ const CustomRadioGroup = ({
                                         }}
                                     >
                                     </div>
-                                    <div className="ml-[10px] mt-[5px]">Thanh toán sau bằng ví điện thử Momo</div>
+                                    <div className="ml-[10px] mt-[5px]">Thanh toán bằng ví điện thử Momo</div>
                                 </Label>
                             </div>
                             <div className="flex items-center space-x-2">
@@ -80,7 +81,7 @@ const CustomRadioGroup = ({
                                         }}
                                     >
                                     </div>
-                                    <div className="ml-[10px] mt-[5px]">Thanh toán sau bằng Paypal</div>
+                                    <div className="ml-[10px] mt-[5px]">Thanh toán bằng Paypal</div>
                                 </Label>
                             </div>
                             <div className="flex items-center space-x-2">
@@ -97,7 +98,24 @@ const CustomRadioGroup = ({
                                         }}
                                     >
                                     </div>
-                                    <div className="ml-[10px] mt-[5px]">Thanh toán sau bằng VNPAY</div>
+                                    <div className="ml-[10px] mt-[5px]">Thanh toán bằng VNPAY</div>
+                                </Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="zalopay" id="r5" />
+                                <Label htmlFor="r5" className="flex">
+                                    <div
+                                        className="pt-[6px]"
+                                        style={{
+                                            backgroundImage: `url(${zalopay})`,
+                                            backgroundSize: "contain",
+                                            backgroundRepeat: "no-repeat",
+                                            width: "30px", // Đặt chiều rộng
+                                            height: "30px", // Đặt chiều cao
+                                        }}
+                                    >
+                                    </div>
+                                    <div className="ml-[10px] mt-[5px]">Thanh toán bằng ZaloPay</div>
                                 </Label>
                             </div>
                         </RadioGroup>

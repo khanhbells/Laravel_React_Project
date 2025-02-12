@@ -24,12 +24,14 @@ use App\Http\Controllers\Api\V1\MedicineCatalogueController;
 use App\Http\Controllers\Api\V1\MedicineController;
 use App\Http\Controllers\Api\V1\HomePageController;
 use App\Http\Controllers\Api\V1\VNPayController;
+use App\Http\Controllers\Api\V1\ZaloPayController;
 use App\Http\Resources\DoctorResource;
 use App\Models\SpecialtyCatalogue;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
@@ -253,6 +255,39 @@ Route::group([
     Route::post('bookings', [BookingController::class, 'create']);
     //VNPAY
     Route::get('vnpay-return', [VNPayController::class, 'vnpay_return']);
+    Route::post('zalopay/callback', function (Request $request) {
+        Log::info("ZaloPay Callback Received", ['request' => $request->all()]);
+        $result = [];
+        try {
+            $key2 = "Iyz2habzyr7AG8SgvoBCbKwKi3UzlLi3";
+            $postdata = file_get_contents('php://input');
+            $postdatajson = json_decode($postdata, true);
+            $mac = hash_hmac("sha256", $postdatajson["data"], $key2);
+
+            $requestmac = $postdatajson["mac"];
+
+            // kiểm tra callback hợp lệ (đến từ ZaloPay server)
+            if (strcmp($mac, $requestmac) != 0) {
+                // callback không hợp lệ
+                $result["returncode"] = -1;
+                $result["returnmessage"] = "mac not equal";
+            } else {
+                // thanh toán thành công
+                // merchant cập nhật trạng thái cho đơn hàng
+                $datajson = json_decode($postdatajson["data"], true);
+                // echo "update order's status = success where apptransid = ". $dataJson["apptransid"];
+
+                $result["returncode"] = 1;
+                $result["returnmessage"] = "success";
+            }
+        } catch (Exception $e) {
+            $result["returncode"] = 0; // ZaloPay server sẽ callback lại (tối đa 3 lần)
+            $result["returnmessage"] = $e->getMessage();
+        }
+
+        // thông báo kết quả cho ZaloPay server
+        echo json_encode($result);
+    });
 });
 
 Route::post('v1/auth/refresh', [AuthController::class, 'refresh']);
@@ -300,8 +335,6 @@ Route::group([
     Route::get('historys', [BookingController::class, 'indexHistory']);
     Route::get('historys/{id}', [BookingController::class, 'show']);
 });
-
-
 Route::post('v1/patient/refresh', [AuthPatientController::class, 'refresh']);
 Route::post('v1/patient/login', [AuthPatientController::class, 'login']);
 Route::post('v1/patient/forgot_password', [AuthPatientController::class, 'sendResetLinkEmail']);

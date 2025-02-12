@@ -7,6 +7,7 @@ import { useEffect } from "react"
 import BookingInforPaymentVNPay from "@/components/BookingInforPaymentVNPay"
 import BookingInforPaymentMomo from "@/components/BookingInforPaymentMomo"
 import BookingInforPaymentPaypal from "@/components/BookingInforPaymentPaypal"
+import BookingInforPaymentZaloPay from "@/components/BookingInforPaymentZaloPay"
 
 const Success = () => {
 
@@ -46,8 +47,10 @@ const Success = () => {
                                     <BookingInforPaymentMomo
                                         dataMomo={typeof data?.momo === 'object' ? data.momo : { m2signature: undefined, partnerSignature: undefined, message: undefined }}
                                     />
-                                ) : queryParams.PayerID && (
+                                ) : queryParams.PayerID ? (
                                     <BookingInforPaymentPaypal />
+                                ) : queryParams.status && queryParams.status === '1' && (
+                                    <BookingInforPaymentZaloPay />
                                 )
 
                     }
