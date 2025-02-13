@@ -13,6 +13,8 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
 import { showToast } from "@/helper/myHelper";
 import CustomInput from "@/components/CustomInput";
+import CustomHelmet from "@/components/CustomHelmet";
+import { canonical } from "@/constant/canonical";
 export interface ResetPassword {
     email: string
 }
@@ -48,7 +50,7 @@ const ResetPassword = () => {
             const res = await changePassword(payload, token, email)
             if (res.code === 200) {
                 showToast(res.message, res.code === 200 ? 'success' : 'error')
-                navigate('/patient/signin')
+                navigate(`${canonical.patinetSignIn}`)
             }
         } finally {
             setIsLoading(false)
@@ -59,6 +61,12 @@ const ResetPassword = () => {
 
     return (
         <>
+            <CustomHelmet
+                meta_title={'Cập nhật mật khẩu'}
+                meta_keyword={'resetPassword'}
+                meta_description={'Đây là trang cập nhật mật khẩu'}
+                canonical={`patient/resetPassword`}
+            />
             <div className="bg-sky-100 px-[550px] py-[50px]">
                 <Card className="pt-[20px]">
                     <CardTitle className="mb-[10px] text-center text-[20px]">Cập nhật mật khẩu</CardTitle>

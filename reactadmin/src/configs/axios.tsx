@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 export const baseUrl = 'http://127.0.0.1:8000/api/v1/'
+// export const baseUrl = 'https://e7cc-2405-4802-ac68-2340-ad8c-7f91-da9b-8a95.ngrok-free.app/api/v1/'
 
 
 export interface CustomAxiosRequestConfig extends AxiosRequestConfig {

@@ -27,6 +27,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { CgProfile } from "react-icons/cg";
 import { IoExitOutline } from "react-icons/io5";
+import { canonical } from '@/constant/canonical';
 const Header = () => {
     //-------------REDUX-CONTEXT-----------------------
     const { isAuthenticated, patient: patientRedux } = useSelector((state: RootState) => state.patient)
@@ -94,7 +95,7 @@ const Header = () => {
             <header className="bg-sky-50 ">
                 <div className='grid grid-cols-12 h-[100%]'>
                     <div className='col-span-3 flex items-center'>
-                        <Link to={`/homepage`}>
+                        <Link to={`${import.meta.env.VITE_HOMEPAGE_URL}`}>
                             <img src={logo} className='w-[70%] h-[70%] bg-contain cursor-pointer transform scale-50' />
                         </Link>
                         {/* <div className='w-[100%] h-[100%] bg-contain cursor-pointer transform scale-50'></div> */}
@@ -194,7 +195,7 @@ const Header = () => {
                                         </DropdownMenuItem>
                                         <DropdownMenuItem className="flex items-center text-[#333335] cursor-pointer">
                                             <FaHistory className="mr-2 text-[18px]" />
-                                            <Link to={`/homepage/history/${patientRedux.id}`}>Lịch sử khám</Link>
+                                            <Link to={`/homepage/history/${patientRedux.id}.html`}>Lịch sử khám</Link>
                                         </DropdownMenuItem>
                                         <DropdownMenuItem className="flex items-center text-[#333335] cursor-pointer" onClick={() => { handleLogout() }}>
                                             <IoExitOutline className="mr-2 text-[18px]" />
@@ -205,7 +206,10 @@ const Header = () => {
                             </div>
                         ) : patientRedux === null && patientContext !== null ? (
                             <div className='col-span-2 items-center grid place-items-end'>
-                                <Link className='hover:text-[white] flex text-white text-center px-[10px] mr-[10px] w-[50%] py-[5px] bg-sky-300 rounded-lg font-semibold hover:bg-sky-400' to={`/patient/signin`}>
+                                <Link
+                                    className='hover:text-[white] flex text-white text-center px-[10px] mr-[10px] w-[50%] py-[5px] bg-sky-300 rounded-lg font-semibold hover:bg-sky-400'
+                                    to={canonical.patinetSignIn}
+                                >
                                     <CgProfile className="mr-2 text-[18px]" />
                                     Tài khoản
                                 </Link>

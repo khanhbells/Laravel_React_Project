@@ -8,6 +8,7 @@ import BookingInforPaymentVNPay from "@/components/BookingInforPaymentVNPay"
 import BookingInforPaymentMomo from "@/components/BookingInforPaymentMomo"
 import BookingInforPaymentPaypal from "@/components/BookingInforPaymentPaypal"
 import BookingInforPaymentZaloPay from "@/components/BookingInforPaymentZaloPay"
+import CustomHelmet from "@/components/CustomHelmet"
 
 const Success = () => {
 
@@ -27,6 +28,12 @@ const Success = () => {
 
     return (
         <>
+            <CustomHelmet
+                meta_title="Đặt lịch khám bệnh thành công"
+                meta_keyword="success, bookingbells"
+                meta_description="Đây là trang đặt lịch thành công"
+                canonical={`homepage/success/${id}`}
+            />
             <div className="bg-sky-100 h-[100%]">
                 <div className="uppercase font-semibold text-center px-[20px] pt-[20px] pb-[5px] text-[20px]">Đặt lịch khám bệnh thành công</div>
                 <div className="text-center italic px-[450px] text-[15px]">Chúng tôi đã gửi đơn đặt lịch khám đến email của bạn để có thể kiểm tra lại. Vui lòng để ý email, bác sĩ sẽ phản hồi trong thời gian sớm nhất! Xin chân thành cảm ơn!</div>

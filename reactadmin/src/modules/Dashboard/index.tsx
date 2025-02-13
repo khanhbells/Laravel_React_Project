@@ -9,23 +9,23 @@ import PageHeading from "../../components/heading"
 import { tableColumn } from "./settings"
 import ChartTwo from "@/components/Charts/ChartTwo"
 import ChatCard from "@/components/Chat/ChatCard"
+import CustomHelmet from "@/components/CustomHelmet"
 const Dashboard = () => {
     const breadcrumb = {
         title: 'Thống kê chung',
-        route: '/dashboard'
+        route: 'dashboard'
     }
-    const baseUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:5173'; // Đặt base URL ở file .env
-    const canonicalUrl = `${baseUrl}${breadcrumb.route}`;
 
     const { data, isLoading, isError, refetch } = useQuery(['statistic'], () => statistic())
 
     return (
         <>
-            <Helmet>
-                <title>Dashboard</title>
-                <meta name="description" content="Thống kê doanh thu"></meta>
-                <link rel="canonical" href={canonicalUrl} />
-            </Helmet>
+            <CustomHelmet
+                meta_title="Dashboard - Thống kê doanh thu"
+                meta_description="Xem thống kê doanh thu và hiệu suất kinh doanh của bạn."
+                meta_keyword="thống kê, doanh thu, dashboard, kinh doanh"
+                canonical={breadcrumb.route}
+            />
             <PageHeading breadcrumb={breadcrumb} />
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5 m-[10px]">
                 <Statistic

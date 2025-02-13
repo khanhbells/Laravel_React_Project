@@ -9,6 +9,7 @@ import { setToast } from "@/redux/slide/toastSlice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import CustomHelmet from "@/components/CustomHelmet";
 const SignIn = () => {
     const navigate = useNavigate()
 
@@ -29,7 +30,7 @@ const SignIn = () => {
                 dispatch(setToast({ message: 'Đăng nhập vào hệ thống thành công', type: 'success' }))
                 dispatch(setAuthPatientLogin(authPatient))
                 // setMessage('Đăng nhập vào hệ thống thành công', 'success')-- > context
-                navigate(-1)
+                navigate(`${import.meta.env.VITE_HOMEPAGE_URL}`)
             }
         } catch (error) {
         } finally {
@@ -39,6 +40,12 @@ const SignIn = () => {
 
     return (
         <>
+            <CustomHelmet
+                meta_title={'Đăng nhập'}
+                meta_keyword={'signin, login'}
+                meta_description={'Đây là trang đăng nhập'}
+                canonical={`patient/signin`}
+            />
             <div className="bg-sky-100 px-[550px] py-[50px]">
                 <Card className="pt-[20px]">
                     <CardTitle className="mb-[10px] text-center text-[20px]">Đăng nhập</CardTitle>

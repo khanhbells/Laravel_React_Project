@@ -13,6 +13,7 @@ import { endpoint } from "@/constant/endpoint";
 import { queryKey } from "@/constant/query";
 
 import useGetDataFrontEnd from "@/hook/useGetDataFrontEnd";
+import CustomHelmet from "../CustomHelmet";
 const HomePage = () => {
     const settings = {
         dots: false,
@@ -50,6 +51,12 @@ const HomePage = () => {
 
     return (
         <>
+            <CustomHelmet
+                meta_title="Trang chủ - Đặt lịch khám bệnh Booking Bells"
+                meta_keyword="trangchu, bookingbells"
+                meta_description="Đây là trang chủ website"
+                canonical="homepage"
+            />
             <BannerHeader />
             <div className="bg-sky-100">
                 {

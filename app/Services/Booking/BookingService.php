@@ -33,7 +33,7 @@ class BookingService extends BaseService
             $agrument['whereHas'] = $this->whereHasDoctor($auth->id);
         } else {
             if ($request->input('user_id')) {
-                $agrument['whereHas'] = $this->whereHasDoctor($request);
+                $agrument['whereHas'] = $this->whereHasDoctor($request->input('user_id'));
             }
         }
         if ($request->input('date')) {
@@ -54,11 +54,11 @@ class BookingService extends BaseService
         ];
     }
 
-    private function whereHasDoctor($request)
+    private function whereHasDoctor($id)
     {
         return [
-            'doctors' => function ($query) use ($request) {
-                $query->where('user_id', $request->input('user_id'))
+            'doctors' => function ($query) use ($id) {
+                $query->where('user_id', $id)
                     ->where('publish', 2);
             }
         ];

@@ -35,6 +35,7 @@ import { useNavigate } from "react-router-dom"
 import { status } from "@/constant/general"
 import CustomSheet from "@/components/CustomSheet"
 import Store from "./include/Store"
+import CustomHelmet from "@/components/CustomHelmet"
 const History = () => {
     const breadcrumbData: Breadcrumb = breadcrumb.index
     const navigate = useNavigate()
@@ -84,66 +85,74 @@ const History = () => {
     const customFilter = useCustomFilter(filterInitial);
 
     return (
-        <FilterProvider customFilters={customFilter}>
-            <div className="page-heading py-[20px] bg-white border-b border-[#e7eaec]">
-                <div className="px-[10px]">
-                    <h2 className="text-[24px] mb-[5px]">{breadcrumbData.title}</h2>
+        <>
+            <CustomHelmet
+                meta_title={'Lịch sử khám'}
+                meta_keyword={'history'}
+                meta_description={'Đây là trang lịch sử khám bệnh'}
+                canonical={`homepage/history/${patientRedux?.id}`}
+            />
+            <FilterProvider customFilters={customFilter}>
+                <div className="page-heading py-[20px] bg-white border-b border-[#e7eaec]">
+                    <div className="px-[10px]">
+                        <h2 className="text-[24px] mb-[5px]">{breadcrumbData.title}</h2>
+                    </div>
                 </div>
-            </div>
-            <div className="container">
-                <Card className="rounded-[5px] mt-[15px] ">
-                    <CardHeader className="border-b border-solid border-[#f3f3f3] p-[20px]">
-                        <CardTitle className="uppercase">Danh sách lịch sử đặt lịch hẹn khám bệnh của <span className="text-[#f00]">{patientRedux?.name}</span></CardTitle>
-                        <CardDescription className="text-xs text-[#f00000]">Hiển thị danh sách lịch hẹn, sử dụng các chức năng bên dưới để lọc theo mong muốn</CardDescription>
-                    </CardHeader>
-                    <CardContent className="p-[15px]">
-                        <Filter
-                            isAnyChecked={somethingChecked}
-                            checkedState={checkedState}
-                            model={model}
-                            refetch={refetch}
-                            handleQueryString={(filters: any) => handleQueryString(filters)}
-                            items={filterItems}
-                            status={status}
-                        />
-                        <TableHistoryPatient
-                            isLoading={isLoading}
-                            data={data}
-                            isError={isError}
-                            model={model}
-                            tableColumn={tableColumn}
-                            checkedState={checkedState}
-                            checkedAllState={checkedAllState}
-                            handleCheckedChange={handleCheckedChange}
-                            handleCheckedAllChange={handleCheckedAllChange}
-                            openSheet={openSheet}
-                            refetch={refetch}
-                            flag={true}
-                            buttonActions={buttonActions}
-                        />
-                    </CardContent>
-                    <CardFooter>
-                        {!isLoading && data[model] && data.links ? <Paginate links={data?.links} pageChange={handlePageChange} /> : null}
-                    </CardFooter>
-                </Card>
-                {isSheetOpen && (
-                    <CustomSheet
-                        title={breadcrumb.medicines.title}
-                        description={breadcrumb.medicines.description}
-                        isSheetOpen={isSheetOpen.open}
-                        closeSheet={closeSheet}
-                        className="w-[400px] sm:w-[550px]"
-                    >
-                        <Store
-                            refetch={refetch}
+                <div className="container">
+                    <Card className="rounded-[5px] mt-[15px] ">
+                        <CardHeader className="border-b border-solid border-[#f3f3f3] p-[20px]">
+                            <CardTitle className="uppercase">Danh sách lịch sử đặt lịch hẹn khám bệnh của <span className="text-[#f00]">{patientRedux?.name}</span></CardTitle>
+                            <CardDescription className="text-xs text-[#f00000]">Hiển thị danh sách lịch hẹn, sử dụng các chức năng bên dưới để lọc theo mong muốn</CardDescription>
+                        </CardHeader>
+                        <CardContent className="p-[15px]">
+                            <Filter
+                                isAnyChecked={somethingChecked}
+                                checkedState={checkedState}
+                                model={model}
+                                refetch={refetch}
+                                handleQueryString={(filters: any) => handleQueryString(filters)}
+                                items={filterItems}
+                                status={status}
+                            />
+                            <TableHistoryPatient
+                                isLoading={isLoading}
+                                data={data}
+                                isError={isError}
+                                model={model}
+                                tableColumn={tableColumn}
+                                checkedState={checkedState}
+                                checkedAllState={checkedAllState}
+                                handleCheckedChange={handleCheckedChange}
+                                handleCheckedAllChange={handleCheckedAllChange}
+                                openSheet={openSheet}
+                                refetch={refetch}
+                                flag={true}
+                                buttonActions={buttonActions}
+                            />
+                        </CardContent>
+                        <CardFooter>
+                            {!isLoading && data[model] && data.links ? <Paginate links={data?.links} pageChange={handlePageChange} /> : null}
+                        </CardFooter>
+                    </Card>
+                    {isSheetOpen && (
+                        <CustomSheet
+                            title={breadcrumb.medicines.title}
+                            description={breadcrumb.medicines.description}
+                            isSheetOpen={isSheetOpen.open}
                             closeSheet={closeSheet}
-                            id={isSheetOpen.id}
-                            action={isSheetOpen.action}
-                        />
-                    </CustomSheet>
-                )}
-            </div >
-        </FilterProvider>
+                            className="w-[400px] sm:w-[550px]"
+                        >
+                            <Store
+                                refetch={refetch}
+                                closeSheet={closeSheet}
+                                id={isSheetOpen.id}
+                                action={isSheetOpen.action}
+                            />
+                        </CustomSheet>
+                    )}
+                </div >
+            </FilterProvider>
+        </>
     )
 }
 export default History

@@ -1,99 +1,100 @@
-import CustomDescriptionContent from "@/components/CustomDescriptionContent";
-import CustomListContent from "@/components/CustomListContent";
-import Paginate from "@/components/Paginate";
-import { endpoint } from "@/constant/endpoint";
-import { queryKey } from "@/constant/query";
-import { getDropdownDate } from '@/helper/myHelper';
-import useListContent from "@/hook/useListContent";
-import { findById, pagination } from "@/service/Frontend/FrontEndService";
-import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
-import Select from 'react-select';
-import PageHeading from "../Breadcrumb";
+import '../../../../assets/scss/DetailDoctor.scss'
+import DoctorSchedule from './include/DoctorSchedule'
+import { useParams } from 'react-router-dom'
+import PageHeading from '../Breadcrumb'
+import DoctorExtraInfo from './include/DoctorExtraInfo'
+import DoctorInfor from './include/DoctorInfor'
+import CustomSheet from "@/components/CustomSheet"
 
+//HOOK
+import useDetailDoctor from '@/hook/useDetailDoctor'
+//CONTEXT
+import { DataScheduleProvider } from '@/contexts/DataScheduleContext'
+import useSheet from "@/hook/useSheet"
+import StoreBookingPatient from './include/StoreBookingPatient'
+import CustomHelmet from '@/components/CustomHelmet'
 
-const Doctor = () => {
-    const model = 'doctors'
-    const { catalogueId, catalogue, specialId, specialty } = useParams()
-    const query = `&publish=2&specialty_id=${specialId}&permission=true`
-    const { isLoading: isLoadingDoctors, data: dataDoctors, isError, refetch, handlePageChange, handleQueryString } = useListContent({ model, pagination, query, endpoint: endpoint.doctors })
-    const { data: dataSpecialties, isLoading: isSpecialtiesLoading } = useQuery(
-        [queryKey.specialties, specialId],
-        () => findById(specialId, endpoint.specialties),
-        { enabled: !!dataDoctors && !isLoadingDoctors && dataDoctors.doctors.length === 0 }
-    );
+const DetailDoctor = () => {
+    const { specialId, doctorId, catalogueId, catalogue, doctor } = useParams()
+    const { dataDoctor, dataSpecialties, schedules, getData, isDoctorLoading, isSpecialtyLoading } = useDetailDoctor(specialId, doctorId);
+    const { isSheetOpen, openSheet, closeSheet } = useSheet()
+
     const breadcrumb = [
         {
             title: `Khám chuyên khoa`,
             route: `/homepage/specialty/${catalogueId}/${catalogue}.html`,
         },
         {
-            title: `${(dataDoctors && dataDoctors.doctors.length > 0) ? dataDoctors.doctors[0].specialties[0].label : (dataSpecialties) ? dataSpecialties.name : 'Loading...'}`,
-            route: `/homepage/specialty/${catalogueId}/${catalogue}/${specialId}/${specialty}.html`,
+            title: `${dataSpecialties ? dataSpecialties.name : 'Loading...'}`,
+            route: `/homepage/specialty/${catalogueId}/${catalogue}/${specialId}/${dataSpecialties?.canonical}.html`,
+        },
+        {
+            title: `${dataDoctor ? dataDoctor.name : 'Loading...'}`,
+            route: ''
         },
     ]
-
-    const doctors = dataDoctors?.doctors || [];
-
-    const [isSchedules, setSchedules] = useState<
-        { getDatas: any[] | string; schedules: any[] }[]
-    >([]);
-
-    useEffect(() => {
-        const fetchSchedules = async () => {
-            const results = await Promise.all(
-                doctors.map(async (doctor: any) => {
-                    const data = await pagination(
-                        `publish=2&doctor_id=${doctor.id}&status=OPEN&permission=true`,
-                        endpoint.schedules
-                    );
-                    return {
-                        schedules: getDropdownDate(data.schedules || []),
-                        getDatas: data.schedules
-                    };
-                })
-            );
-            setSchedules(results);
-        };
-
-        if (doctors.length > 0) {
-            fetchSchedules();
-        }
-    }, [doctors]);
-
     return (
         <>
-            <PageHeading breadcrumb={breadcrumb} />
-            <CustomDescriptionContent
-                dataDoctors={dataDoctors}
-                dataSpecialties={dataSpecialties}
+            <CustomHelmet
+                meta_title={dataDoctor?.meta_title || ''}
+                meta_keyword={dataDoctor?.meta_keyword || ''}
+                meta_description={dataDoctor?.meta_description || ''}
+                canonical={`homepage/specialty/${catalogueId}/${catalogue}/${specialId}/${dataSpecialties?.canonical}/${doctorId}/${doctor}`}
             />
-            <div className="bg-sky-100 min-h-[250px] py-[10px] px-[100px] h-[100%]">
-                <div className="mb-[40px]">
-                    <Select
-                        options={[]}
-                        className="w-[150px]"
-                        placeholder={'Chọn khu vực'}
-                    // onChange={(selected) => handleSelectChange(selected?.value)}
-                    // value={options?.find(option => option.value === selectedDate) || null}
+            <DataScheduleProvider>
+                <PageHeading breadcrumb={breadcrumb} />
+                <div className="h-[full]">
+                    <DoctorInfor
+                        dataDoctor={dataDoctor}
+                        className='px-[200px] py-[10px]'
                     />
-                </div>
-                <CustomListContent
-                    dataDoctors={dataDoctors}
-                    isLoadingDoctors={isLoadingDoctors}
-                    isSchedules={isSchedules}
-                    catalogue={catalogue}
-                    catalogueId={catalogueId}
-                    specialty={specialty}
-                    specialId={specialId}
-                />
-                <div className="pb-[10px]">
-                    {!isLoadingDoctors && dataDoctors[model] && dataDoctors.links ? <Paginate links={dataDoctors?.links} pageChange={handlePageChange} /> : null}
-                </div>
-            </div>
+                    <div className='schedule-doctor h-[100%] flex px-[200px] py-[10px] min-h-[200px] bg-sky-100'>
+
+                        <div className='content-left w-[50%]'>
+                            <DoctorSchedule
+                                options={schedules || []}
+                                data={getData || []}
+                                className='border-primary border-r'
+                            />
+                        </div>
+                        <div className='content-right w-[50%]'>
+                            <DoctorExtraInfo
+                                dataDoctor={dataDoctor}
+                                openSheet={openSheet}
+                            />
+                        </div>
+
+                    </div>
+                    <div className='detail-info-doctor px-[200px] bg-[#f9f9f9] py-[10px] border-primary border-y'>
+                        <div
+                            dangerouslySetInnerHTML={{ __html: dataDoctor?.content }}
+                        >
+                        </div>
+                    </div>
+                    <div className='comment-doctor h-[50px]'> </div>
+
+                </div >
+
+                {isSheetOpen && (
+                    <div className='z-auto'>
+                        <CustomSheet
+                            title={'Đơn đăng ký khám bệnh'}
+                            description={'Vui lòng điền đầy đủ thông tin cá nhân trước khi xác nhận lịch khám'}
+                            isSheetOpen={isSheetOpen.open}
+                            closeSheet={closeSheet}
+                            className="w-[400px] sm:w-[600px]"
+                        >
+                            <StoreBookingPatient
+                                dataDoctor={dataDoctor}
+                                schedules={schedules}
+                                closeSheet={closeSheet}
+                            />
+                        </CustomSheet>
+                    </div>
+                )}
+            </DataScheduleProvider>
         </>
     )
 }
 
-export default Doctor
+export default DetailDoctor

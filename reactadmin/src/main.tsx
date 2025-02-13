@@ -73,11 +73,11 @@ import MedicineCatalogueStore from './modules/MedicineCatalogue/screens/Store';
 /*--------------------------UI/UX------------------------- */
 import LayoutFrontend from './components/Frontend/Layout';
 import HomePage from './components/Frontend';
-import DetailDoctor from './components/Frontend/Section/Doctor/DetailDoctor';
+import DetailDoctor from './components/Frontend/Section/Doctor';
 import ScrollToTop from './components/ScrollToTop';
-import SpecialtyFrontEndIndex from './components/Frontend/Section/Specialty';
+import SpecialtyFrontEndIndex from './components/Frontend/Section/SpecialtyCatalogue';
 import PostFrontEndIndex from './components/Frontend/Section/Post';
-import DoctorFrontEndIndex from './components/Frontend/Section/Doctor';
+import DoctorFrontEndIndex from './components/Frontend/Section/Specialty';
 import SuccessIndex from './components/Frontend/Section/Success';
 //Login Patient
 import SignUpPatientIndex from './components/Frontend/Section/Login/SignUp';
@@ -157,10 +157,10 @@ const router = createBrowserRouter([
       </NoAuthPatientMiddleware>
     ),
     children: [
-      { path: "signup", element: <SignUpPatientIndex /> },
-      { path: "signin", element: <SignInPatientIndex /> },
-      { path: "forgotPassword", element: <ForgotPasswordPatientIndex /> },
-      { path: "resetPassword", element: <ResetPasswordIPatientndex /> },
+      { path: "signup.html", element: <SignUpPatientIndex /> },
+      { path: "signin.html", element: <SignInPatientIndex /> },
+      { path: "forgotPassword.html", element: <ForgotPasswordPatientIndex /> },
+      { path: "resetPassword.html", element: <ResetPasswordIPatientndex /> },
     ]
   },
   {
@@ -174,13 +174,13 @@ const router = createBrowserRouter([
       </>
     ),
     children: [
-      { path: "homepage", element: <HomePage /> },
-      { path: "homepage/specialty/:catalogueId/:catalogue/:specialId/:specialty/:doctorId/:name.html", element: <DetailDoctor /> },
+      { path: "homepage.html", element: <HomePage /> },
+      { path: "homepage/specialty/:catalogueId/:catalogue/:specialId/:specialty/:doctorId/:doctor.html", element: <DetailDoctor /> },
       { path: "homepage/specialty/:catalogueId/:catalogue/:specialId/:specialty.html", element: <DoctorFrontEndIndex /> },
       { path: "homepage/specialty/:catalogueId/:catalogue.html", element: <SpecialtyFrontEndIndex /> },
       { path: "homepage/post/:catalogueId/:catalogue.html", element: <PostFrontEndIndex /> },
-      { path: "homepage/success/:id", element: <SuccessIndex /> },
-      { path: "homepage/history/:id", element: <HistoryIndex /> },
+      { path: "homepage/success/:id.html", element: <SuccessIndex /> },
+      { path: "homepage/history/:id.html", element: <HistoryIndex /> },
     ]
   },
 ]);

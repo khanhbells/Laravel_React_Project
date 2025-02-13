@@ -24,7 +24,7 @@ const NoAuthMiddleware = ({ children }: ProtectedRouteProps) => {
                     console.log(123);
 
                     setPatientData(patientData)
-                    navigate('/homepage')
+                    navigate(`${import.meta.env.VITE_HOMEPAGE_URL}`)
                 } else {
                     setPatientData(undefined);
                     setCheckedAuth(true)
@@ -36,7 +36,7 @@ const NoAuthMiddleware = ({ children }: ProtectedRouteProps) => {
         if (!isAuthenticated || patient === null) {
             checkAuthenticate()
         } else {
-            navigate('/homepage')
+            navigate(`${import.meta.env.VITE_HOMEPAGE_URL}`)
         }
 
     }, [isAuthenticated, patient, navigate])

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import LoadingButton from "./LoadingButton"
+import { canonical } from "@/constant/canonical"
 
 interface ICustomLogin {
     errors: any,
@@ -45,11 +46,11 @@ const CustomLogin = ({
                 <div className="flex justify-between">
                     <Link
                         className="text-blue-700"
-                        to={`/${forgotPassword ? 'patient' : 'admin'}/forgotPassword`}
+                        to={`${forgotPassword ? `${canonical.patientForgotPassword}` : '/admin/forgotPassword'}`}
                     >
                         Quên mật khẩu
                     </Link>
-                    <span>Chưa có tài khoản? <Link className="text-blue-700" to={`/${forgotPassword ? 'patient' : 'admin'}/signup`}>Đăng ký ngay</Link></span>
+                    <span>Chưa có tài khoản? <Link className="text-blue-700" to={`${forgotPassword ? `${canonical.patientSignUp}` : '/admin/signup'}`}>Đăng ký ngay</Link></span>
                 </div>
             </p>
             <div className="description text-xs text-gray-700 mb-[10px]">

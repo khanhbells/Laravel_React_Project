@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import LoadingButton from "@/components/LoadingButton";
+import CustomHelmet from "@/components/CustomHelmet";
 
 export interface ForgotPassword {
     email: string
@@ -43,6 +44,12 @@ const ForgotPassword = () => {
 
     return (
         <>
+            <CustomHelmet
+                meta_title={'Quên mật khẩu'}
+                meta_keyword={'forgotpassword, quenmatkhau'}
+                meta_description={'Đây là trang quên mật khẩu'}
+                canonical={`patient/forgotPassword`}
+            />
             <div className="bg-sky-100 px-[550px] py-[50px]">
                 <Card className="pt-[20px]">
                     <CardTitle className="mb-[10px] text-center text-[20px]">Nhập email quên mật khẩu</CardTitle>

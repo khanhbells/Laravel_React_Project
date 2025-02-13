@@ -37,7 +37,7 @@ const ContentSlider = ({
                 <div className='section-container'>
                     <div className='section-header'>
                         <span className='title-section'>{label ?? (dataCatalogue && dataCatalogue.name)}</span>
-                        <Link to={`${nameCatalogueParams}/${dataCatalogue?.id}/${dataCatalogue?.canonical}.html`} className="btn-section rounded-lg bg-sky-500 text-[white] text-[13px]">Xem thêm</Link>
+                        <Link to={`/homepage/${nameCatalogueParams}/${dataCatalogue?.id}/${dataCatalogue?.canonical}.html`} className="btn-section rounded-lg bg-sky-500 text-[white] text-[13px]">Xem thêm</Link>
                     </div>
                     <div className='section-body'>
                         {
@@ -57,7 +57,7 @@ const ContentSlider = ({
                                                         <div className='position text-center'>
                                                             <Link
                                                                 key={index}
-                                                                to={`${nameCatalogueParams}/${dataCatalogue?.id}/${dataCatalogue?.canonical}/${value.specialties[0].value}/${value.specialties[0].canonical}/${value.id}/${value.canonical}.html`}
+                                                                to={`/homepage/${nameCatalogueParams}/${dataCatalogue?.id}/${dataCatalogue?.canonical}/${value.specialties[0].value}/${value.specialties[0].canonical}/${value.id}/${value.canonical}.html`}
                                                             >
                                                                 <span className="font-semibold">{value.name}</span>
                                                             </Link>
