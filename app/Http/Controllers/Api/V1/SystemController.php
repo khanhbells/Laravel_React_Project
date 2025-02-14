@@ -47,7 +47,7 @@ class SystemController extends Controller
 
     public function create(Request $request)
     {
-        $auth = auth()->user();
+        $auth = auth('api')->user();
         $data = $this->systemService->create($request, $auth);
         return $data;
         if ($data['code'] == Status::SUCCESS) {

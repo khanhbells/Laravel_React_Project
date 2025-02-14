@@ -13,13 +13,13 @@ const Post = () => {
     const { catalogueId, catalogue } = useParams()
 
     const query = `&publish=2&post_catalogue_id=${catalogueId}`
-    const { isLoading: isLoadingPosts, data: dataPosts, isError, refetch, handlePageChange, handleQueryString } = useListContent({ model, pagination, query, endpoint: endpoint.posts })
+    const { isLoading: isLoadingPosts, data: dataPosts, isError, refetch, handlePageChange, handleQueryString } = useListContent({ model, pagination, queryData: query, endpoint: endpoint.posts })
     const { data: dataCatalogue, isLoading, isError: isErrorDataCatalogue } = useQuery([model, catalogueId], () => getPostCatalogueById(catalogueId), {
         enabled: !!catalogueId,
     })
     const breadcrumb = [
         {
-            title: `${dataPosts?.posts[0].cats[0]}`,
+            title: `${dataPosts && dataPosts.posts.length > 0 ? dataPosts.posts[0].cats[0] : 'Loading...'}`,
             route: ''
         },
     ]

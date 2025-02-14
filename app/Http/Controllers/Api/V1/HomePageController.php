@@ -10,6 +10,7 @@ use App\Http\Resources\LocationResource;
 use App\Http\Resources\PostCatalogueResource;
 use App\Http\Resources\SpecialtyCatalogueResource;
 use App\Http\Resources\SpecialtyResource;
+use App\Models\System;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -55,7 +56,22 @@ class HomePageController extends Controller
         }
     }
 
-
+    public function systems(Request $request)
+    {
+        try {
+            $systems = convert_array(System::get(), 'keyword', 'content');
+            return response()->json([
+                'systems' => $systems,
+                'code' => Response::HTTP_OK
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Có lỗi xảy ra, vui lòng thử lại sau.',
+                'message' => $e->getMessage(),
+                'code' => Status::ERROR
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 
     public function search(Request $request)
     {

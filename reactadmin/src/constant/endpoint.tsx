@@ -9,6 +9,7 @@ export const endpoint = {
     schedules: 'frontend/schedules',
     patients: 'frontend/patients',
     menus: 'frontend/menus',
+    systems: 'frontend/systems',
     bookings: 'bookings',
     bookingMedicine: 'bookings/medicine',
     searchHomePage: 'frontend/search',

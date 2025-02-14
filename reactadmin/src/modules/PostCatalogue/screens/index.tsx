@@ -36,7 +36,6 @@ const PostCatalogue = () => {
     //Checkbox
     const { checkedState, checkedAllState, handleCheckedChange, handleCheckedAllChange, isAnyChecked } = useCheckBoxState(data, model, isLoading)
     const somethingChecked = isAnyChecked()
-    // const { isSheetOpen, openSheet, closeSheet } = useSheet()
 
     const [customFilter, setCustomFilter] = useState<SelectConfig[]>([]);
 

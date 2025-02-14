@@ -10,6 +10,7 @@ import {
 import { canonical } from '@/constant/canonical';
 import { endpoint } from '@/constant/endpoint';
 import { usePatientContext } from '@/contexts/PatientContext';
+import { useSystemContext } from "@/contexts/SystemContext";
 import { writeUrl } from '@/helper/myHelper';
 import { setAuthPatientLogout } from "@/redux/slide/authPatientSlice";
 import { RootState } from '@/redux/store';
@@ -23,12 +24,16 @@ import { IoExitOutline } from "react-icons/io5";
 import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from 'react-router-dom';
-import logo from '../../assets/logo1.png';
 import { LoadingSpinner } from '../ui/loading';
+import { useMenuContext } from "@/contexts/MenuContext";
 const Header = () => {
     //-------------REDUX-CONTEXT-----------------------
     const { isAuthenticated, patient: patientRedux } = useSelector((state: RootState) => state.patient)
     const { patient: patientContext, setPatient } = usePatientContext()
+    const { isDataSystems } = useSystemContext()
+    const { isDataMenus } = useMenuContext()
+
+
     const handleLogout = async () => {
         try {
             const response = await logout();
@@ -41,25 +46,22 @@ const Header = () => {
         }
     }
     //---------------QUERY---------------------
-    const { data, isLoading, isError } = useQuery(['menus'],
-        () => menus('', endpoint.menus)
-    )
     const menuData = useMemo(() => {
-        if (data && !isLoading && data.menus) {
+        if (isDataMenus) {
             return [
                 {
                     title: 'Dịch vụ khám',
-                    subItems: data.menus.specialty_catalogues,
+                    subItems: isDataMenus.specialty_catalogues,
                     model: 'specialty'
                 },
                 {
                     title: 'Cơ sở y tế',
-                    subItems: data.menus.hospitals,
+                    subItems: isDataMenus.hospitals,
                     model: 'hospital'
                 },
                 {
                     title: 'Bài viết',
-                    subItems: data.menus.post_catalogues,
+                    subItems: isDataMenus.post_catalogues,
                     model: 'post'
                 },
                 {
@@ -71,10 +73,7 @@ const Header = () => {
             ]
         }
         return []
-    }, [data, isLoading])
-    useEffect(() => {
-        console.log(menuData);
-    }, [menuData])
+    }, [isDataMenus])
     const dispatch = useDispatch();
 
     const [openIndex, setOpenIndex] = useState(null); // Lưu ID của menu đang mở
@@ -86,6 +85,10 @@ const Header = () => {
     const handleMouseLeave = () => {
         setOpenIndex(null);
     };
+    useEffect(() => {
+        console.log(isDataSystems);
+
+    }, [isDataSystems])
 
     return (
         <>
@@ -93,7 +96,20 @@ const Header = () => {
                 <div className='grid grid-cols-12 h-[100%]'>
                     <div className='col-span-3 flex items-center'>
                         <Link to={`${import.meta.env.VITE_HOMEPAGE_URL}`}>
-                            <img src={logo} className='w-[70%] h-[70%] bg-contain cursor-pointer transform scale-50' />
+                            {
+                                isDataSystems ? (
+                                    <img
+                                        src={isDataSystems.homepage_logon}
+                                        className='w-[70%] h-[70%] bg-contain cursor-pointer transform scale-50'
+                                    />
+                                ) :
+                                    (
+                                        <div className="flex items-center justify-center w-full">
+                                            <LoadingSpinner className="mr-[5px]" />
+                                            Loading...
+                                        </div>
+                                    )
+                            }
                         </Link>
                         {/* <div className='w-[100%] h-[100%] bg-contain cursor-pointer transform scale-50'></div> */}
                     </div>

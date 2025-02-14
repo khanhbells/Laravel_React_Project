@@ -1,17 +1,46 @@
+import { useMenuContext } from "@/contexts/MenuContext"
+import { useSystemContext } from "@/contexts/SystemContext"
+import { writeUrl } from "@/helper/myHelper"
+import { useEffect, useMemo } from "react"
+import { Link } from "react-router-dom"
+import { LoadingSpinner } from "../ui/loading"
 const Footer = () => {
+    const { isDataSystems } = useSystemContext()
+    const { isDataMenus } = useMenuContext()
+    const footerData = useMemo(() => {
+        if (isDataMenus) {
+            return [
+                {
+                    title: 'Dịch vụ khám',
+                    subItems: isDataMenus.specialty_catalogues,
+                    model: 'specialty'
+                },
+                {
+                    title: 'Cơ sở y tế',
+                    subItems: isDataMenus.hospitals,
+                    model: 'hospital'
+                },
+                {
+                    title: 'Bài viết',
+                    subItems: isDataMenus.post_catalogues,
+                    model: 'post'
+                },
+            ]
+        }
+        return []
+    }, [isDataMenus])
     return (
         <>
-            <footer aria-labelledby="footer-heading" className="bg-white flex grid">
+            <footer aria-labelledby="footer-heading" className="bg-white grid">
                 <p className="sr-only" id="footer-heading">Footer</p>
                 <div className="mx-auto px-4 py-20 max-w-screen-2xl">
                     <div className="xl:grid xl:grid-cols-3 xl:gap-8">
                         <div className="mt-10 xl:mt-0">
-                            <p className="text-sm font-semibold leading-6 text-black">Subscribe to our newsletter</p>
-                            <p className="mt-2 text-sm leading-6 text-gray-800">The latest news, articles, and resources, sent to your inbox
-                                weekly.</p>
+                            <p className="text-sm font-semibold leading-6 text-black">{isDataSystems && isDataSystems.homepage_brand}</p>
+                            <p className="mt-2 text-sm leading-6 text-gray-800">{isDataSystems && isDataSystems.homepage_slogan}</p>
                             <form className="mt-6 sm:flex sm:max-w-md">
                                 <label htmlFor="email-address" className="sr-only">Email address</label>
-                                <input type="email" placeholder="Enter your email" name="email-address" autoComplete="email" required
+                                <input type="email" placeholder="Nhập email của bạn..." name="email-address" autoComplete="email" required
                                     className="min-w-0 appearance-none border-0 ring-1 ring-inset ring-white/10 placeholder:text-gray-500
               focus:ring-2 focus:ring-inset focus:ring-black focus:outline-none w-full rounded-md bg-gray-50 px-3 py-1.5
               text-base text-black shadow-sm sm:w-64 sm:text-sm sm:leading-6 xl:w-full" id="email-address" />
@@ -19,61 +48,85 @@ const Footer = () => {
                                     <button type="submit" className="flex hover:bg-black focus-visible:outline
                 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black w-full items-center
                 justify-center rounded-md bg-black px-3 py-2 text-sm font-semibold text-white
-                shadow-sm">Subscribe</button>
+                shadow-sm">Đăng ký</button>
                                 </div>
                             </form>
                         </div>
                         <div className="mt-10 xl:mt-0 xl:col-span-2 grid grid-cols-2 gap-8">
                             <div className="md:grid md:grid-cols-2 md:gap-8">
                                 <div>
-                                    <p className="text-sm font-semibold leading-6 text-black">Category</p>
+                                    <p className="text-sm font-semibold leading-6 text-black">Dịch vụ khám</p>
                                     <ul role="list" className="mt-6 space-y-4">
-                                        <li>
-                                            <a href="#" className="text-sm leading-6 text-gray-800 hover:text-black">Marketing</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" className="text-sm leading-6 text-gray-800 hover:text-black">Analytics</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" className="text-sm leading-6 text-gray-800 hover:text-black">Commerce</a>
-                                        </li>
+                                        {
+                                            isDataMenus && isDataMenus.specialty_catalogues.length > 0 ? isDataMenus.specialty_catalogues.map((value: any, index: number) =>
+                                            (
+                                                <li key={value.id}>
+                                                    <Link to={writeUrl(value.canonical, 'specialty', value.id)} className="text-sm leading-6 text-gray-800 hover:text-black">
+                                                        {value.name}
+                                                    </Link>
+                                                </li>
+                                            )
+                                            ) :
+                                                (
+                                                    <div className="flex items-center justify-center w-full">
+                                                        <LoadingSpinner className="mr-[5px]" />
+                                                        Loading...
+                                                    </div>
+                                                )
+                                        }
                                     </ul>
                                 </div>
                                 <div className="mt-10 md:mt-0">
-                                    <p className="text-sm font-semibold leading-6 text-black">Category</p>
+                                    <p className="text-sm font-semibold leading-6 text-black">Cơ sở y tế</p>
                                     <ul role="list" className="mt-6 space-y-4">
-                                        <li>
-                                            <a href="#" className="text-sm leading-6 text-gray-800 hover:text-black">Pricing</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" className="text-sm leading-6 text-gray-800 hover:text-black">Guides</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" className="text-sm leading-6 text-gray-800 hover:text-black">Mission and Values</a>
-                                        </li>
+                                        {
+                                            isDataMenus && isDataMenus.hospitals.length > 0 ? isDataMenus.hospitals.map((value: any, index: number) =>
+                                            (
+                                                <li key={value.id}>
+                                                    <Link to={writeUrl(value.canonical, 'hospital', value.id)} className="text-sm leading-6 text-gray-800 hover:text-black">
+                                                        {value.name}
+                                                    </Link>
+                                                </li>
+                                            )
+                                            ) :
+                                                (
+                                                    <div className="flex items-center justify-center w-full">
+                                                        <LoadingSpinner className="mr-[5px]" />
+                                                        Loading...
+                                                    </div>
+                                                )
+                                        }
                                     </ul>
                                 </div>
                             </div>
                             <div className="md:grid md:grid-cols-2 md:gap-8">
                                 <div>
-                                    <p className="text-sm font-semibold leading-6 text-black">Category</p>
+                                    <p className="text-sm font-semibold leading-6 text-black">Bài viết</p>
                                     <ul role="list" className="mt-6 space-y-4">
-                                        <li>
-                                            <a href="#" className="text-sm leading-6 text-gray-800 hover:text-black">About</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" className="text-sm leading-6 text-gray-800 hover:text-black">Blog</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" className="text-sm leading-6 text-gray-800 hover:text-black">Team</a>
-                                        </li>
+                                        {
+                                            isDataMenus && isDataMenus.post_catalogues.length > 0 ? isDataMenus.post_catalogues.map((value: any, index: number) =>
+                                            (
+                                                <li key={value.id}>
+                                                    <Link to={writeUrl(value.canonical, 'post', value.id)} className="text-sm leading-6 text-gray-800 hover:text-black">
+                                                        {value.name}
+                                                    </Link>
+                                                </li>
+                                            )
+                                            ) :
+                                                (
+                                                    <div className="flex items-center justify-center w-full">
+                                                        <LoadingSpinner className="mr-[5px]" />
+                                                        Loading...
+                                                    </div>
+                                                )
+                                        }
                                     </ul>
                                 </div>
                                 <div className="mt-10 md:mt-0">
-                                    <p className="text-sm font-semibold leading-6 text-black">Category</p>
+                                    <p className="text-sm font-semibold leading-6 text-black">Liên hệ</p>
                                     <ul role="list" className="mt-6 space-y-4">
                                         <li>
-                                            <a href="#" className="text-sm leading-6 text-gray-800 hover:text-black">Claim</a>
+                                            <a href="#" className="text-sm leading-6 text-gray-800 hover:text-black">About</a>
                                         </li>
                                         <li>
                                             <a href="#" className="text-sm leading-6 text-gray-800 hover:text-black">Privacy</a>
@@ -88,7 +141,7 @@ const Footer = () => {
                     </div>
                     <div className="mt-16 pt-8 sm:mt-20 md:flex md:items-center md:justify-between lg:mt-24 border-t border-white/10">
                         <div className="md:order-2 flex space-x-6">
-                            <a href="#" className="text-black hover:text-gray-700">
+                            <a href={isDataSystems && isDataSystems.social_facebook} className="text-black hover:text-gray-700">
                                 <span className="sr-only">Facebook</span>
                                 <svg
                                     className="h-6 w-6"
@@ -107,7 +160,7 @@ const Footer = () => {
                                     />
                                 </svg>
                             </a>
-                            <a href="#" className="text-black hover:text-gray-700">
+                            <a href={isDataSystems && isDataSystems.social_instagram} className="text-black hover:text-gray-700">
                                 <span className="sr-only">Instagram</span>
                                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" id="Windframe_HVLPQ3n-Mj46">
                                     <path fillRule="evenodd"
@@ -121,15 +174,6 @@ const Footer = () => {
                                 </svg>
                             </a>
                             <a href="#" className="text-black hover:text-gray-700">
-                                <span className="sr-only">X</span>
-                                <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" id="Windframe_Bh18PPA4x1te">
-                                    <path d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002
-                21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218H13.6823ZM11.5541 13.0956L10.8574
-                12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541
-                13.096V13.0956Z"></path>
-                                </svg>
-                            </a>
-                            <a href="#" className="text-black hover:text-gray-700">
                                 <span className="sr-only">GitHub</span>
                                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" id="Windframe_Hi0vTCPMTr5Z">
                                     <path fillRule="evenodd"
@@ -139,7 +183,7 @@ const Footer = () => {
                                         clipRule="evenodd"></path>
                                 </svg>
                             </a>
-                            <a href="#" className="text-black hover:text-gray-700">
+                            <a href={isDataSystems && isDataSystems.social_youtube} className="text-black hover:text-gray-700">
                                 <span className="sr-only">YouTube</span>
                                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" id="Windframe_mgkOvdPknMdW">
                                     <path fillRule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418
@@ -149,8 +193,7 @@ const Footer = () => {
                                 </svg>
                             </a>
                         </div>
-                        <p className="mt-8 text-xs leading-5 text-gray-400 md:order-1 md:mt-0">© 2024 Windframe, Inc. All rights
-                            reserved.</p>
+                        <p className="mt-8 text-xs leading-5 text-gray-400 md:order-1 md:mt-0">{isDataSystems && isDataSystems?.homepage_copyright}</p>
                     </div>
                 </div>
             </footer>

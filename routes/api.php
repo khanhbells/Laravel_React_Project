@@ -321,6 +321,8 @@ Route::group([
     Route::post('patients', [PatientController::class, 'signUp']);
     //MENU
     Route::get('menus', [HomePageController::class, 'menus']);
+    //MENU
+    Route::get('systems', [HomePageController::class, 'systems']);
     //SEARCH
     Route::get('search', [HomePageController::class, 'search']);
 });

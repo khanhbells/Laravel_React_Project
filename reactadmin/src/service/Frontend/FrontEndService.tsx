@@ -34,6 +34,18 @@ const menus = async (queryString: string, endpoint: string) => {
         };
     }
 }
+const systems = async (queryString: string, endpoint: string) => {
+    try {
+        const response = await axios.get(`/${endpoint}?${queryString}`)
+        return response.data
+    } catch (error: any) {
+        handleAxiosError(error)
+        return {
+            code: error?.response.status,
+            message: 'Không có quyền truy cập',
+        };
+    }
+}
 
 const searchInput = async (queryString: string, endpoint: string) => {
     try {
@@ -63,5 +75,6 @@ export {
     findById,
     pagination,
     menus,
-    searchInput
+    searchInput,
+    systems
 };

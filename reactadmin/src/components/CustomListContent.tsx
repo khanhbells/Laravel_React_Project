@@ -54,7 +54,7 @@ const CustomListContent = ({
                             <div key={index}>
 
                                 <Card className="mb-[20px] h-[100%] " >
-                                    <CardContent className="flex pt-[10px] grid grid-cols-12">
+                                    <CardContent className=" pt-[10px] grid grid-cols-12">
                                         <div className="border-r border-sky-200 col-span-6">
                                             <DoctorInfor
                                                 dataDoctor={value}

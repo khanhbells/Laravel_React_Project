@@ -31,7 +31,7 @@ import Permission from '@/modules/UserCatalogue/screens/Permission';
 //PatientCatalogue
 import PatientCatalogueIndex from '@/modules/PatientCatalogue/screens';
 //PostCatalogue
-import PostCatalogueIndex from '@/modules/PostCatalogue/screens/View';
+import PostCatalogueIndex from '@/modules/PostCatalogue/screens';
 import PostCatalogueStore from '@/modules/PostCatalogue/screens/Store';
 //Post
 import PostIndex from '@/modules/Post/screens/index';

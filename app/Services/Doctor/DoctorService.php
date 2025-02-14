@@ -28,8 +28,21 @@ class DoctorService extends BaseService
     {
         $agrument = $this->paginateAgrument($request);
 
-        if ($request->input('specialty_id')) {
-            $agrument['whereHas'] = $this->whereHas($request);
+        // Danh sách các điều kiện whereHas có thể áp dụng
+        $whereHasConditions = [
+            'specialty_id' => 'whereHasSpecialty',
+            'province_id' => 'whereHasProvince',
+            'date' => 'whereHasDate',
+        ];
+
+        // Duyệt qua danh sách, kiểm tra input và thêm vào `whereHas` nếu có
+        foreach ($whereHasConditions as $param => $method) {
+            if ($request->filled($param)) {
+                $agrument['whereHas'] = array_merge(
+                    $agrument['whereHas'] ?? [],
+                    $this->$method($request)
+                );
+            }
         }
 
         $doctors = $this->doctorRepository->pagination([...$agrument]);
@@ -37,12 +50,29 @@ class DoctorService extends BaseService
         return $doctors;
     }
 
-    private function whereHas($request)
+    private function whereHasSpecialty($request)
     {
         return [
             'specialties' => function ($query) use ($request) {
                 $query->where('specialty_id', $request->integer('specialty_id'))
                     ->where('publish', 2);
+            }
+        ];
+    }
+    private function whereHasProvince($request)
+    {
+        return [
+            'users' => function ($query) use ($request) {
+                $query->where('province_id', $request->integer('province_id'));
+            }
+        ];
+    }
+    private function whereHasDate($request)
+    {
+        return [
+            'schedules' => function ($query) use ($request) {
+                $query->where('date', $request->input('date'))
+                    ->where('status', 'OPEN');
             }
         ];
     }
@@ -53,7 +83,7 @@ class DoctorService extends BaseService
             'perpage' => $request->input('perpage') ?? 10,
             'keyword' => [
                 'search' => $request->input('keyword') ?? '',
-                'field' => ['mete_title']
+                'field' => ['meta_title']
             ],
             'condition' => [
                 'publish' => $request->integer('publish'),

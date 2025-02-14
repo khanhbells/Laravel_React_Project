@@ -17,13 +17,17 @@ import {
 
 export interface CustomFilterDatePickerProps {
     handleFilter: (value: string, field: string) => void,
+    disabledDay: boolean
 }
 
 const CustomFilterDatePicker: React.FC<CustomFilterDatePickerProps> = ({
     handleFilter,
+    disabledDay
 }) => {
 
     const [date, setDate] = React.useState<Date>()
+
+    const today = new Date()
 
     const onDateChange = (selectedDate: Date | undefined) => {
         setDate(selectedDate)
@@ -63,6 +67,7 @@ const CustomFilterDatePicker: React.FC<CustomFilterDatePickerProps> = ({
                             selected={date}
                             onSelect={onDateChange}
                             initialFocus
+                            disabled={(day) => disabledDay ? day < today : false}
                         />
                     </PopoverContent>
                 </Popover>

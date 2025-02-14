@@ -153,5 +153,26 @@ if (!function_exists('execPostRequest')) {
         return $result;
     }
 }
+if (!function_exists('convert_array')) {
+    function convert_array($system = null, $keyword = '', $value = '')
+    {
+        $temp = [];
+        if (is_array($system)) {
+            foreach ($system as $key => $val) {
+                if (strpos($val[$value], 'public/')) {
+                    $temp[$val[$keyword]] = getImages($val[$value]);
+                } else {
+                    $temp[$val[$keyword]] = $val[$value];
+                }
+            }
+        }
+        if (is_object($system)) {
+            foreach ($system as $key => $val) {
+                $temp[$val->{$keyword}] = getImages($val->{$value});
+            }
+        }
+        return $temp;
+    }
+}
 // tác dụng của studly chuyển chuỗi thành kiểu chữ "StudlyCase" (còn gọi là PascalCase), trong đó mỗi từ bắt đầu bằng chữ cái viết hoa và không có dấu gạch dưới hoặc khoảng trắng.
 // tác dụng của singular chuyển đổi một chuỗi từ số nhiều (plural) thành số ít (singular).

@@ -129,7 +129,7 @@ const Filter = ({
                                                     ))}
                                                 </SelectContent>
                                             </Select>
-                                        ) : (
+                                        ) : !restProps.closePublish && (
                                             <Select onValueChange={(value) => handleFilter(value, 'publish')} defaultValue={filters.publish}>
                                                 <SelectTrigger className="w-[150px]">
                                                     <SelectValue placeholder="Chọn trạng thái" />
@@ -145,20 +145,23 @@ const Filter = ({
                                         )
                                     }
                                 </div>
-                                <div className="mr-[10px]">
-                                    <Select onValueChange={(value) => handleFilter(value, 'sort')} defaultValue={filters.sort}>
-                                        <SelectTrigger className="w-[180px]">
-                                            <SelectValue placeholder="Sắp xếp theo" />
-                                        </SelectTrigger>
-                                        <SelectContent >
-                                            {sort && sort.map((item, index) => (
-                                                <SelectItem className="cursor-pointer" value={String(item.value)} key={index}>
-                                                    {item.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
+                                {
+                                    !restProps.closeSort &&
+                                    <div className="mr-[10px]">
+                                        <Select onValueChange={(value) => handleFilter(value, 'sort')} defaultValue={filters.sort}>
+                                            <SelectTrigger className="w-[180px]">
+                                                <SelectValue placeholder="Sắp xếp theo" />
+                                            </SelectTrigger>
+                                            <SelectContent >
+                                                {sort && sort.map((item, index) => (
+                                                    <SelectItem className="cursor-pointer" value={String(item.value)} key={index}>
+                                                        {item.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                }
                                 <div className="mr-[10px]">
                                     <Input
                                         type="email"
@@ -172,7 +175,11 @@ const Filter = ({
                                 </div>
                                 <div className="mr-[10px]">
                                     {
-                                        filterDate && filterDate === true && <CustomFilterDatePicker handleFilter={handleFilter} />
+                                        filterDate && filterDate === true &&
+                                        <CustomFilterDatePicker
+                                            handleFilter={handleFilter}
+                                            disabledDay={restProps.disabledDay}
+                                        />
                                     }
                                 </div>
                             </div>
@@ -182,7 +189,7 @@ const Filter = ({
                         {
                             restProps.permission
                                 ?
-                                <Link to={restProps.permission} className="p-0 bg-teal-500 mr-[10px] text-white px-[15px] flex justify-between items-center text-[12px] block p-[8px] rounded">
+                                <Link to={restProps.permission} className=" bg-teal-500 mr-[10px] text-white px-[15px] flex justify-between items-center text-[12px] p-[8px] rounded">
                                     <FiPlus className="mr-[5px]" />
                                     Phân quyền
                                 </Link>
@@ -211,7 +218,7 @@ const Filter = ({
                                 ) :
                                     buttonText ?
                                         (
-                                            <Link to={restProps.to} className="p-0 bg-primary text-white px-[15px] flex justify-between items-center text-[12px] block p-[10px] rounded">
+                                            <Link to={restProps.to} className=" bg-primary text-white px-[15px] flex justify-between items-center text-[12px] p-[10px] rounded">
                                                 <FiPlus className="mr-[5px]" />
                                                 {buttonText}
                                             </Link>
