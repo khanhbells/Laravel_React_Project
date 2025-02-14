@@ -15,12 +15,14 @@ import {
 } from "../components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar"
 import { CgProfile } from "react-icons/cg";
+import { FaHome } from "react-icons/fa";
 //CONTEXT
 import { useUserContext } from "@/contexts/UserContext";
 //API
 import { logout } from "@/service/BaseService";
 import { useDispatch } from "react-redux";
 import { setAuthLogout } from "@/redux/slide/authSlice";
+import { canonical } from "@/constant/canonical";
 const Header = () => {
     const dispatch = useDispatch();
     const { user, setUser } = useUserContext();
@@ -88,6 +90,10 @@ const Header = () => {
                                     <DropdownMenuItem className="flex items-center text-[#333335] cursor-pointer">
                                         <CgProfile className="mr-2 text-[18px]" />
                                         <Link to={`/user/doctor/update/${user?.id}`}>Thay đổi thông tin</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="flex items-center text-[#333335] cursor-pointer">
+                                        <FaHome className="mr-2 text-[18px]" />
+                                        <Link to={`${canonical.homepage}`}>Trang chủ</Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem className="flex items-center text-[#333335] cursor-pointer" onClick={() => { handleLogout() }}>
                                         <IoExitOutline className="mr-2 text-[18px]" />

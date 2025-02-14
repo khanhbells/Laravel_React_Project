@@ -1,5 +1,5 @@
 //REACT
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { Controller } from "react-hook-form";
 import { useFormContext } from "react-hook-form";
 //COMPONENT
@@ -55,9 +55,13 @@ const Parent = ({
         }
     }, [name, getValues, dispatch, restProps]);
 
-    const combinedOptions = [
-        ...options.filter(option => option.value !== '0')
-    ];
+    const combinedOptions = useMemo(() => {
+        if (name === "parent_id") {
+            return [...options]
+        } else {
+            return [...options.filter(option => option.value !== '0')]
+        }
+    }, [name]);
 
     const defaultParentValue = options?.find(option => option.value === '0')
     return (

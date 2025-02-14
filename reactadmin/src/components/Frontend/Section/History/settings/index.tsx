@@ -72,9 +72,9 @@ const tableColumn: tableColumn[] = [
         name: 'Hình thức thanh toán',
         render: (item: Booking) => <span className="">{
             item.method === 'cod' ? 'Thanh toán trực tiếp' : item.method === 'momo' ?
-                'Thanh toán bằng ví momo' : item.method === 'paypal' ?
-                    'Thanh toán bằng paypal' : item.method === 'vnpay' ?
-                        'Thanh toán bằng VNPAY' : ''
+                'Thanh toán bằng ví Momo' : item.method === 'paypal' ?
+                    'Thanh toán bằng Paypal' : item.method === 'vnpay' ?
+                        'Thanh toán bằng VNPAY' : item.method === 'zalopay' ? 'Thanh toán bằng ZaloPay' : ''
         }</span>
     },
     {

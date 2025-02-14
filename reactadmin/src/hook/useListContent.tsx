@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 interface UseTableProps {
     model: string,
     pagination: any,
-    query: string,
+    queryData: string,
     endpoint: string
 }
 
@@ -12,7 +12,7 @@ interface FilterParam {
     [key: string]: string | number
 }
 
-const useListContent = ({ model, pagination, query, endpoint }: UseTableProps) => {
+const useListContent = ({ model, pagination, queryData, endpoint }: UseTableProps) => {
 
     //get dữ liệu
     const navigate = useNavigate()
@@ -41,11 +41,11 @@ const useListContent = ({ model, pagination, query, endpoint }: UseTableProps) =
     const [page, setPage] = useState<number | null>(currentPage)
     const [queryString, setQueryString] = useState<string>(() => {
 
-        // const query = createQueryString(initialFilterParams)
-        // if (query) {
-        //     return `page=${currentPage}${query !== '' ? `&${query}` : ''}`
-        // }
-        return `page=${currentPage}${query}`
+        const query = createQueryString(initialFilterParams)
+        if (query) {
+            return `page=${currentPage}${queryData}${query !== '' ? `&${query}` : ''}`
+        }
+        return `page=${currentPage}${queryData}`
 
     })
     const [filters, setFilters] = useState<FilterParam>({})
@@ -57,6 +57,10 @@ const useListContent = ({ model, pagination, query, endpoint }: UseTableProps) =
         }
         return response;
     }, {});
+
+    useEffect(() => {
+        setQueryString(`page=${currentPage}${queryData}`)
+    }, [queryData])
 
     //Pagination
     const handlePageChange = (page: number | null) => {
@@ -71,16 +75,20 @@ const useListContent = ({ model, pagination, query, endpoint }: UseTableProps) =
         setFilters(initialFilterParams)
     }, [])
 
-    // useEffect(() => {
-    //     const query = createQueryString(filters)
-    //     const mainQueryString = `page=${page}${query !== '' ? `&${query}` : ''}`
-    //     setQueryString(mainQueryString)
-    // }, [page, filters])
+    useEffect(() => {
+        const query = createQueryString(filters)
+        const mainQueryString = `page=${page}${queryData}${query !== '' ? `&${query}` : ''}`
+        setQueryString(mainQueryString)
+    }, [page, filters, queryData])
 
-    // useEffect(() => {
-    //     navigate(`page=?${page}.html`, { replace: true })
-    //     refetch()
-    // }, [page, queryString])
+    useEffect(() => {
+        const query = createQueryString(filters)
+        const queryStringForAPI = `page=${page}${queryData}${query !== '' ? `&${query}` : ''}`
+        const queryStringForURL = `page=${page}${query !== '' ? `&${query}` : ''}`
+        setQueryString(queryStringForAPI)
+        navigate(`?${queryStringForURL}`, { replace: true })
+
+    }, [page, filters, queryData])
 
     return {
         isLoading,

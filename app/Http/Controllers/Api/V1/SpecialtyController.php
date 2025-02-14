@@ -27,7 +27,7 @@ class SpecialtyController extends Controller
     ) {
         $this->specialtyService = $specialtyService;
         $this->specialtyRepository = $specialtyRepository;
-        $this->auth = auth()->user();
+        $this->auth = auth('api')->user();
     }
 
     public function index(Request $request)
@@ -54,7 +54,7 @@ class SpecialtyController extends Controller
 
     public function create(StoreSpecialtyRequest $request)
     {
-        $auth = auth()->user();
+        $auth = auth('api')->user();
         $data = $this->specialtyService->create($request, $auth);
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
@@ -69,7 +69,7 @@ class SpecialtyController extends Controller
 
     public function update(UpdateSpecialtyRequest $request, $id)
     {
-        $auth = auth()->user();
+        $auth = auth('api')->user();
         $data = $this->specialtyService->update($request, $id, $auth);
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
@@ -77,6 +77,11 @@ class SpecialtyController extends Controller
                 'specialty_catalogues' => new SpecialtyResource($data['specialty']),
                 'code' => Response::HTTP_OK
             ], Response::HTTP_OK);
+        } else {
+            return response()->json([
+                'message' => $data['message'],
+                'code' => Response::HTTP_NOT_FOUND
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 

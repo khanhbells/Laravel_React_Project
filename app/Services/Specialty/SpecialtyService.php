@@ -107,7 +107,7 @@ class SpecialtyService extends BaseService
     {
         DB::beginTransaction();
         try {
-            $except = ['specialty_counts', 'catalogues', 'cats', 'tags'];
+            $except = ['specialty_counts', 'catalogues', 'cats', 'tags', 'model', 'canonical_catalogue'];
             $payload = $this->initializeRequest($request, $auth, $except);
             $specialty = $this->specialtyRepository->update($id, $payload);
             if ($specialty) {

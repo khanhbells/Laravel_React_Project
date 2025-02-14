@@ -17,15 +17,15 @@ import CustomHelmet from "@/components/CustomHelmet";
 const Doctor = () => {
     const model = 'doctors'
     const { catalogueId, catalogue, specialId, specialty } = useParams()
-    const query = `&publish=2&specialty_id=${specialId}&permission=true`
-    const { isLoading: isLoadingDoctors, data: dataDoctors, isError, refetch, handlePageChange, handleQueryString } = useListContent({ model, pagination, query, endpoint: endpoint.doctors })
+    const queryData = `&publish=2&specialty_id=${specialId}&permission=true`
+    const { isLoading: isLoadingDoctors, data: dataDoctors, isError, refetch, handlePageChange, handleQueryString } = useListContent({ model, pagination, queryData, endpoint: endpoint.doctors })
     const { data: dataSpecialties, isLoading: isSpecialtiesLoading } = useQuery(
         [queryKey.specialties, specialId],
         () => findById(specialId, endpoint.specialties),
     );
     const breadcrumb = [
         {
-            title: `Khám chuyên khoa`,
+            title: `${(dataSpecialties) ? dataSpecialties.cats[0] : 'Loading...'}`,
             route: `/homepage/specialty/${catalogueId}/${catalogue}.html`,
         },
         {

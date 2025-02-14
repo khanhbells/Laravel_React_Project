@@ -1,21 +1,4 @@
-import logo from '../../assets/logo1.png'
-import { FaHistory } from "react-icons/fa";
-import { Link } from 'react-router-dom';
-import { RootState } from '@/redux/store'
-import { useSelector } from "react-redux"
-import { usePatientContext } from '@/contexts/PatientContext';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { LoadingSpinner } from '../ui/loading';
-import { Button } from '../ui/button';
-import { logout } from '@/service/Frontend/AuthPatientService';
-import { setAuthPatientLogout } from "@/redux/slide/authPatientSlice";
-import { useDispatch } from "react-redux";
-import { motion, AnimatePresence } from "framer-motion";
-import { useQuery } from 'react-query';
-import { menus } from '@/service/Frontend/FrontEndService';
-import { endpoint } from '@/constant/endpoint';
-import { RiTiktokLine } from 'react-icons/ri';
-import { writeUrl } from '@/helper/myHelper';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -23,11 +6,25 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { CgProfile } from "react-icons/cg";
-import { IoExitOutline } from "react-icons/io5";
+} from "@/components/ui/dropdown-menu";
 import { canonical } from '@/constant/canonical';
+import { endpoint } from '@/constant/endpoint';
+import { usePatientContext } from '@/contexts/PatientContext';
+import { writeUrl } from '@/helper/myHelper';
+import { setAuthPatientLogout } from "@/redux/slide/authPatientSlice";
+import { RootState } from '@/redux/store';
+import { logout } from '@/service/Frontend/AuthPatientService';
+import { menus } from '@/service/Frontend/FrontEndService';
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useMemo, useState } from 'react';
+import { CgProfile } from "react-icons/cg";
+import { FaHistory } from "react-icons/fa";
+import { IoExitOutline } from "react-icons/io5";
+import { useQuery } from 'react-query';
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from 'react-router-dom';
+import logo from '../../assets/logo1.png';
+import { LoadingSpinner } from '../ui/loading';
 const Header = () => {
     //-------------REDUX-CONTEXT-----------------------
     const { isAuthenticated, patient: patientRedux } = useSelector((state: RootState) => state.patient)

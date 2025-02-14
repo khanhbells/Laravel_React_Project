@@ -7,16 +7,16 @@ import { useParams } from "react-router-dom";
 import PageHeading from "../Breadcrumb";
 import { useQuery } from "react-query";
 import { getSpecialtyCatalogueById } from "@/service/SpecialtyCatalogueService";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CustomHelmet from "@/components/CustomHelmet";
 const Specialty = () => {
     const model = 'specialties'
     const { catalogueId, catalogue } = useParams()
-    const query = `&publish=2&specialty_catalogue_id=${catalogueId}`
-    const { isLoading: isLoadingSpecialties, data: dataSpecialties, isError, refetch, handlePageChange, handleQueryString } = useListContent({ model, pagination, query, endpoint: endpoint.specialties })
+    const [isQuery, setIsQuery] = useState<string>(`&publish=2&specialty_catalogue_id=${catalogueId}`)
+    const { isLoading: isLoadingSpecialties, data: dataSpecialties, isError, refetch, handlePageChange, handleQueryString } = useListContent({ model, pagination, queryData: isQuery, endpoint: endpoint.specialties })
     const breadcrumb = [
         {
-            title: `${dataSpecialties ? dataSpecialties.specialties[0].cats[0] : 'Loading...'}`,
+            title: `${dataSpecialties && dataSpecialties.specialties.length > 0 ? dataSpecialties.specialties[0].cats[0] : 'Loading...'}`,
             route: ''
         },
     ]
@@ -24,6 +24,10 @@ const Specialty = () => {
         enabled: !!catalogueId,
     })
 
+    useEffect(() => {
+        setIsQuery(`&publish=2&specialty_catalogue_id=${catalogueId}`)
+        refetch()
+    }, [catalogue, catalogueId, refetch])
 
     return (
         <>

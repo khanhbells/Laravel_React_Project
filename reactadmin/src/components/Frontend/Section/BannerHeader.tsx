@@ -2,39 +2,21 @@ import calendarImage from "@/assets/calendar.jpg";
 import doctorImage from "@/assets/examination.jpg";
 import syringeImage from "@/assets/syringe.jpg";
 import videoImage from "@/assets/video.jpg";
-import useDebounce from "@/hook/useReplaceDebounce";
+import { writeUrl } from "@/helper/myHelper";
+import useSearchState from "@/hook/useSearchState";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { Link } from "react-router-dom";
-import { searchInput } from "@/service/Frontend/FrontEndService";
-import { writeUrl } from "@/helper/myHelper";
-import { motion, AnimatePresence } from "framer-motion";
 const BannerHeader = () => {
     const placeholderText = "Tìm chuyên khoa khám bệnh";
+
     const [displayText, setDisplayText] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
     const [index, setIndex] = useState(0);
     const [keyword, setKeyword] = useState<string>('')
-    const [isDataSearch, setDataSearch] = useState([])
+    const { isDataSearch } = useSearchState({ keyword: keyword });
 
-    const debounceInputSearch = useDebounce(keyword, 300)
-
-    useEffect(() => {
-        if (debounceInputSearch !== '') {
-            const fetchData = async () => {
-                const data = await searchInput(`keyword=${debounceInputSearch}`, 'frontend/search');
-
-                // Làm phẳng dữ liệu, lấy phần tử thực bên trong
-                const dataSearch = data.searchAll.flat();
-
-                console.log(dataSearch); // Kiểm tra dữ liệu có đúng không
-                setDataSearch(dataSearch);
-            };
-            fetchData();
-        } else {
-            setDataSearch([])
-        }
-    }, [debounceInputSearch]);
 
     useEffect(() => {
         const typingSpeed = isDeleting ? 50 : 100; // Tốc độ gõ và xóa

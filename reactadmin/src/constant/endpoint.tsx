@@ -11,4 +11,5 @@ export const endpoint = {
     menus: 'frontend/menus',
     bookings: 'bookings',
     bookingMedicine: 'bookings/medicine',
+    searchHomePage: 'frontend/search',
 }

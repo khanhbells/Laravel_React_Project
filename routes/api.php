@@ -311,8 +311,8 @@ Route::group([
     Route::get('user_catalogues/{id}', [UserCatalogueController::class, 'show']);
     Route::get('users', [UserController::class, 'index']);
     //GET DOCTOR
-    Route::get('doctors/{id}', [DoctorController::class, 'showDoctor']);
     Route::get('doctors', [DoctorController::class, 'index']);
+    Route::get('doctors/{id}', [DoctorController::class, 'showDoctor']);
     //GET SCHEDULES
     Route::get('schedules', [ScheduleController::class, 'index']);
     //BOOKINGS

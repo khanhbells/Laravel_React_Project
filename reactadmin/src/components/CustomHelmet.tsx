@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet-async"
-import logo from "@/assets/logo1.png";
+import logo from "@/assets/logobooking.png";
 interface ICustomHelmet {
     meta_title: string
     meta_description: string,
