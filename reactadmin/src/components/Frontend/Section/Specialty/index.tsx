@@ -46,7 +46,7 @@ const Doctor = () => {
             route: `/homepage/specialty/${catalogueId}/${catalogue}.html`,
         },
         {
-            title: `${(dataDoctors && dataDoctors.doctors.length > 0) ? dataDoctors.doctors[0].specialties[0].label : (dataSpecialties) ? dataSpecialties.name : 'Loading...'}`,
+            title: `${(dataSpecialties) ? dataSpecialties.name : 'Loading...'}`,
             route: `/homepage/specialty/${catalogueId}/${catalogue}/${specialId}/${specialty}.html`,
         },
     ]

@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import "../assets/scss/Accordion.scss"
 import "../assets/scss/Aside.scss"
 import { sidebarItem } from "../constant/sidebar";
-import { Logo } from "./logo"
+import { Logo } from "./Logo"
 
 const Aside = () => {
     const location = useLocation()

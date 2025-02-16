@@ -1,33 +1,30 @@
 //CORE REACT
-import { useCallback, useEffect, useState, useMemo, useRef } from "react";
-import { useQueries, useQuery } from "react-query";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 //COMPONENT
-import PageHeading from "@/components/heading"
-import LoadingButton from "@/components/LoadingButton"
-import General from "@/components/General";
-import Album from "@/components/Album";
-import Seo from "@/components/Seo";
-import ImageIcon from "@/components/ImageIcon";
 import Advance from "@/components/Advance";
+import Album from "@/components/Album";
+import General from "@/components/General";
+import PageHeading from "@/components/heading";
+import ImageIcon from "@/components/ImageIcon";
+import LoadingButton from "@/components/LoadingButton";
 import Parent from "@/components/Parent";
+import Seo from "@/components/Seo";
 //SETTINGS
-import { breadcrumb, model, redirectIfSucces } from "../settings";
-import { Breadcrumb } from "@/types/Breadcrumb"
-import { yupResolver } from '@hookform/resolvers/yup'
+import { getDropdown } from "@/helper/myHelper";
+import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { formatCatalogueName, getDropdown } from "@/helper/myHelper";
+import { breadcrumb, model, redirectIfSucces } from "../settings";
 //INTERFACES
 import { SpecialtyCataloguePayloadInput } from "@/interfaces/types/SpecialtyCatalogueType";
 //HOOK
-import { useForm, FormProvider } from "react-hook-form";
 import useFormSubmit from "@/hook/useFormSubmit";
+import { FormProvider, useForm } from "react-hook-form";
 //SERVICE
-import { save, getSpecialtyCatalogueById } from "@/service/SpecialtyCatalogueService";
-import { pagination } from "@/service/SpecialtyCatalogueService";
+import { getSpecialtyCatalogueById, pagination, save } from "@/service/SpecialtyCatalogueService";
 //SCSS
-import '@/assets/scss/Editor.scss'
-import { error } from "console";
+import '@/assets/scss/Editor.scss';
 
 const fileValidation = (fileTypes: string[], maxFileSize: number) => {
     return yup.mixed().test('fileType', 'Loại tệp không hợp kệ', (value: any) => {
@@ -117,7 +114,8 @@ const Store = ({
                 image: data.image,
                 icon: data.icon
             })
-        }
+        },
+        staleTime: 10000
     })
 
     //Dropdown Select Parent
@@ -138,9 +136,9 @@ const Store = ({
         ]
     }, [dropdown])
 
-    useEffect(() => {
-        isSuccess === true && navigate(redirectIfSucces)
-    }, [isSuccess])
+    // useEffect(() => {
+    //     isSuccess === true && navigate(redirectIfSucces)
+    // }, [isSuccess])
 
 
     return (
@@ -169,7 +167,9 @@ const Store = ({
                                             options={specialtyCatalogues}
                                         />
                                     }
-                                    {id ? specialtyCatalogue && <ImageIcon data={specialtyCatalogue} /> : <ImageIcon />}
+                                    {id ? specialtyCatalogue &&
+                                        <ImageIcon data={specialtyCatalogue} /> : <ImageIcon />
+                                    }
                                     <Advance />
                                     <div className="mt-[20px] text-right">
                                         <LoadingButton

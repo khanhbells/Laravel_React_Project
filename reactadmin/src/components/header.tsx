@@ -47,15 +47,15 @@ const Header = () => {
                     <div className="header-right-content flex justify-between items-center">
                         <div className="header-search">
                             <Link to="/" className="header-link flex relative">
-                                <IoIosSearch className="cursor-pointer text-[20px] header-link-icon text-[30px] font-semibold" />
+                                <IoIosSearch className="cursor-pointer text-[20px] header-link-icon  font-semibold" />
                             </Link>
                         </div>
-                        <div className="cart-dropdown">
+                        {/* <div className="cart-dropdown">
                             <Link to="/" className="header-link flex relative">
                                 <FiShoppingCart className="cursor-pointer header-link-icon" />
                                 <span className="badge absolute top-[6px] right-[6px] text-[10px] text-white font-semibold w-[14px] h-[15px] text-center rounded-full bg-primary">5</span>
                             </Link>
-                        </div>
+                        </div> */}
                         <div className="notification-dropdown">
                             <Link to="/" className="header-link flex relative">
                                 <GoBell className="cursor-pointer header-link-icon" />

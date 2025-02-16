@@ -101,6 +101,7 @@ class SpecialtyCatalogueService extends BaseService
         try {
             $except = ['specialty_counts'];
             $payload = $this->initializeRequest($request, $auth, $except);
+
             $specialtyCatalogue = $this->specialtyCatalogueRepository->update($id, $payload);
             $nested = $this->nested;
             $this->nestedset($auth, $nested);

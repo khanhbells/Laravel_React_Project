@@ -173,7 +173,6 @@ class AuthPatientController extends Controller
     public function logout(Request $request)
     {
         try {
-            // Vô hiệu hóa token hiện tại
             auth('patient')->logout();
 
             // Xóa cookie chứa token

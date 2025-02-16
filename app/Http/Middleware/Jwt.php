@@ -31,7 +31,7 @@ class Jwt
         } catch (JWTException $e) {
             return response()->json(['message' => 'Token không hợp lệ'], Response::HTTP_UNAUTHORIZED);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Không có quyền truy cập'], Response::HTTP_UNAUTHORIZED);
+            return response()->json(['message' => 'Không có 123'], Response::HTTP_UNAUTHORIZED);
         }
 
         return $next($request);

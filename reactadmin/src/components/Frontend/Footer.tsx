@@ -7,28 +7,6 @@ import { LoadingSpinner } from "../ui/loading"
 const Footer = () => {
     const { isDataSystems } = useSystemContext()
     const { isDataMenus } = useMenuContext()
-    const footerData = useMemo(() => {
-        if (isDataMenus) {
-            return [
-                {
-                    title: 'Dịch vụ khám',
-                    subItems: isDataMenus.specialty_catalogues,
-                    model: 'specialty'
-                },
-                {
-                    title: 'Cơ sở y tế',
-                    subItems: isDataMenus.hospitals,
-                    model: 'hospital'
-                },
-                {
-                    title: 'Bài viết',
-                    subItems: isDataMenus.post_catalogues,
-                    model: 'post'
-                },
-            ]
-        }
-        return []
-    }, [isDataMenus])
     return (
         <>
             <footer aria-labelledby="footer-heading" className="bg-white grid">

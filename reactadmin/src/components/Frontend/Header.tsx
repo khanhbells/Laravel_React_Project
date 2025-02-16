@@ -85,14 +85,10 @@ const Header = () => {
     const handleMouseLeave = () => {
         setOpenIndex(null);
     };
-    useEffect(() => {
-        console.log(isDataSystems);
-
-    }, [isDataSystems])
 
     return (
         <>
-            <header className="bg-sky-50 ">
+            <header className="bg-sky-50 z-999">
                 <div className='grid grid-cols-12 h-[100%]'>
                     <div className='col-span-3 flex items-center'>
                         <Link to={`${import.meta.env.VITE_HOMEPAGE_URL}`}>

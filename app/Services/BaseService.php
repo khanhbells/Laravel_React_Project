@@ -64,16 +64,21 @@ class BaseService
         $customFolder = ['avatar'],
         $imageType = 'image'
     ) {
+
         if ($auth && count($files) && is_array($files)) {
             if (isset($auth->email)) {
+
                 $this->fileUploader = new FileUploader($auth->email);
             } else {
                 $this->fileUploader = new FileUploader($auth);
             }
+
             foreach ($files as $keyFile => $file) {
                 if ($request->file($file)) {
+
                     $this->payload[$file] = $this->fileUploader->uploadFile($request->file($file), $imageType, $customFolder);
                 } else {
+
                     if ($request->input($file)) {
                         $this->payload[$file] = str_replace(config('app.url') . 'storage', 'public', $this->payload[$file]);
                     }

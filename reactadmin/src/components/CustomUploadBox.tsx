@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UploadIcon from "@/assets/upload-image.jpg";
 import { useFormContext, Path, FieldValues } from "react-hook-form";
 
@@ -24,10 +24,13 @@ const CustomUploadBox = <T extends FieldValues>({
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const files = Array.from(event.target.files);
+
             const imagePreviews = files.map((file) => ({
                 file,
                 preview: URL.createObjectURL(file),
             }));
+            console.log(imagePreviews);
+
             setImages(imagePreviews); // Cập nhật trạng thái riêng cho từng input
         }
     };

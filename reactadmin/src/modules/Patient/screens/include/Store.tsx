@@ -235,7 +235,7 @@ const Store = ({
                                 ) : data && data.image ? (
                                     <AvatarImage src={data.image} />
                                 ) : (
-                                    <AvatarImage src='https://github.com/shadcn.png' />
+                                    <AvatarImage src='/src/assets/upload-image.jpg' />
                                 )}
                             </Avatar>
                         </label>

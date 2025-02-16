@@ -82,7 +82,7 @@ const DetailDoctor = () => {
                             description={'Vui lòng điền đầy đủ thông tin cá nhân trước khi xác nhận lịch khám'}
                             isSheetOpen={isSheetOpen.open}
                             closeSheet={closeSheet}
-                            className="w-[400px] sm:w-[600px]"
+                            className="w-[400px] sm:w-[600px] z-99999"
                         >
                             <StoreBookingPatient
                                 dataDoctor={dataDoctor}

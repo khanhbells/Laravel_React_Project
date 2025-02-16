@@ -27,7 +27,7 @@ class SpecialtyCatalogueController extends Controller
     ) {
         $this->specialtyCatalogueService = $specialtyCatalogueService;
         $this->specialtyCatalogueRepository = $specialtyCatalogueRepository;
-        $this->auth = auth()->user();
+        $this->auth = auth('api')->user();
     }
 
     public function index(Request $request)
@@ -52,7 +52,7 @@ class SpecialtyCatalogueController extends Controller
 
     public function create(Request $request)
     {
-        $auth = auth()->user();
+        $auth = auth('api')->user();
         $data = $this->specialtyCatalogueService->create($request, $auth);
 
         if ($data['code'] == Status::SUCCESS) {
@@ -68,15 +68,27 @@ class SpecialtyCatalogueController extends Controller
 
     public function update(Request $request, $id)
     {
-        $auth = auth()->user();
-        $data = $this->specialtyCatalogueService->update($request, $id, $auth);
-        // return $data;
-        if ($data['code'] == Status::SUCCESS) {
+
+        try {
+
+            $auth = auth('api')->user();
+            $data = $this->specialtyCatalogueService->update($request, $id, $auth);
+            // return $data;
+            if ($data['code'] == Status::SUCCESS) {
+                return response()->json([
+                    'message' => 'Cập nhật bản ghi thành công',
+                    'specialty_catalogues' => new SpecialtyCatalogueResource($data['specialtyCatalogue']),
+                    'code' => Response::HTTP_OK
+                ], Response::HTTP_OK);
+            }
             return response()->json([
-                'message' => 'Cập nhật bản ghi thành công',
-                'specialty_catalogues' => new SpecialtyCatalogueResource($data['specialtyCatalogue']),
-                'code' => Response::HTTP_OK
-            ], Response::HTTP_OK);
+                'message' => $data['message']
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => Status::ERROR,
+                'message' => $e->getMessage()
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 

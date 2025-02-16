@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { Link } from "react-router-dom";
+import { useMenuContext } from "@/contexts/MenuContext";
 const BannerHeader = () => {
     const placeholderText = "Tìm chuyên khoa khám bệnh";
 
@@ -16,6 +17,12 @@ const BannerHeader = () => {
     const [index, setIndex] = useState(0);
     const [keyword, setKeyword] = useState<string>('')
     const { isDataSearch } = useSearchState({ keyword: keyword });
+    const { isDataMenus } = useMenuContext();
+
+    useEffect(() => {
+        console.log(isDataMenus);
+
+    }, [isDataMenus])
 
 
     useEffect(() => {
@@ -103,38 +110,18 @@ const BannerHeader = () => {
                 </div>
                 <div className='content-down'>
                     <div className='options pb-[5%]'>
-                        <div className='drop-shadow-xl option-child bg-white border border-sky-200 hover:border-sky-400 w-[220px] max-h-[300px] rounded-lg p-[10px]'>
-                            <div className='icon-child items-center justify-center flex flex-col '>
-                                <span className="">
-                                    <img className="" src={calendarImage} alt="" />
-                                </span>
-                            </div>
-                            <div className='text-child text-[17px] text-[#003553] font-roboto font-normal'>Khám theo chuyên khoa</div>
-                        </div>
-                        <div className='drop-shadow-xl option-child bg-white border border-sky-200 hover:border-sky-400 w-[220px] max-h-[300px] rounded-lg p-[10px]'>
-                            <div className='icon-child items-center justify-center flex flex-col '>
-                                <span className="">
-                                    <img className="" src={doctorImage} alt="" />
-                                </span>
-                            </div>
-                            <div className='text-child text-[17px] text-[#003553] font-roboto font-normal'>Khám theo bác sĩ</div>
-                        </div>
-                        <div className='drop-shadow-xl option-child bg-white border border-sky-200 hover:border-sky-400 w-[220px] max-h-[300px] rounded-lg p-[10px]'>
-                            <div className='icon-child items-center justify-center flex flex-col '>
-                                <span className="">
-                                    <img className="" src={videoImage} alt="" />
-                                </span>
-                            </div>
-                            <div className='text-child text-[17px] text-[#003553] font-roboto font-normal'>Gọi video với bác sĩ</div>
-                        </div>
-                        <div className='drop-shadow-xl option-child bg-white border border-sky-200 hover:border-sky-400 w-[220px] max-h-[300px] rounded-lg p-[10px]'>
-                            <div className='icon-child items-center justify-center flex flex-col '>
-                                <span className="">
-                                    <img className="" src={syringeImage} alt="" />
-                                </span>
-                            </div>
-                            <div className='text-child text-[17px] text-[#003553] font-roboto font-normal'>Đặt lịch xét nghiệm</div>
-                        </div>
+                        {
+                            isDataMenus && isDataMenus.specialty_catalogues.length > 0 && isDataMenus.specialty_catalogues.map((value: any, index: number) => (
+                                <Link to={writeUrl(value.canonical, 'specialty', value.id)} key={value.id} className='drop-shadow-xl option-child bg-white border border-sky-200 hover:border-sky-400 w-[220px] max-h-[300px] rounded-lg p-[10px]'>
+                                    <div className='icon-child items-center justify-center flex flex-col '>
+                                        <span className="">
+                                            <img className="" src={value.image} alt="" />
+                                        </span>
+                                    </div>
+                                    <div className='text-child text-[17px] text-[#003553] font-roboto font-normal'>{value.name}</div>
+                                </Link>
+                            ))
+                        }
                     </div>
                 </div>
             </div>

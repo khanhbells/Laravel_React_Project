@@ -22,7 +22,7 @@ import SignUpAdminIndex from './modules/Login/SignUp';
 import ForgotPasswordAdminIndex from './modules/Login/ForgotPassword';
 import ResetPasswordAdminIndex from './modules/Login/ResetPassword/ResetPassword';
 //User
-import UserIndex from '@/modules/User/screens/View'
+import UserIndex from '@/modules/User/screens'
 //Patient
 import PatientIndex from '@/modules/Patient/screens'
 //UserCatalogue

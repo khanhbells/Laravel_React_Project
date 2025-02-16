@@ -160,7 +160,7 @@ const SignUp = () => {
                                             {images.length > 0 ? (
                                                 <AvatarImage src={images[0].preview} />
                                             ) : (
-                                                <AvatarImage src='https://github.com/shadcn.png' />
+                                                <AvatarImage src='/src/assets/upload-image.jpg' />
                                             )}
                                         </Avatar>
                                     </label>
