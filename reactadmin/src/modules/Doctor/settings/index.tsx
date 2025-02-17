@@ -111,6 +111,21 @@ const extraFilterItems: Select[] = [
     }
 ]
 
+const InformationText = [
+    {
+        label: "Bằng cấp",
+        name: "exp"
+    },
+    {
+        label: "Tên phòng khám",
+        name: "clinic_name"
+    },
+    {
+        label: "Địa chỉ phòng khám",
+        name: "clinic_address"
+    },
+]
+
 
 
 export {
@@ -119,4 +134,5 @@ export {
     tableColumn,
     buttonActions,
     extraFilterItems,
+    InformationText
 }

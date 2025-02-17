@@ -240,13 +240,13 @@ Route::group([
     Route::get('chart', [DashboardController::class, 'chart']);
     //Analytics
     Route::get('analytics', [DashboardController::class, 'analytics']);
-    //TopDoctors
-    Route::get('topDoctors', [DashboardController::class, 'topDoctors']);
 });
 
 Route::group([
     'prefix' => 'v1'
 ], function ($router) {
+    //TopDoctors
+    Route::get('topDoctors', [DashboardController::class, 'topDoctors']);
     // Location
     Route::get('location', [DashboardController::class, 'location']);
     // Patient

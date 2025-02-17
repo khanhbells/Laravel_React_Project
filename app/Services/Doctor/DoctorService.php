@@ -61,11 +61,14 @@ class DoctorService extends BaseService
     }
     private function whereHasProvince($request)
     {
-        return [
-            'users' => function ($query) use ($request) {
-                $query->where('province_id', $request->integer('province_id'));
-            }
-        ];
+        if ($request->integer('province_id') != 0) {
+            return [
+                'users' => function ($query) use ($request) {
+                    $query->where('province_id', $request->integer('province_id'));
+                }
+            ];
+        }
+        return [];
     }
     private function whereHasDate($request)
     {

@@ -276,6 +276,9 @@ class DashboardController extends Controller
             $topDoctors = $repositoryDoctors->getTopDoctors()->toArray();
             foreach ($topDoctors as $key => $value) {
                 $topDoctors[$key]['image'] = getImages($value['image']);
+                $topDoctors[$key]['specialty_canonicals'] = explode(',', $topDoctors[$key]['specialty_canonicals']);
+                $topDoctors[$key]['specialty_ids'] = explode(',', $topDoctors[$key]['specialty_ids']);
+                $topDoctors[$key]['specialty_names'] = explode(',', $topDoctors[$key]['specialty_names']);
             }
 
             return response()->json([

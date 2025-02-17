@@ -130,7 +130,7 @@ export const sidebarItem = [
             {
                 icon: <BsHospital className="text-sm mr-2" />,
                 active: ['hospital'],
-                label: 'Quản Lý Bệnh Viện',
+                label: 'QL Phòng Khám/Bệnh Viện',
                 path: '/hospital/index'
             },
             {

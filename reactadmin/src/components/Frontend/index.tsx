@@ -14,6 +14,7 @@ import { queryKey } from "@/constant/query";
 
 import useGetDataFrontEnd from "@/hook/useGetDataFrontEnd";
 import CustomHelmet from "../CustomHelmet";
+import { topDoctors } from "@/service/DashboardService";
 const HomePage = () => {
     const settings = {
         dots: false,
@@ -41,13 +42,14 @@ const HomePage = () => {
         queryKeyCatalogue: queryKey.postCatalogues,
         queryKey: queryKey.posts
     })
-    //GET DOCTORS
-    const { getData: doctors, isLoading: isDoctorsLoading } = useGetDataFrontEnd({
-        endpoint: endpoint.doctors,
-        filter: '&permission=true&publish=2',
-        queryKey: queryKey.doctors
+    // //GET DOCTORS
+    // const { getData: doctors, isLoading: isDoctorsLoading } = useGetDataFrontEnd({
+    //     endpoint: endpoint.doctors,
+    //     filter: '&permission=true&publish=2',
+    //     queryKey: queryKey.doctors
+    // })
+    const { data: doctors, isLoading: isDoctorsLoading, isError } = useQuery([queryKey], () => topDoctors(), {
     })
-
 
     return (
         <>
@@ -74,9 +76,9 @@ const HomePage = () => {
                     settings={settings}
                     label="Bác sĩ nổi bật"
                     className="section-outstanding-doctor"
-                    data={doctors}
+                    data={doctors && doctors.topDoctors || []}
                     dataCatalogue={specialty_catalogues}
-                    isLoading={isPostsLoading}
+                    isLoading={isDoctorsLoading}
                     nameCatalogueParams="specialty"
                 />
                 {
@@ -85,7 +87,7 @@ const HomePage = () => {
                         settings={settings}
                         dataCatalogue={post_catalogues}
                         data={posts}
-                        isLoading={isDoctorsLoading}
+                        isLoading={isPostsLoading}
                         nameCatalogueParams="post"
                     />
                 }

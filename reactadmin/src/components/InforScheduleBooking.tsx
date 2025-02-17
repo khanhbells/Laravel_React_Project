@@ -5,6 +5,7 @@ import dayjs from "dayjs"
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { RootState } from "@/redux/store"
+import { canonical } from "@/constant/canonical"
 
 interface IInforScheduleBooking {
     [key: string]: any
@@ -58,10 +59,10 @@ const InforScheduleBooking = ({
                 {
                     !patientRedux && patientRedux === null &&
                     <div className="flex">
-                        <Link to={`/patient/signup`} className="w-[50%] mr-[10px]">
+                        <Link to={canonical.patientSignUp} className="w-[50%] mr-[10px]">
                             <div className="text-center mt-[10px] text-white bg-sky-300 p-[5px] rounded font-semibold">+ Đăng ký thành viên</div>
                         </Link>
-                        <Link to={`/patient/signin`} className="w-[50%]">
+                        <Link to={canonical.patinetSignIn} className="w-[50%]">
                             <div className="text-center mt-[10px] text-white bg-yellow-400 p-[5px] rounded font-semibold">+ Đăng nhập ngay</div>
                         </Link>
                     </div>

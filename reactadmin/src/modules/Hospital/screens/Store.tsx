@@ -145,7 +145,9 @@ const Store = ({
                         <form onSubmit={handleSubmit(onSubmitHanler)}>
                             <div className="grid grid-cols-12 gap-4 ">
                                 <div className="col-span-9">
-                                    <General />
+                                    <General
+                                        label="Tên bệnh viện"
+                                    />
                                     {/* Cứ khi nào thằng con thông qua props làm thay đổi thằng cha thì là callback */}
                                     <Album
                                         onAlbumChange={handleAlbum}

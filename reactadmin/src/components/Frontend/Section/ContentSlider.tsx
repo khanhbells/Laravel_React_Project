@@ -42,35 +42,37 @@ const ContentSlider = ({
                                         data && data.map((value: any, index: string) => (
                                             className === 'section-outstanding-doctor' ? (
                                                 <div className='section-customize ' key={index}>
-                                                    <div className='customize-border border border-teal-200 rounded-xl bg-[white]'>
-                                                        <div className='outer-bg '>
-                                                            <div
-                                                                className='bg-image section-outstanding-doctor bg-cover'
-                                                                style={{ backgroundImage: `url(${value.image})` }}
-                                                            />
-                                                        </div>
-                                                        <div className='position text-center'>
-                                                            <Link
-                                                                key={index}
-                                                                to={`/homepage/${nameCatalogueParams}/${dataCatalogue?.id}/${dataCatalogue?.canonical}/${value.specialties[0].value}/${value.specialties[0].canonical}/${value.id}/${value.canonical}.html`}
-                                                            >
+                                                    <Link
+                                                        key={index}
+                                                        to={`/homepage/${nameCatalogueParams}/${dataCatalogue?.id}/${dataCatalogue?.canonical}/${value.specialty_ids[0]}/${value.specialty_canonicals[0]}/${value.id}/${value.canonical}.html`}
+                                                    >
+                                                        <div className='customize-border border border-teal-200 rounded-xl bg-[white]'>
+                                                            <div className='outer-bg '>
+                                                                <div
+                                                                    className='bg-image section-outstanding-doctor bg-cover'
+                                                                    style={{ backgroundImage: `url(${value.image})` }}
+                                                                />
+                                                            </div>
+                                                            <div className='position text-center'>
+
                                                                 <span className="font-semibold">{value.name}</span>
-                                                            </Link>
-                                                            <div className="">
-                                                                <span className="text-[#f00] mr-[2px] font-normal">
-                                                                    Chuyên khoa:
-                                                                </span>
-                                                                <Link
-                                                                    key={index}
-                                                                    to={`/homepage/specialty/${dataCatalogue?.id}/${dataCatalogue?.canonical}/${value.specialties[0].value}/${value.specialties[0].canonical}.html`}
-                                                                >
-                                                                    <span className="font-semibold">
-                                                                        {value.specialties && value.specialties.length > 0 ? value.specialties[0].label : ""}
+
+                                                                <div className="">
+                                                                    <span className="text-[#f00] mr-[2px] font-normal">
+                                                                        Chuyên khoa:
                                                                     </span>
-                                                                </Link>
+                                                                    <Link
+                                                                        key={index}
+                                                                        to={`/homepage/specialty/${dataCatalogue?.id}/${dataCatalogue?.canonical}/${value.specialty_ids[0]}/${value.specialty_canonicals[0]}.html`}
+                                                                    >
+                                                                        <span className="font-semibold">
+                                                                            {value.specialty_names && value.specialty_names.length > 0 ? value.specialty_names[0] : ""}
+                                                                        </span>
+                                                                    </Link>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </Link>
                                                 </div>
                                             ) :
                                                 (

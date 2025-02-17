@@ -20,7 +20,7 @@ import Specialty from "@/components/Specialty";
 import { getDropdown } from "@/helper/myHelper";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { breadcrumb, model, redirectIfSucces } from "../settings";
+import { breadcrumb, model, redirectIfSucces, InformationText } from "../settings";
 import { queryKey } from "@/constant/query";
 //INTERFACES
 import { DoctorPayloadInput } from "@/interfaces/types/DoctorType";
@@ -66,6 +66,7 @@ const Store = ({
     const [album, setAlbum] = useState<string[]>([])
     const [openDialog, setOpenDialog] = useState<boolean>()
     const [newTags, setNewTag] = useState<{ value: string, label: string }[]>([])
+    const [isFetchData, setFetchData] = useState<boolean>(true)
 
 
     //--------------------------------------
@@ -96,7 +97,7 @@ const Store = ({
 
     //useQuery
     const { data: dropdown, isLoading: isDropdownLoading, isError: isDropDownError } = useQuery([queryKey.hospitals], () => pagination(''), {
-        staleTime: 6000
+        staleTime: 10000
     })
     const { data: doctor, isLoading, isError } = useQuery([model, id], async () => {
         const response = await findById(id)
@@ -105,7 +106,7 @@ const Store = ({
         }
         return response;
     }, {
-        enabled: !!id,
+        enabled: !!id && isFetchData === true,
         onSuccess: (data) => {
             reset({
                 ...data,
@@ -126,9 +127,9 @@ const Store = ({
 
 
     //Tra ve view
-    // useEffect(() => {
-    //     isSuccess === true && navigate(redirectIfSucces)
-    // }, [isSuccess])
+    useEffect(() => {
+        isSuccess === true && navigate(redirectIfSucces)
+    }, [isSuccess])
 
     //Tag dialog create
     const handleOpenDialog = useCallback(() => {
@@ -138,20 +139,11 @@ const Store = ({
         setNewTag(prev => [...prev, tag])
     }, [])
 
-    const InformationText = [
-        {
-            label: "Bằng cấp",
-            name: "exp"
-        },
-        {
-            label: "Tên phòng khám",
-            name: "clinic_name"
-        },
-        {
-            label: "Địa chỉ phòng khám",
-            name: "clinic_address"
-        },
-    ]
+    useEffect(() => {
+        if (dropdown) {
+            setFetchData(false)
+        }
+    }, [dropdown])
 
 
     return (

@@ -11,7 +11,6 @@ use App\Services\Specialty\SpecialtyCatalogueService;
 use App\Repositories\Specialty\SpecialtyCatalogueRepository;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UpdateByFieldRequest;
-use App\Http\Requests\Specialty\StoreSpecialtyCatalogueRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class SpecialtyCatalogueController extends Controller
