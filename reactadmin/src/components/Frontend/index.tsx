@@ -59,7 +59,9 @@ const HomePage = () => {
                 meta_description="Đây là trang chủ website"
                 canonical="homepage"
             />
-            <BannerHeader />
+            <BannerHeader
+                settings={settings}
+            />
             <div className="bg-sky-100">
                 {
                     specialty_catalogues?.publish === 2 &&

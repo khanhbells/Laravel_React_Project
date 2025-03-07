@@ -52,7 +52,7 @@ class PermissionController extends Controller
 
     public function create(StorePermissionRequest $request)
     {
-        $auth = auth()->user();
+        $auth = auth('api')->user();
         $data = $this->permissionService->create($request);
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([

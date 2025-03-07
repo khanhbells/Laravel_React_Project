@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UpdateByFieldRequest;
 use App\Http\Requests\Schedule\StoreScheduleRequest;
 use App\Http\Requests\Schedule\UpdateScheduleRequest;
+use App\Models\Schedule;
 use Mockery\Undefined;
 
 class ScheduleController extends Controller
@@ -35,7 +36,7 @@ class ScheduleController extends Controller
             if ($permission == null) {
                 $this->authorize('modules', '/schedule/index');
             }
-            $auth = auth()->user();
+            $auth = auth('api')->user();
             $schedules = $this->scheduleService->paginate($request, $auth);
             return response()->json([
                 'schedules' =>  method_exists($schedules, 'items') ? ScheduleResource::collection($schedules->items()) : $schedules,
@@ -54,15 +55,17 @@ class ScheduleController extends Controller
 
     public function create(Request $request)
     {
-        $data = $this->scheduleService->create($request);
-        return $data;
-        if ($data['code'] == Status::SUCCESS) {
-            return response()->json([
+        $data = $this->scheduleService->create($request); //1
+
+        if ($data['code'] == Status::SUCCESS) { //2
+            $dataResource = new ScheduleResource($data['schedule']);
+
+            return response()->json([ //3
                 'message' => 'Thêm mới bản ghi thành công',
-                'schedule' => new ScheduleResource($data['schedule'])
+                'schedule' => $data['schedule']
             ], Response::HTTP_OK);
         }
-        return response()->json([
+        return response()->json([ //4
             'message' => $data['message']
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
@@ -70,7 +73,6 @@ class ScheduleController extends Controller
     public function update(UpdateScheduleRequest $request, $id)
     {
         $data = $this->scheduleService->update($request, $id);
-        return $data;
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
                 'message' => 'Cập nhật bản ghi thành công',

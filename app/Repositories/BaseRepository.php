@@ -42,9 +42,13 @@ class BaseRepository
 
     public function createMany($payload = [])
     {
+        $ids = [];
 
-        return $this->model->insert($payload);
-        // return 
+        foreach ($payload as $data) {
+            $ids[] = $this->model->insertGetId($data);
+        }
+
+        return $this->model->whereIn('id', $ids)->get()->toArray();
     }
 
     public function update($id, $payload)

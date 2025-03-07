@@ -70,7 +70,6 @@ class DoctorController extends Controller
     {
         $auth = auth('api')->user();
         $data = $this->doctorService->update($request, $id, $auth);
-        return $data;
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
                 'message' => 'Cập nhật bản ghi thành công',

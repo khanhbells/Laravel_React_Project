@@ -26,7 +26,7 @@ import UserIndex from '@/modules/User/screens'
 //Patient
 import PatientIndex from '@/modules/Patient/screens'
 //UserCatalogue
-import UserCatalogueIndex from '@/modules/UserCatalogue/screens/View';
+import UserCatalogueIndex from '@/modules/UserCatalogue/screens';
 import Permission from '@/modules/UserCatalogue/screens/Permission';
 //PatientCatalogue
 import PatientCatalogueIndex from '@/modules/PatientCatalogue/screens';
@@ -75,9 +75,9 @@ import LayoutFrontend from './components/Frontend/Layout';
 import HomePage from './components/Frontend';
 import DetailDoctor from './components/Frontend/Section/Doctor';
 import ScrollToTop from './components/ScrollToTop';
-import SpecialtyFrontEndIndex from './components/Frontend/Section/SpecialtyCatalogue';
-import PostFrontEndIndex from './components/Frontend/Section/Post';
-import DoctorFrontEndIndex from './components/Frontend/Section/Specialty';
+import SpecialtyCatalogueFrontEndIndex from './components/Frontend/Section/SpecialtyCatalogue';
+import PostCatalogueFrontEndIndex from './components/Frontend/Section/PostCatalogue';
+import SpecialtyFrontEndIndex from './components/Frontend/Section/Specialty';
 import SuccessIndex from './components/Frontend/Section/Success';
 //Login Patient
 import SignUpPatientIndex from './components/Frontend/Section/Login/SignUp';
@@ -111,6 +111,7 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: "/dashboard", element: <Dashboard /> },
+      { path: "/detail/dashboard", element: <Dashboard /> },
       { path: "/user/index", element: <UserIndex /> },
       { path: "/patient/index", element: <PatientIndex /> },
       { path: "/user/catalogue/index", element: <UserCatalogueIndex /> },
@@ -175,10 +176,10 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: "homepage.html", element: <HomePage /> },
+      { path: "homepage/specialty/:catalogueId/:catalogue.html", element: <SpecialtyCatalogueFrontEndIndex /> },
+      { path: "homepage/specialty/:catalogueId/:catalogue/:specialId/:specialty.html", element: <SpecialtyFrontEndIndex /> },
       { path: "homepage/specialty/:catalogueId/:catalogue/:specialId/:specialty/:doctorId/:doctor.html", element: <DetailDoctor /> },
-      { path: "homepage/specialty/:catalogueId/:catalogue/:specialId/:specialty.html", element: <DoctorFrontEndIndex /> },
-      { path: "homepage/specialty/:catalogueId/:catalogue.html", element: <SpecialtyFrontEndIndex /> },
-      { path: "homepage/post/:catalogueId/:catalogue.html", element: <PostFrontEndIndex /> },
+      { path: "homepage/post/:catalogueId/:catalogue.html", element: <PostCatalogueFrontEndIndex /> },
       { path: "homepage/success/:id.html", element: <SuccessIndex /> },
       { path: "homepage/history/:id.html", element: <HistoryIndex /> },
     ]

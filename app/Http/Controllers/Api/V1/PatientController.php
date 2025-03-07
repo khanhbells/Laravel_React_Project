@@ -54,8 +54,22 @@ class PatientController extends Controller
     }
     public function create(StorePatientRequest $request)
     {
-        $auth = auth()->guard('patient')->user();
-        $this->createAcount($request, $auth);
+        $auth = auth()->guard('patient')->user(); //1
+        $this->createAcount($request, $auth); //2
+    }
+
+    public function createAcount($request, $auth)
+    {
+        $data = $this->patientService->create($request, $auth); //3
+        if ($data['code'] == Status::SUCCESS) { //4
+            return response()->json([ //5
+                'message' => 'Thêm mới bản ghi thành công',
+                'patient' => new PatientResource($data['patient'])
+            ], Response::HTTP_OK);
+        }
+        return response()->json([ //6
+            'message' => $data['message']
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     public function signUp(StorePatientRequest $request)
@@ -73,19 +87,7 @@ class PatientController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function createAcount($request, $auth)
-    {
-        $data = $this->patientService->create($request, $auth);
-        if ($data['code'] == Status::SUCCESS) {
-            return response()->json([
-                'message' => 'Thêm mới bản ghi thành công',
-                'patient' => new PatientResource($data['patient'])
-            ], Response::HTTP_OK);
-        }
-        return response()->json([
-            'message' => $data['message']
-        ], Response::HTTP_INTERNAL_SERVER_ERROR);
-    }
+
 
     public function update(UpdatePatientRequest $request, $id)
     {

@@ -35,23 +35,23 @@ class AuthController extends Controller
         $credentials = [
             'email' => $request->input('email'),
             'password' => $request->input('password')
-        ];
+        ]; //1
 
-        if (!$token = auth('api')->attempt($credentials)) {
-            return response()->json(['error' => 'Email hoặc mật khẩu không đúng'], Response::HTTP_UNAUTHORIZED);
+        if (!$token = auth('api')->attempt($credentials)) { //2
+            return response()->json(['error' => 'Email hoặc mật khẩu không đúng'], Response::HTTP_UNAUTHORIZED); //3
         }
 
-        $user = auth('api')->user();
+        $user = auth('api')->user(); //4
 
-        $refreshTokenData = $this->refreshTokenData($user);
+        $refreshTokenData = $this->refreshTokenData($user); //5
 
-        $refresh_token = JWTAuth::getJWTProvider()->encode($refreshTokenData);
+        $refresh_token = JWTAuth::getJWTProvider()->encode($refreshTokenData); //6
 
         $cookie = $this->setTokenAndRefreshTokenCookie($token, $refresh_token);
         $tokenCookie = $cookie['tokenCookie'];
-        $refreshCookie = $cookie['refreshTokenCookie'];
+        $refreshCookie = $cookie['refreshTokenCookie']; //7
 
-        return $this->respondWithToken($token, $refresh_token, $user)->withCookie($tokenCookie)->withCookie($refreshCookie);
+        return $this->respondWithToken($token, $refresh_token, $user)->withCookie($tokenCookie)->withCookie($refreshCookie); //8
     }
 
     public function refresh(Request $request)
@@ -221,16 +221,17 @@ class AuthController extends Controller
 
     public function signUp(StoreUserRequest $request)
     {
-        $auth = $request->input('email');
-        $data = $this->userService->create($request, $auth);
-        if ($data['code'] == Status::SUCCESS) {
-            return response()->json([
+        $auth = $request->input('email'); //1
+        $data = $this->userService->create($request, $auth); //2
+        if ($data['code'] == Status::SUCCESS) { //3
+            return response()->json([ //4
                 'message' => 'Thêm mới bản ghi thành công',
                 'user' => new UserResource($data['user'])
             ], Response::HTTP_OK);
+        } else {
+            return response()->json([ //5
+                'message' => $data['message']
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        return response()->json([
-            'message' => $data['message']
-        ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

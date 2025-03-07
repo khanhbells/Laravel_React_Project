@@ -54,15 +54,15 @@ class SpecialtyController extends Controller
 
     public function create(StoreSpecialtyRequest $request)
     {
-        $auth = auth('api')->user();
-        $data = $this->specialtyService->create($request, $auth);
-        if ($data['code'] == Status::SUCCESS) {
-            return response()->json([
+        $auth = auth('api')->user(); //1
+        $data = $this->specialtyService->create($request, $auth); //2
+        if ($data['code'] == Status::SUCCESS) { //3
+            return response()->json([ //4
                 'message' => 'Thêm mới bản ghi thành công',
                 'specialty_catalogues' => new SpecialtyResource($data['specialty'])
             ], Response::HTTP_OK);
         }
-        return response()->json([
+        return response()->json([ //5
             'message' => $data['message']
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }

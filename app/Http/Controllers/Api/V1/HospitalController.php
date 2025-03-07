@@ -27,7 +27,7 @@ class HospitalController extends Controller
     ) {
         $this->hospitalService = $hospitalService;
         $this->hospitalRepository = $hospitalRepository;
-        $this->auth = auth()->user();
+        $this->auth = auth('api')->user();
     }
 
     public function index(Request $request)
@@ -52,7 +52,7 @@ class HospitalController extends Controller
 
     public function create(Request $request)
     {
-        $auth = auth()->user();
+        $auth = auth('api')->user();
         $data = $this->hospitalService->create($request, $auth);
 
         if ($data['code'] == Status::SUCCESS) {
@@ -68,21 +68,23 @@ class HospitalController extends Controller
 
     public function update(Request $request, $id)
     {
-        $auth = auth()->user();
-        $data = $this->hospitalService->update($request, $id, $auth);
+        $auth = auth('api')->user(); //1
+        $data = $this->hospitalService->update($request, $id, $auth); //2
         // return $data;
-        if ($data['code'] == Status::SUCCESS) {
-            return response()->json([
+        if ($data['code'] == Status::SUCCESS) { //3
+            return response()->json([ //4
                 'message' => 'Cập nhật bản ghi thành công',
                 'hospitals' => new HospitalResource($data['hospital']),
                 'code' => Response::HTTP_OK
             ], Response::HTTP_OK);
         }
+        return response()->json([ //5
+            'message' => $data['message']
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     public function show(Request $request, $id)
     {
-
         try {
             if (!$id) {
                 return response()->json([

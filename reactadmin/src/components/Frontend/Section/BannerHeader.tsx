@@ -1,15 +1,19 @@
-import calendarImage from "@/assets/calendar.jpg";
-import doctorImage from "@/assets/examination.jpg";
-import syringeImage from "@/assets/syringe.jpg";
-import videoImage from "@/assets/video.jpg";
+import { useMenuContext } from "@/contexts/MenuContext";
 import { writeUrl } from "@/helper/myHelper";
 import useSearchState from "@/hook/useSearchState";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { Link } from "react-router-dom";
-import { useMenuContext } from "@/contexts/MenuContext";
-const BannerHeader = () => {
+import Slider from "react-slick";
+
+interface IBannerHeader {
+    settings: any
+}
+
+const BannerHeader = ({
+    settings
+}: IBannerHeader) => {
     const placeholderText = "Tìm chuyên khoa khám bệnh";
 
     const [displayText, setDisplayText] = useState("");
@@ -18,11 +22,6 @@ const BannerHeader = () => {
     const [keyword, setKeyword] = useState<string>('')
     const { isDataSearch } = useSearchState({ keyword: keyword });
     const { isDataMenus } = useMenuContext();
-
-    useEffect(() => {
-        console.log(isDataMenus);
-
-    }, [isDataMenus])
 
 
     useEffect(() => {
@@ -129,4 +128,4 @@ const BannerHeader = () => {
     )
 }
 
-export default BannerHeader
+export default memo(BannerHeader)

@@ -23,7 +23,7 @@ export const sidebarItem = [
                     },
                     {
                         title: 'Thống kê chi tiết',
-                        to: '/dashboard/order'
+                        to: '/detail/dashboard'
                     }
                 ]
             }

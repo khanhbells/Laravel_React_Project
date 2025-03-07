@@ -55,7 +55,7 @@ class UserCatalogueController extends Controller
 
     public function create(StoreUserCatalogueRequest $request)
     {
-        $auth = auth()->user();
+        $auth = auth('api')->user();
         $data = $this->userCatalogueService->create($request);
         if ($data['code'] == Status::SUCCESS) {
             return response()->json([
