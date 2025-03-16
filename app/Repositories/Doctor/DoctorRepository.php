@@ -19,6 +19,7 @@ class DoctorRepository extends BaseRepository
     {
         return $this->model->select(
             'doctors.id',
+            'doctors.canonical',
             'users.name',
             'users.email',
             'users.phone',
@@ -36,6 +37,7 @@ class DoctorRepository extends BaseRepository
             ->where('bookings.status', '=', 'confirm')
             ->where('bookings.payment_status', '=', 'confirm')
             ->groupBy(
+                'doctors.canonical',
                 'doctors.id',
                 'users.name',
                 'users.email',

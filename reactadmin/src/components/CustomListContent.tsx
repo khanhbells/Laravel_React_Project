@@ -45,6 +45,8 @@ const CustomListContent = ({
         setSelectedSchedules(schedules);
     }, [])
 
+
+
     return (
         <>
             <DataScheduleProvider>
@@ -58,7 +60,7 @@ const CustomListContent = ({
                                         <div className="border-r border-sky-200 col-span-6">
                                             <DoctorInfor
                                                 dataDoctor={value}
-                                                params={`/homepage/specialty/${catalogueId}/${catalogue}/${specialId}/${specialty}/${value.id}/${value.canonical}.html`}
+                                                params={`/homepage/specialty/${catalogueId ?? value.specialties[0].specialty_catalogues[0].id}/${catalogue ?? value.specialties[0].specialty_catalogues[0].canonical}/${specialId ?? value.specialties[0].value}/${specialty ?? value.specialties[0].canonical}/${value.id}/${value.canonical}.html`}
                                             />
                                         </div>
                                         <div

@@ -307,6 +307,9 @@ Route::group([
     //GET POST
     Route::get('post_catalogues/{id}', [PostCatalogueController::class, 'show']);
     Route::get('posts', [PostController::class, 'index']);
+    //GET HOSPITALS
+    Route::get('hospitals', [HospitalController::class, 'index']);
+    Route::get('hospitals/{id}', [HospitalController::class, 'show']);
     //GET USER
     Route::get('user_catalogues/{id}', [UserCatalogueController::class, 'show']);
     Route::get('users', [UserController::class, 'index']);

@@ -35,6 +35,7 @@ class DoctorController extends Controller
             if ($permission == null) {
                 $this->authorize('modules', '/doctor/index');
             }
+            
             $doctors = $this->doctorService->paginate($request);
             return response()->json([
                 'doctors' =>  DetailDoctorResource::collection($doctors),

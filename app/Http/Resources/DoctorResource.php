@@ -24,6 +24,7 @@ class DoctorResource extends JsonResource
                 ];
             });
         }
+        
         return [
             'id' => $this->doctors->id ?? '',
             'user_id' => $this->id ?? '',

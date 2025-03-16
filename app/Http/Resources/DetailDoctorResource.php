@@ -24,6 +24,12 @@ class DetailDoctorResource extends JsonResource
                     'canonical' => $special->canonical,
                     'description' => $special->description,
                     'content' => $special->content,
+                    'specialty_catalogues'=> $special->specialty_catalogues->map(function ($specialCatalogue){
+                        return [
+                            'id'=> $specialCatalogue->id,
+                            'canonical'=> $specialCatalogue->canonical
+                        ];
+                    })
                 ];
             });
         }

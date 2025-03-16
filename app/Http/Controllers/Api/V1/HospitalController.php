@@ -33,7 +33,11 @@ class HospitalController extends Controller
     public function index(Request $request)
     {
         try {
-            $this->authorize('modules', '/hospital/index');
+            $permission =  $request->input('permission') ?? null;
+            if ($permission == null) {
+                $this->authorize('modules', '/hospital/index');
+            }
+            
             $hospitals = $this->hospitalService->paginate($request);
             return response()->json([
                 'hospitals' =>  method_exists($hospitals, 'items') ? HospitalResource::collection($hospitals->items()) : $hospitals,

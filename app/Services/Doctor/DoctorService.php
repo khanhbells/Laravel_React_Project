@@ -82,18 +82,24 @@ class DoctorService extends BaseService
 
     private function paginateAgrument($request)
     {
+        $condition = [
+            'publish' => $request->integer('publish'),
+        ];
+
+        if($request->integer('hospital_id')){
+            $condition['hospital_id'] = $request->integer('hospital_id');
+        }
+
         return [
             'perpage' => $request->input('perpage') ?? 10,
             'keyword' => [
                 'search' => $request->input('keyword') ?? '',
                 'field' => ['meta_title']
             ],
-            'condition' => [
-                'publish' => $request->integer('publish'),
-            ],
+            'condition' => $condition,
             'select' => ['*'],
             'orderBy' => $request->input('sort') ? explode(',', $request->input('sort')) : ['id', 'desc'],
-            'relations' => ['users', 'specialties', 'tags'],
+            'relations' => ['users', 'specialties.specialty_catalogues', 'tags'],
             // 'limit' => 10,
         ];
     }

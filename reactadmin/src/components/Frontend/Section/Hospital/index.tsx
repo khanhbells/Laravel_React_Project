@@ -24,11 +24,11 @@ import {
     CardHeader,
     CardDescription,
 } from "@/components/ui/card";
-const Specialty = () => {
+const Hospital = () => {
     const model = "doctors";
-    const { catalogueId, catalogue, specialId, specialty } = useParams();
+    const { hospitalId, hospital } = useParams();
     //----------QUERY----------------------------------------------------
-    const queryData = `&publish=2&specialty_id=${specialId}&permission=true`;
+    const queryData = `&publish=2&hospital_id=${hospitalId}&permission=true`;
     const {
         isLoading: isLoadingDoctors,
         data: dataDoctors,
@@ -42,9 +42,9 @@ const Specialty = () => {
         queryData,
         endpoint: endpoint.doctors,
     });
-    const { data: dataSpecialties, isLoading: isSpecialtiesLoading } = useQuery(
-        [queryKey.specialties, specialId],
-        () => findById(specialId, endpoint.specialties)
+    const { data: dataHospitals, isLoading: isHospitalLoading } = useQuery(
+        [queryKey.hospitals, hospitalId],
+        () => findById(hospitalId, endpoint.hospitals)
     );
     const {
         isLoading: isProvinceLoading,
@@ -63,14 +63,8 @@ const Specialty = () => {
 
     const breadcrumb = [
         {
-            title: `${
-                dataSpecialties ? dataSpecialties.cats[0] : "Loading..."
-            }`,
-            route: `/homepage/specialty/${catalogueId}/${catalogue}.html`,
-        },
-        {
-            title: `${dataSpecialties ? dataSpecialties.name : "Loading..."}`,
-            route: `/homepage/specialty/${catalogueId}/${catalogue}/${specialId}/${specialty}.html`,
+            title: `${dataHospitals ? dataHospitals.name : "Loading..."}`,
+            route: `/homepage/hospital/${hospitalId}/${hospital}.html`,
         },
     ];
     const doctors = dataDoctors?.doctors || [];
@@ -118,19 +112,23 @@ const Specialty = () => {
     );
     const customFilter = useCustomFilter(filterInitial);
 
+    useEffect(() => {
+        console.log(dataDoctors);
+    }, [dataDoctors]);
+
     return (
         <>
             <FilterProvider customFilters={customFilter}>
                 <CustomHelmet
-                    meta_title={dataSpecialties?.meta_title || ""}
-                    meta_keyword={dataSpecialties?.meta_keyword || ""}
-                    meta_description={dataSpecialties?.meta_description || ""}
-                    canonical={`homepage/specialty/${catalogueId}/${catalogue}/${specialId}/${specialty}`}
+                    meta_title={dataHospitals?.meta_title || ""}
+                    meta_keyword={dataHospitals?.meta_keyword || ""}
+                    meta_description={dataHospitals?.meta_description || ""}
+                    canonical={`homepage/specialty/${hospitalId}/${hospital}`}
                 />
                 <PageHeading breadcrumb={breadcrumb} />
                 <CustomDescriptionContent
                     dataDoctors={dataDoctors}
-                    dataDescription={dataSpecialties}
+                    dataDescription={dataHospitals}
                 />
                 <div className="bg-sky-100 min-h-[250px] py-[10px] px-[100px] h-[100%]">
                     <div className="mb-[20px]">
@@ -166,10 +164,6 @@ const Specialty = () => {
                         dataDoctors={dataDoctors}
                         isLoadingDoctors={isLoadingDoctors}
                         isSchedules={isSchedules}
-                        catalogue={catalogue}
-                        catalogueId={catalogueId}
-                        specialty={specialty}
-                        specialId={specialId}
                     />
                     <div className="pb-[10px]">
                         {!isLoadingDoctors &&
@@ -187,4 +181,4 @@ const Specialty = () => {
     );
 };
 
-export default Specialty;
+export default Hospital;

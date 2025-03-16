@@ -25,31 +25,43 @@ const HomePage = () => {
     };
 
     //GET SPECIALTIES
-    const { getData: specialties, dataCatalogue: specialty_catalogues, isLoading: isLoadingSpecialties } = useGetDataFrontEnd({
-        id: '13',
+    const {
+        getData: specialties,
+        dataCatalogue: specialty_catalogues,
+        isLoading: isLoadingSpecialties,
+    } = useGetDataFrontEnd({
+        id: "13",
         endpointCatalogue: endpoint.specialty_catalogues,
         endpoint: endpoint.specialties,
-        filter: '&specialty_catalogue_id=13&publish=2',
+        filter: "&specialty_catalogue_id=13&publish=2",
         queryKeyCatalogue: queryKey.specialty_catalogues,
-        queryKey: queryKey.specialties
-    })
+        queryKey: queryKey.specialties,
+    });
     //GET BLOGS
-    const { getData: posts, dataCatalogue: post_catalogues, isLoading: isPostsLoading } = useGetDataFrontEnd({
-        id: '7',
+    const {
+        getData: posts,
+        dataCatalogue: post_catalogues,
+        isLoading: isPostsLoading,
+    } = useGetDataFrontEnd({
+        id: "7",
         endpointCatalogue: endpoint.post_catalogues,
         endpoint: endpoint.posts,
-        filter: '&post_catalogue_id=7&publish=2',
+        filter: "&post_catalogue_id=7&publish=2",
         queryKeyCatalogue: queryKey.postCatalogues,
-        queryKey: queryKey.posts
-    })
-    // //GET DOCTORS
-    // const { getData: doctors, isLoading: isDoctorsLoading } = useGetDataFrontEnd({
-    //     endpoint: endpoint.doctors,
-    //     filter: '&permission=true&publish=2',
-    //     queryKey: queryKey.doctors
-    // })
-    const { data: doctors, isLoading: isDoctorsLoading, isError } = useQuery([queryKey], () => topDoctors(), {
-    })
+        queryKey: queryKey.posts,
+    });
+    // //GET HOSPITALS
+    const { getData: hospitals, isLoading: isHospitalLoading } =
+        useGetDataFrontEnd({
+            endpoint: endpoint.hospitals,
+            filter: "&permission=true&publish=2",
+            queryKey: queryKey.hospitals,
+        });
+    const {
+        data: doctors,
+        isLoading: isDoctorsLoading,
+        isError,
+    } = useQuery([queryKey], () => topDoctors(), {});
 
     return (
         <>
@@ -59,12 +71,9 @@ const HomePage = () => {
                 meta_description="Đây là trang chủ website"
                 canonical="homepage"
             />
-            <BannerHeader
-                settings={settings}
-            />
+            <BannerHeader settings={settings} />
             <div className="bg-sky-100">
-                {
-                    specialty_catalogues?.publish === 2 &&
+                {specialty_catalogues?.publish === 2 && (
                     <ContentSlider
                         settings={settings}
                         className="section-specialty"
@@ -73,18 +82,25 @@ const HomePage = () => {
                         isLoading={isLoadingSpecialties}
                         nameCatalogueParams="specialty"
                     />
-                }
+                )}
                 <ContentSlider
                     settings={settings}
                     label="Bác sĩ nổi bật"
                     className="section-outstanding-doctor"
-                    data={doctors && doctors.topDoctors || []}
+                    data={(doctors && doctors.topDoctors) || []}
                     dataCatalogue={specialty_catalogues}
                     isLoading={isDoctorsLoading}
                     nameCatalogueParams="specialty"
                 />
-                {
-                    post_catalogues?.publish === 2 &&
+                <ContentSlider
+                    settings={settings}
+                    label="Cơ sở y tế"
+                    className="section-outstanding-hospital"
+                    data={hospitals || []}
+                    isLoading={isHospitalLoading}
+                    nameCatalogueParams="hospital"
+                />
+                {post_catalogues?.publish === 2 && (
                     <ContentSlider
                         settings={settings}
                         dataCatalogue={post_catalogues}
@@ -92,11 +108,11 @@ const HomePage = () => {
                         isLoading={isPostsLoading}
                         nameCatalogueParams="post"
                     />
-                }
+                )}
                 <About />
             </div>
         </>
-    )
-}
+    );
+};
 
-export default HomePage
+export default HomePage;
