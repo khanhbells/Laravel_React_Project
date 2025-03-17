@@ -91,4 +91,22 @@ trait QueryTrait
             }
         }
     }
+
+    // public function scopeRightJoin($query, $join)
+    // {
+    //     if (!is_array($join)) {
+    //         return $query;
+    //     }
+    //     dd($join); // Kiểm tra giá trị của $join
+
+    //     foreach ($join as $val) {
+    //         if (is_array($val) && count($val) >= 4) {
+    //             $query->rightJoin($val[0], $val[1], $val[2], $val[3]);
+    //         }
+    //     }
+
+    //     dd($query->toSql()); // Kiểm tra câu SQL sau khi RIGHT JOIN
+
+    //     return $query;
+    // }
 }

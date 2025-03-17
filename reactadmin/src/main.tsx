@@ -9,7 +9,9 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import AuthMiddleware from "./middleware/AuthMiddleware";
 import NoAuthMiddleware from "./middleware/NoAuthMiddleware";
 import Layout from "./components/Layout";
+//Dashboard
 import Dashboard from "./modules/Dashboard";
+import DetailDashboard from "./modules/DashboardDetail";
 //LOGIN ADMIN
 import SignInAdminIndex from "./modules/Login/SignIn";
 import SignUpAdminIndex from "./modules/Login/SignUp";
@@ -104,7 +106,7 @@ const router = createBrowserRouter([
         ),
         children: [
             { path: "/dashboard", element: <Dashboard /> },
-            { path: "/detail/dashboard", element: <Dashboard /> },
+            { path: "/detail/dashboard", element: <DetailDashboard /> },
             { path: "/user/index", element: <UserIndex /> },
             { path: "/patient/index", element: <PatientIndex /> },
             { path: "/user/catalogue/index", element: <UserCatalogueIndex /> },

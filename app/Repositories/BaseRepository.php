@@ -22,16 +22,30 @@ class BaseRepository
             ->keyword($params['keyword'] ?? '')
             ->relationWith($params['relations'] ?? [])
             ->relationWhereHas($params['whereHas'] ?? [])
+            // ->rightJoin(is_array($params['rightJoin']) ? $params['rightJoin'] : [])
             ->relationCount($params['relationCount'] ?? [])
             ->orderBy($params['orderBy'][0], $params['orderBy'][1]);
+            
 
         if (!empty($params['limit'])) {
             $query->limit($params['limit']);
         }
-        // return $query->toSql();
+
+        if (!empty($params['innerJoin']) && is_array($params['innerJoin'])){
+
+            foreach ($params['innerJoin'] as $val) {
+                if (is_array($val) && count($val) >= 4) {
+                    $query->join($val[0], $val[1], $val[2], $val[3]);
+                }
+            }
+        }
+        
         if (isset($params['perpage']) && !empty($params['perpage'])) {
+            
             return $query->paginate($params['perpage']);
         }
+        // dd($query->toSql());
+
         return $query->get();
     }
 

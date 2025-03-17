@@ -240,6 +240,8 @@ Route::group([
     Route::get('chart', [DashboardController::class, 'chart']);
     //Analytics
     Route::get('analytics', [DashboardController::class, 'analytics']);
+    //DetailDoctorAnalytics
+    Route::get('detailAnalytics', [DashboardController::class, 'detailAnalytics']);
 });
 
 Route::group([

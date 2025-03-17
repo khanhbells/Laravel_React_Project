@@ -48,4 +48,49 @@ class DoctorRepository extends BaseRepository
             ->limit(5)
             ->get();
     }
+
+    public function listRevenueDetailDoctor($doctor_id)
+    {
+        $data = DB::table('bookings')
+                ->select(
+                    DB::raw('DATE(bookings.created_at) as examinationDate'),
+                    DB::raw('COALESCE(SUM(CASE WHEN bookings.status = "confirm" AND bookings.payment_status = "confirm" THEN bookings.total_price ELSE 0 END), 0) as revenue'),
+                    DB::raw('COUNT(CASE WHEN bookings.status = "confirm" AND bookings.payment_status = "confirm" THEN bookings.id END) as totalBookingSuccess'),
+                    DB::raw('COUNT(CASE WHEN bookings.status = "stop" THEN bookings.id END) as totalBookingStop'),
+                    DB::raw('COUNT(CASE WHEN bookings.status = "pending" OR bookings.payment_status = "pending" THEN bookings.id END) as totalBookingPending')
+                )
+                ->where('bookings.doctor_id', $doctor_id)
+                ->groupBy(DB::raw('DATE(bookings.created_at)'))
+                ->orderBy(DB::raw('DATE(bookings.created_at)'), 'ASC')
+                ->get();
+
+        $totalRevenue = DB::table('bookings')
+            ->where('doctor_id', $doctor_id)
+            ->where('status', 'confirm')
+            ->where('payment_status', 'confirm')
+            ->sum('total_price');
+
+        $totalBooking = DB::table('bookings')
+            ->where('doctor_id', $doctor_id)
+            ->count();
+
+        $totalBookingConfirm = DB::table('bookings')
+            ->where('doctor_id', $doctor_id)
+            ->where('status', 'confirm')
+            ->where('payment_status', 'confirm')
+            ->count();
+
+        $totalBookingStop = DB::table('bookings')
+            ->where('doctor_id', $doctor_id)
+            ->where('status', 'stop')
+            ->count();
+
+        return [
+            'listRevenueDetailDoctor' => $data,
+            'totalRevenue' => $totalRevenue,
+            'totalBooking' => $totalBooking,
+            'totalBookingConfirm' => $totalBookingConfirm,
+            'totalBookingStop' => $totalBookingStop,
+        ];
+    }
 }

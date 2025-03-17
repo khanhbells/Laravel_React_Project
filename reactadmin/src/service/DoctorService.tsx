@@ -21,6 +21,19 @@ const pagination = async (queryString: string) => {
     }
 }
 
+const paginationDoctor = async (queryString: string) => {
+    try {
+        const response = await axios.get(`/doctors`)
+        return response.data
+    } catch (error: any) {
+        handleAxiosError(error)
+        return {
+            code: error?.response.status,
+            message: 'Không có quyền truy cập',
+        };
+    }
+}
+
 const save = async (payload: DoctorPayloadInput, updateParams: { action: string, id: string | undefined }) => {
 
     const payloadSubmit: DoctorPayloadForSubmit = {
@@ -58,6 +71,7 @@ const findById = async (id: string | undefined): Promise<Doctor> => {
 
 export {
     pagination,
+    paginationDoctor,
     save,
     findById,
     destroy,

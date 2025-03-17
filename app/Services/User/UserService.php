@@ -43,7 +43,7 @@ class UserService extends BaseService
             $condition['id'] = $auth->id;
         }
         return [
-            'perpage' => $request->input('perpage') ?? 10,
+            'perpage' => $request->input('perpage') ?? 100,
             'keyword' => [
                 'search' => $request->input('keyword') ?? '',
                 'field' => ['name', 'email', 'address', 'phone']
@@ -51,7 +51,7 @@ class UserService extends BaseService
             'condition' => $condition,
             'select' => ['*'],
             'orderBy' => $request->input('sort') ? explode(',', $request->input('sort')) : ['id', 'desc'],
-            'relations' => ['user_catalogues']
+            'relations' => ['user_catalogues','doctors']
         ];
     }
 

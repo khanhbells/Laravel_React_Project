@@ -95,10 +95,8 @@ const Store = ({
     //Dropdown Select Parent
     const doctors = useMemo(() => {
         if (!isDropdownLoading && dropdown) {
-            console.log(dropdown['users']);
             return dropdown['users'] ? getDropdown(dropdown['users']) : []
         }
-        console.log(doctor);
         return []
     }, [dropdown, user, doctor])
 

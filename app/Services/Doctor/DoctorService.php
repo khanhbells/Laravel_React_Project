@@ -91,7 +91,7 @@ class DoctorService extends BaseService
         }
 
         return [
-            'perpage' => $request->input('perpage') ?? 10,
+            'perpage' => $request->input('perpage') ?? 100,
             'keyword' => [
                 'search' => $request->input('keyword') ?? '',
                 'field' => ['meta_title']

@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Api\V1;
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SortRequest;
+use App\Http\Resources\DetailDoctorResource;
 use App\Http\Resources\HospitalResource;
 use App\Http\Resources\LocationResource;
 use App\Http\Resources\PostCatalogueResource;
 use App\Http\Resources\SpecialtyCatalogueResource;
 use App\Http\Resources\SpecialtyResource;
+use App\Http\Resources\UserDoctorResource;
+use App\Http\Resources\UserResource;
 use App\Models\System;
 use Exception;
 use Illuminate\Http\Request;
@@ -76,21 +79,57 @@ class HomePageController extends Controller
     public function search(Request $request)
     {
         try {
-            $repositorySpecialty = $this->customRepository('specialties');
-            $repositoryHospital = $this->customRepository('hospitals');
-            $specialties = $repositorySpecialty->pagination([...$this->setPaginateAgrument($request, true, 'specialty')]);
-            $hospitals = $repositoryHospital->pagination([...$this->setPaginateAgrument($request)]);
-            $searchAll = [];
-
-            if ($specialties->count() > 0) {
-                $searchAll[] = SpecialtyResource::collection($specialties->items());
-            }
-
-            if ($hospitals->count() > 0) {
-                $searchAll[] = HospitalResource::collection($hospitals->items());
-            }
+            $repositories = [
+                [
+                    'repo' => $this->customRepository('specialties'),
+                    'args' => $this->paginateAgrument($request, true, 'specialty'),
+                    'resource' => SpecialtyResource::class
+                ],
+                [
+                    'repo' => $this->customRepository('hospitals'),
+                    'args' => $this->paginateAgrument($request),
+                    'resource' => HospitalResource::class
+                ],
+                [
+                    'repo' => $this->customRepository('users'),
+                    'args' => $this->paginateAgrument(
+                        $request, 
+                        false,
+                        null, 
+                        ['doctors.specialties.specialty_catalogues'],
+                        [
+                            'users.publish' => 2,
+                            'user_catalogue_id' => 2
+                        ],
+                        [
+                            [
+                                'doctors',
+                                'users.id',
+                                '=',
+                                'doctors.user_id'
+                            ],
+                            [
+                                'hospitals',
+                                'doctors.hospital_id',
+                                '=',
+                                'hospitals.id'
+                            ]
+                        ],
+                        ['users.*'],
+                        ['users.name'],
+                        ['users.id', 'desc']
+                    ),
+                    'resource' => UserDoctorResource::class
+                ],
+            ];
+    
+            $searchAll = array_filter(array_map(function ($item) {
+                $data = $item['repo']->pagination([...$item['args']]);
+                return $data->isNotEmpty() ? $item['resource']::collection($data->items()) : null;
+            }, $repositories));
+    
             return response()->json([
-                'searchAll' => $searchAll,
+                'searchAll' => array_values($searchAll),
                 'code' => Response::HTTP_OK
             ], Response::HTTP_OK);
         } catch (\Exception $e) {
@@ -101,31 +140,34 @@ class HomePageController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+    
 
-    private function setPaginateAgrument($request, $flag = false, $model = null)
-    {
-        if ($flag && $model != null) {
-            return $this->paginateAgrument($request, $flag, $model);
-        } else {
-            return $this->paginateAgrument($request);
-        }
-    }
-
-    private function paginateAgrument($request, $flag = false, $model = null)
-    {
+    private function paginateAgrument(
+        $request, 
+        $flag = false, 
+        $model = null, 
+        $relations = [], 
         $condition = [
-            'publish' => 2,
-        ];
+            'publish' => 2
+        ],
+        $join = [],
+        $select = ['*'],
+        $field  = ['name'],
+        $orderBy = ['id', 'desc']
+    )
+    {
         return [
-            'select' => '*',
-            'orderBy' => ['id', 'desc'],
+            'select' => $select,
+            'orderBy' => $orderBy,
             'perpage' => 10,
             'keyword' => [
                 'search' => $request->input('keyword') ?? '',
-                'field' => ['name']
+                'field' => $field
             ],
             'condition' => $condition,
             'whereHas' => $flag && $model != null ? $this->whereHas($request, $model) : [],
+            'relations' => $relations,
+            'innerJoin' => $join && count($join) > 0 ? $join : []
         ];
     }
 

@@ -313,4 +313,48 @@ class DashboardController extends Controller
 
         return $total;
     }
+
+    public function detailAnalytics(Request $request){
+        
+        try {
+            $repository = $this->customRepository('doctors');
+            $doctor_id = $request->input('doctor_id');
+            $data = $repository->listRevenueDetailDoctor($doctor_id);
+
+            return response()->json([
+                'responses' => $data,
+                'code' => Response::HTTP_OK
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Có lỗi xảy ra, vui lòng thử lại sau.',
+                'message' => $e->getMessage(),
+                'code' => Status::ERROR
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+    
 }
+// [
+//     'listRevenueDetailDoctor'=>[
+//         [
+//             'examinationDate'=>...
+//             'revenue'=>...
+//             'totalBooking'=>...
+//         ],
+//         [
+//             'examinationDate'=>...
+//             'revenue'=>...
+//             'totalBooking'=>...
+//         ],
+//         [
+//             'examinationDate'=>...
+//             'revenue'=>...
+//             'totalBooking'=>...
+//         ]
+//     ],
+//     'totalRevenue'=>...,
+//     'totalBooking'=>...,
+//     'totalBookingConfirm'=>...,
+//     'totalBookingStop'
+// ]
