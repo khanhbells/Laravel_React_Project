@@ -141,6 +141,7 @@ Route::group([
     // Doctor
     Route::get('doctors', [DoctorController::class, 'index']);
     Route::get('doctors/{id}', [DoctorController::class, 'show']);
+    Route::get('doctors_detail_info/{id}', [DoctorController::class, 'showDoctor']);
     Route::post('doctors', [DoctorController::class, 'create']);
     Route::put('doctors/{id}', [DoctorController::class, 'update']);
     Route::delete('doctors/{id}', [DoctorController::class, 'destroy']);

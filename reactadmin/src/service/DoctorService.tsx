@@ -55,9 +55,9 @@ const destroy = async (id: string) => {
     return baseDestroy(id, endpoint)
 }
 
-const findById = async (id: string | undefined): Promise<Doctor> => {
+const findById = async (id: string | undefined | null, paramEndpoint: string | undefined): Promise<Doctor> => {
     try {
-        const response = await axios.get(`${endpoint}/${id}`)
+        const response = await axios.get(`${paramEndpoint ?? endpoint}/${id}`)
         return response.data
     } catch (error: any) {
         handleAxiosError(error)
