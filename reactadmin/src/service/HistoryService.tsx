@@ -4,31 +4,32 @@ import { baseSave } from "./BaseService";
 import { handleAxiosError } from "@/helper/axiosHelper";
 import { useNavigate } from "react-router-dom";
 export interface IHistory {
-    [key: string]: string | undefined
+    [key: string]: string | undefined;
 }
 
-const endpoint = 'patient/historys'
+const endpoint = "patient/historys";
 
 const pagination = async (queryString: string) => {
     try {
-        const response = await axios.get(`/${endpoint}?${queryString}`)
-        return response.data
+        const response = await axios.get(`/${endpoint}?${queryString}`);
+        return response.data;
     } catch (error: any) {
-        handleAxiosError(error)
+        handleAxiosError(error);
         return {
             code: error?.response.status,
-            message: 'Không có quyền truy cập',
+            message: "Không có quyền truy cập",
         };
     }
-}
-
+};
 
 const getHistoryById = async (id: string | undefined): Promise<IHistory> => {
-    const response = await axios.get(`${endpoint}/${id}`)
-    return response.data
-}
-
-export {
-    getHistoryById,
-    pagination,
+    const response = await axios.get(`${endpoint}/${id}`);
+    return response.data;
 };
+
+const stopBooking = async (id: string | undefined): Promise<IHistory> => {
+    const response = await axios.post(`${endpoint}/stop/${id}`);
+    return response.data;
+};
+
+export { getHistoryById, pagination, stopBooking };

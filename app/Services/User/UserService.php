@@ -27,8 +27,20 @@ class UserService extends BaseService
     public function paginate($request, $auth)
     {
         $agrument = $this->paginateAgrument($request, $auth);
+        if($request->input('specialty_id')){
+            $agrument['whereHas'] = $this->whereHasSpecialty($request);
+        }
         $users = $this->userRepository->pagination([...$agrument]);
         return $users;
+    }
+
+    private function whereHasSpecialty($request)
+    {
+        return [
+            'doctors.specialties' => function ($query) use ($request) {
+                $query->where('specialty_id', $request->integer('specialty_id'));
+            }
+        ];
     }
 
     private function paginateAgrument($request, $auth)
@@ -51,7 +63,7 @@ class UserService extends BaseService
             'condition' => $condition,
             'select' => ['*'],
             'orderBy' => $request->input('sort') ? explode(',', $request->input('sort')) : ['id', 'desc'],
-            'relations' => ['user_catalogues','doctors']
+            'relations' => ['user_catalogues','doctors.specialties']
         ];
     }
 

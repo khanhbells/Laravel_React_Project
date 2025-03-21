@@ -164,6 +164,17 @@ class BookingController extends Controller
         ], Response::HTTP_OK);
     }
 
+    public function stopBooking(Request $request, $id){
+        $data = $this->bookingService->stopBooking($request, $id);
+        if ($data['code'] == Status::SUCCESS) {
+            return response()->json([
+                'message' => 'Hủy đơn khám thành công',
+                'booking' => new BookingResource($data['booking']),
+                'code' => Response::HTTP_OK
+            ], Response::HTTP_OK);
+        }
+    }
+
     public function paymentReturn($request, $queryParams, $booking)
     {
         switch ($booking->method) {

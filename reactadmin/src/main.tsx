@@ -85,6 +85,7 @@ import ResetPasswordIPatientndex from "./components/Frontend/Section/Login/Reset
 import NoAuthPatientMiddleware from "./middleware/NoPatientMiddleware";
 import AuthPatienMiddleware from "./middleware/AuthPatientMiddleware";
 import HistoryIndex from "./components/Frontend/Section/History";
+import ChatAI from "./components/Frontend/Section/ChatAI";
 
 const router = createBrowserRouter([
     {
@@ -200,6 +201,7 @@ const router = createBrowserRouter([
             </>
         ),
         children: [
+            { path: "chatAI", element: <ChatAI /> },
             { path: "homepage.html", element: <HomePage /> },
             {
                 path: "homepage/specialty/:catalogueId/:catalogue.html",
@@ -235,7 +237,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                 <RouterProvider router={router} />
             </HelmetProvider>
             <ToastContainer />
-            <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+            <ReactQueryDevtools initialIsOpen={false} position="bottom-left" />
         </QueryClientProvider>
     </Provider>
 );

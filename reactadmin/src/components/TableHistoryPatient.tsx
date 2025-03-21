@@ -19,6 +19,7 @@ import {
     TableRow,
 } from "../components/ui/table"
 import { Button } from "./ui/button"
+import CustomAlertDialog from "./CustomAlertDialog"
 
 
 const TableHistoryPatient = ({
@@ -32,6 +33,7 @@ const TableHistoryPatient = ({
     handleCheckedChange,
     handleCheckedAllChange,
     openSheet,
+    stopBooking,
     refetch,
     ...restProps
 }: CustomTableProps) => {
@@ -104,37 +106,41 @@ const TableHistoryPatient = ({
 
                             ))}
                             <TableCell className="flex justify-center">
-                                {buttonActions && buttonActions.map((action: any, index: number) => (
-                                    <Button
-                                        key={index} className={`${action.className} p-[15px]`}
-                                        onClick={
-                                            action.onClick && action.params ? (e: React.
-                                                MouseEvent<HTMLButtonElement>) => {
-                                                const args = action.params?.map((param: any) => {
-                                                    if (typeof param === 'string' && (param.endsWith(':f') || param.endsWith(':pf') || param.endsWith(':c'))) {
-                                                        if (param.endsWith(':f')) {
-                                                            return eval(param.slice(0, -2))
-                                                        } else if (param.endsWith(':pf')) {
-                                                            const functionName = param.slice(0, -3)
-                                                            return restProps[functionName]
-                                                        } else if (param.endsWith(':c')) {
-                                                            return action.component
+                                {buttonActions && buttonActions.map((action: any, index: number) => {
+                                    // Nếu trạng thái là 'pending' hoặc hành động là 'create' (xem chi tiết)
+                                    if (row.status === 'pending' || action.method === 'create') {
+                                        return (
+                                            <Button
+                                                key={index}
+                                                className={`${action.className} p-[15px]`}
+                                                onClick={
+                                                    action.onClick && action.params ? (e: React.MouseEvent<HTMLButtonElement>) => {
+                                                        const args = action.params?.map((param: any) => {
+                                                            if (typeof param === 'string' && (param.endsWith(':f') || param.endsWith(':pf') || param.endsWith(':c'))) {
+                                                                if (param.endsWith(':f')) {
+                                                                    return eval(param.slice(0, -2));
+                                                                } else if (param.endsWith(':pf')) {
+                                                                    const functionName = param.slice(0, -3);
+                                                                    return restProps[functionName];
+                                                                } else if (param.endsWith(':c')) {
+                                                                    return action.component;
+                                                                }
+                                                            } else {
+                                                                return row[param as keyof Row];
+                                                            }
+                                                        }) as ParamsToTuple<typeof action.params>;
+                                                        if (action.onClick) {
+                                                            action.onClick(...args);
                                                         }
-                                                    }
-                                                    else {
-                                                        return row[param as keyof Row]
-                                                    }
-                                                }) as ParamsToTuple<typeof action.params>
-                                                if (action.onClick) {
-                                                    action.onClick(...args)
+                                                    } : undefined
                                                 }
-                                            } : undefined
-                                        }
-                                    >
-                                        {action.icon}
-                                    </Button>
-
-                                ))}
+                                            >
+                                                {action.icon}
+                                            </Button>
+                                        );
+                                    }
+                                    return null; // Ẩn nếu không thỏa mãn điều kiện
+                                })}
                             </TableCell>
                         </TableRow>
                     ))
@@ -153,6 +159,14 @@ const TableHistoryPatient = ({
                     )}
                 </TableBody>
             </Table >
+            <CustomAlertDialog
+                isOpen={alertDialogOpen}
+                title="Bạn có chắc chắn muốn thực hiện chức năng này?"
+                description="Hành động này là không thể đảo ngược được! Hãy chắc chắn rằng bạn muốn thực hiện chức năng này"
+                closeAlertDialog={closeAlertDialog}
+                confirmAction={() => confirmAction()}
+                isDialogLoading={isDialogLoading}
+            />
         </>
     )
 }

@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\V1\ScheduleController;
 use App\Http\Controllers\Api\V1\SystemController;
 use App\Http\Controllers\Api\V1\BookingController;
 use App\Http\Controllers\Api\V1\AuthPatientController;
+use App\Http\Controllers\Api\V1\GeminiController;
 use App\Http\Controllers\Api\V1\MedicineCatalogueController;
 use App\Http\Controllers\Api\V1\MedicineController;
 use App\Http\Controllers\Api\V1\HomePageController;
@@ -31,6 +32,7 @@ use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -342,8 +344,13 @@ Route::group([
     //History
     Route::get('historys', [BookingController::class, 'indexHistory']);
     Route::get('historys/{id}', [BookingController::class, 'show']);
+    Route::post('historys/stop/{id}', [BookingController::class, 'stopBooking']);
 });
 Route::post('v1/patient/refresh', [AuthPatientController::class, 'refresh']);
 Route::post('v1/patient/login', [AuthPatientController::class, 'login']);
 Route::post('v1/patient/forgot_password', [AuthPatientController::class, 'sendResetLinkEmail']);
 Route::put('v1/patient/reset_password', [AuthPatientController::class, 'resetPassword'])->name('password.reset');
+
+
+//CHAT AI
+Route::post('v1/gemini', [GeminiController::class, 'sendToApiGemeni'] );

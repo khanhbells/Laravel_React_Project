@@ -23,7 +23,7 @@ const pagination = async (queryString: string) => {
 
 const paginationDoctor = async (queryString: string) => {
     try {
-        const response = await axios.get(`/doctors`)
+        const response = await axios.get(`/doctors?${queryString}`)
         return response.data
     } catch (error: any) {
         handleAxiosError(error)

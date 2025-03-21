@@ -42,10 +42,7 @@ const CustomTable = ({
     refetch,
     ...restProps
 }: CustomTableProps) => {
-
-    useEffect(() => {
-        console.log(data);
-    }, [data])
+    
     const now = dayjs();
 
     //CONTEXT

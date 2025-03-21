@@ -12,6 +12,7 @@ export type User = {
     ward_id: string | null,
     birthday: string | null,
     user_catalogues?: string | null,
+    doctors: any
 }
 export type PayloadInput = {
     name: string,

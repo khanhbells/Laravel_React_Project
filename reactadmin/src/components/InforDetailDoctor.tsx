@@ -60,6 +60,16 @@ const InfoDetailDoctor = ({
                                     {dataInforDoctor.exp}
                                 </div>
                             </div>
+                            <div className="flex justify-between text-[15px]">
+                                <label>Chuyên khoa:</label>
+                                <div className="font-bold">
+                                    {dataInforDoctor.specialties
+                                        .map(
+                                            (specialty: any) => specialty.label
+                                        )
+                                        .join(", ")}
+                                </div>
+                            </div>
                         </>
                     ) : isLoadingDataInfoDoctor ? (
                         <div className="flex items-center justify-center w-full">

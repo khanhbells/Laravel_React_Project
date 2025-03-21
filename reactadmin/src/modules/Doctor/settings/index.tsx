@@ -9,124 +9,136 @@ import { Input } from "@/components/ui/input";
 import { PostCatalogue } from "@/interfaces/types/PostCatalogueType";
 import { formatCatalogueName } from "@/helper/myHelper";
 //INTERFACE & TYPE
-import { ButtonAction, ActionParam, OpenSheetFunction } from "@/interfaces/BaseServiceInterface";
+import {
+    ButtonAction,
+    ActionParam,
+    OpenSheetFunction,
+} from "@/interfaces/BaseServiceInterface";
 import { Select } from "@/interfaces/BaseServiceInterface";
 //SERVICE
 import { sort } from "@/service/BaseService";
 //HOOK
 import useDebounce from "@/hook/useDebounce";
 import { User } from "@/types/User";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitialName } from "@/helper/myHelper";
 
-const model = 'doctors'
-export const redirectIfSucces = '/user/doctor/index'
+const model = "doctors";
+export const redirectIfSucces = "/user/doctor/index";
 
 const breadcrumb = {
-
     index: {
-        title: 'Quản lý bác sĩ',
-        route: '/user/doctor/index'
+        title: "Quản lý bác sĩ",
+        route: "/user/doctor/index",
     },
     create: {
-        title: 'Quản lý bác sĩ',
-        route: '/user/doctor/index'
+        title: "Quản lý bác sĩ",
+        route: "/user/doctor/index",
     },
     update: {
-        title: 'Cập nhật thông tin',
-        description: 'Nhập đầy đủ các thông tin dưới đây. Các mục có dấu (*) là bắt buộc',
-        route: '/doctor/update/:id'
+        title: "Cập nhật thông tin",
+        description:
+            "Nhập đầy đủ các thông tin dưới đây. Các mục có dấu (*) là bắt buộc",
+        route: "/doctor/update/:id",
     },
-
-}
-
+};
 
 interface tableColumn {
-    name: string,
-    render: (item: User) => JSX.Element
+    name: string;
+    render: (item: User) => JSX.Element;
 }
 const tableColumn: tableColumn[] = [
     {
-        name: 'Avartar',
+        name: "Avartar",
         render: (item: User) => (
             <div className="flex items-center">
                 <Avatar className="mr-[15px] ml-[15px]">
-                    {item.image ? <AvatarImage src={item.image} alt="avatar" /> : <AvatarFallback>{getInitialName(item.name)}</AvatarFallback>}
+                    {item.image ? (
+                        <AvatarImage src={item.image} alt="avatar" />
+                    ) : (
+                        <AvatarFallback>
+                            {getInitialName(item.name)}
+                        </AvatarFallback>
+                    )}
                 </Avatar>
             </div>
-        )
+        ),
     },
     {
-        name: 'Họ tên',
-        render: (item: User) => <span>{item.name}</span>
+        name: "Họ tên",
+        render: (item: User) => <span>{item.name}</span>,
     },
 
     {
-        name: 'Số điện thoại',
-        render: (item: User) => <span>{item.phone}</span>
+        name: "Số điện thoại",
+        render: (item: User) => <span>{item.phone}</span>,
     },
     {
-        name: 'Email',
-        render: (item: User) => <span>{item.email}</span>
+        name: "Email",
+        render: (item: User) => <span>{item.email}</span>,
     },
     {
-        name: 'Địa chỉ',
-        render: (item: User) => <span>{item.address ?? '-'}</span>
+        name: "Địa chỉ",
+        render: (item: User) => <span>{item.address ?? "-"}</span>,
     },
-
-]
-
-
+    {
+        name: "Chuyên khoa",
+        render: (item: User) => (
+            <span className="text-center">
+                {item.doctors.specialties.length > 0
+                    ? item.doctors.specialties
+                          .map((value: any) => value.name)
+                          .join(", ")
+                    : "-"}
+            </span>
+        ),
+    },
+];
 
 const buttonActions: ButtonAction<ActionParam[]>[] = [
     {
         icon: <FaRegEdit className="text-white" />,
-        className: 'flex mr-[5px]',
-        method: 'create',
-        params: ['id', 'openSheet:f'],
+        className: "flex mr-[5px]",
+        method: "create",
+        params: ["id", "openSheet:f"],
         onClick: (id: string, openSheet: OpenSheetFunction) => {
-            openSheet({ open: true, action: 'update', id: id })
+            openSheet({ open: true, action: "update", id: id });
         },
-        path: '/user/doctor/update/'
+        path: "/user/doctor/update/",
     },
-]
-
-
-
+];
 
 const extraFilterItems: Select[] = [
     {
-        id: 'doctor_catalogue_Id',
-        placeholder: 'Chọn bác sĩ',
+        id: "doctor_catalogue_Id",
+        placeholder: "Chọn bác sĩ",
         items: [
             {
-                value: '0',
-                label: 'Tất cả'
+                value: "0",
+                label: "Tất cả",
             },
             {
-                value: '1',
-                label: 'Admin'
-            }
-        ]
-    }
-]
+                value: "1",
+                label: "Admin",
+            },
+        ],
+    },
+];
 
 const InformationText = [
     {
         label: "Bằng cấp",
-        name: "exp"
+        name: "exp",
     },
     {
         label: "Tên phòng khám",
-        name: "clinic_name"
+        name: "clinic_name",
     },
     {
         label: "Địa chỉ phòng khám",
-        name: "clinic_address"
+        name: "clinic_address",
     },
-]
-
-
+];
 
 export {
     breadcrumb,
@@ -134,5 +146,5 @@ export {
     tableColumn,
     buttonActions,
     extraFilterItems,
-    InformationText
-}
+    InformationText,
+};

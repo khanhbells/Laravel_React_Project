@@ -1,40 +1,18 @@
 import CustomHelmet from "@/components/CustomHelmet";
-import Parent from "@/components/Parent";
-import { queryKey } from "@/constant/query";
-import { addCommas, getDropdown } from "@/helper/myHelper";
-import { setIdDoctor } from "@/redux/slide/idDoctorSlice";
-import { findById, paginationDoctor } from "@/service/DoctorService";
-import { useEffect, useMemo } from "react";
-import { useQuery } from "react-query";
-import PageHeading from "../../components/heading";
-import { FormProvider, useForm } from "react-hook-form";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import CardDataStats from "@/components/CardDataStats";
-import { LoadingSpinner } from "@/components/ui/loading";
-import { RiHandCoinLine } from "react-icons/ri";
-import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
-import { MdOutlineBorderColor } from "react-icons/md";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { detailAnalytics } from "@/service/DashboardService";
-import ImageIcon from "@/components/ImageIcon";
 import DetailAnalytics from "@/components/DetailAnalytics";
 import InforDetailDoctor from "@/components/InforDetailDoctor";
+import Parent from "@/components/Parent";
+import { queryKey } from "@/constant/query";
+import { getDropdown } from "@/helper/myHelper";
+import { setIdDoctor } from "@/redux/slide/idDoctorSlice";
+import { RootState } from "@/redux/store";
+import { detailAnalytics } from "@/service/DashboardService";
+import { findById, paginationDoctor } from "@/service/DoctorService";
+import { useMemo } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { useQuery } from "react-query";
+import { useSelector } from "react-redux";
+import PageHeading from "../../components/heading";
 
 const DetailDashboard = () => {
     const breadcrumb = {
@@ -71,7 +49,7 @@ const DetailDashboard = () => {
         data: dropdown,
         isLoading: isDropdownLoading,
         isError: isDropDownError,
-    } = useQuery([queryKey.doctors], () => paginationDoctor(""));
+    } = useQuery([], () => paginationDoctor("perpage=100"));
     //Dropdown Select Parent
     const doctors = useMemo(() => {
         if (!isDropdownLoading && dropdown) {

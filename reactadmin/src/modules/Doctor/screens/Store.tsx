@@ -100,7 +100,7 @@ const Store = ({
         staleTime: 10000
     })
     const { data: doctor, isLoading, isError } = useQuery([model, id], async () => {
-        const response = await findById(id)
+        const response = await findById(id, undefined)
         if (Number(response?.code) === 403) {
             navigate(-1);
         }

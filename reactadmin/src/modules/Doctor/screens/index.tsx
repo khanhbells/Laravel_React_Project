@@ -1,12 +1,11 @@
 //pagination
-import { pagination, destroy } from "@/service/DoctorService"
-import Paginate from "@/components/Paginate"
+import Paginate from "@/components/Paginate";
+import { destroy, pagination } from "@/service/DoctorService";
 //breadcrumb
-import PageHeading from "@/components/heading"
-import { Breadcrumb } from "@/types/Breadcrumb"
+import PageHeading from "@/components/heading";
+import { Breadcrumb } from "@/types/Breadcrumb";
 //table
-import CustomTable from "@/components/CustomTable"
-import useTable from "@/hook/useTable"
+import CustomTable from "@/components/CustomTable";
 import {
     Card,
     CardContent,
@@ -14,35 +13,67 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
+import useTable from "@/hook/useTable";
 //filter
-import Filter from "@/components/Filter"
+import Filter from "@/components/Filter";
 //Checkbox
-import useCheckBoxState from "@/hook/useCheckBoxState"
+import useCheckBoxState from "@/hook/useCheckBoxState";
 //settings
-import { breadcrumb, tableColumn, buttonActions } from "../settings"
-import { filterItems } from "@/settings/globalSettings"
-import { queryKey } from "@/constant/query"
+import { filterItems } from "@/settings/globalSettings";
+import { breadcrumb, buttonActions, tableColumn } from "../settings";
 //contexts
-import { FilterProvider } from "@/contexts/FilterContext"
+import { FilterProvider } from "@/contexts/FilterContext";
 //react
-import { useState, useMemo, useEffect } from "react"
-import Placeholder from "react-select/dist/declarations/src/components/Placeholder"
-import { useCustomFilter } from "@/hook/useCustomFilter"
-import { useQuery } from "react-query"
+import { useCustomFilter } from "@/hook/useCustomFilter";
+import { useMemo } from "react";
+import { useQuery } from "react-query";
+import { queryKey } from "@/constant/query";
+import { pagination as specialtyPagination } from "@/service/SpecialtyService";
 //Service
-import { pagination as userPagination } from "@/service/UserService"
 const Doctor = () => {
-    const model = 'users'
-    const breadcrumbData: Breadcrumb = breadcrumb.index
+    const model = "users";
+    const breadcrumbData: Breadcrumb = breadcrumb.index;
 
     //REACT QUERY
-    const { isLoading, data, isError, refetch, handlePageChange, handleQueryString } = useTable({ model, pagination })
+    const {
+        isLoading,
+        data,
+        isError,
+        refetch,
+        handlePageChange,
+        handleQueryString,
+    } = useTable({ model, pagination });
     //Checkbox
-    const { checkedState, checkedAllState, handleCheckedChange, handleCheckedAllChange, isAnyChecked } = useCheckBoxState(data, model, isLoading)
-    const somethingChecked = isAnyChecked()
-
-    const filterInitial = useMemo(() => [], [])
+    const {
+        checkedState,
+        checkedAllState,
+        handleCheckedChange,
+        handleCheckedAllChange,
+        isAnyChecked,
+    } = useCheckBoxState(data, model, isLoading);
+    const somethingChecked = isAnyChecked();
+    const {
+        data: specialties,
+        isLoading: isSpecialtyLoading,
+        isError: isSpecialtyError,
+    } = useQuery([queryKey.specialties], () =>
+        specialtyPagination("perpage=100")
+    );
+    const filterInitial = useMemo(
+        () => [
+            {
+                name: "specialty_id",
+                placeholder: "Chọn dịch vụ khám",
+                data: specialties?.["specialties"],
+                isLoading: isSpecialtyLoading,
+                isNested: true,
+                valueKey: "id",
+                labelKey: "name",
+            },
+        ],
+        [specialties]
+    );
 
     /* 
        - Phân loại được là kiểu hiện có hiển thị theo kiểu danh mục cha con không: isNested:true/ false --> false
@@ -58,8 +89,13 @@ const Doctor = () => {
             <div className="container">
                 <Card className="rounded-[5px] mt-[15px] ">
                     <CardHeader className="border-b border-solid border-[#f3f3f3] p-[20px]">
-                        <CardTitle className="uppercase">Quản lý danh sách bác sĩ</CardTitle>
-                        <CardDescription className="text-xs text-[#f00000]">Hiển thị danh sách bác sĩ, sử dụng các chức năng bên dưới để lọc theo mong muốn</CardDescription>
+                        <CardTitle className="uppercase">
+                            Quản lý danh sách bác sĩ
+                        </CardTitle>
+                        <CardDescription className="text-xs text-[#f00000]">
+                            Hiển thị danh sách bác sĩ, sử dụng các chức năng bên
+                            dưới để lọc theo mong muốn
+                        </CardDescription>
                     </CardHeader>
                     <CardContent className="p-[15px]">
                         <Filter
@@ -67,7 +103,9 @@ const Doctor = () => {
                             checkedState={checkedState}
                             model={model}
                             refetch={refetch}
-                            handleQueryString={(filters: any) => handleQueryString(filters)}
+                            handleQueryString={(filters: any) =>
+                                handleQueryString(filters)
+                            }
                             items={filterItems}
                         />
                         <CustomTable
@@ -86,11 +124,16 @@ const Doctor = () => {
                         />
                     </CardContent>
                     <CardFooter>
-                        {!isLoading && data[model] && data.links ? <Paginate links={data?.links} pageChange={handlePageChange} /> : null}
+                        {!isLoading && data[model] && data.links ? (
+                            <Paginate
+                                links={data?.links}
+                                pageChange={handlePageChange}
+                            />
+                        ) : null}
                     </CardFooter>
                 </Card>
-            </div >
+            </div>
         </FilterProvider>
-    )
-}
-export default Doctor
+    );
+};
+export default Doctor;

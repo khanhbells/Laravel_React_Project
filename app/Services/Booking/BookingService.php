@@ -163,6 +163,29 @@ class BookingService extends BaseService
         }
     }
 
+    public function stopBooking($request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            $payload = [
+                'status' => 'stop',
+                'payment_status' => 'stop'
+            ];
+            $booking = $this->bookingRepository->update($id, $payload);
+            DB::commit();
+            return [
+                'booking' => $booking,
+                'code' => Status::SUCCESS
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return [
+                'code' => Status::ERROR,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
     public function delete($id)
     {
         DB::beginTransaction();
