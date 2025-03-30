@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
 use App\Classes\FileUploader;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -92,6 +93,17 @@ class BaseService
     protected function processCanonical()
     {
         $this->payload['canonical'] = Str::slug($this->payload['canonical']);
+        return $this;
+    }
+
+    //Xử lý thời gian
+    protected function processTimeSlot()
+    {
+        foreach (['start_time', 'end_time'] as $key) {
+            if (!empty($this->payload[$key])) {
+                $this->payload[$key] = formatTime($this->payload[$key]);
+            }
+        }
         return $this;
     }
 

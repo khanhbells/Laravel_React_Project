@@ -43,7 +43,7 @@ const InforScheduleBooking = ({
                             <div className="flex">
                                 <LuCalendarCheck className="mt-[3px] mr-[10px] text-[18px]" />
                                 <div className="font-semibold text-[#FEC206] text-[15px] pb-[10px]">
-                                    {`${dayjs(selectedDataSchedule.start_time).format('hh:mm A')} - ${dayjs(selectedDataSchedule.end_time).format('hh:mm A')} - ${schedule}`}
+                                    {`${selectedDataSchedule.start_time} - ${selectedDataSchedule.end_time} - ${schedule}`}
                                 </div>
                             </div>
                             <div className="flex">

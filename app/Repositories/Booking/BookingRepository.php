@@ -15,6 +15,11 @@ class BookingRepository extends BaseRepository
         $this->model = $model;
     }
 
+    public function getConfirmBooking()
+    {
+        return $this->model->where('status', '=', 'confirm')->count();
+    }
+
     public function getStopBooking()
     {
         return $this->model->where('status', '=', 'stop')->count();

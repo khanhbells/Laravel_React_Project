@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 if (!function_exists('growth')) {
@@ -96,6 +97,33 @@ if (!function_exists('callRepository')) {
         return $repository;
     }
 }
+
+
+if (!function_exists('formatTime')) {
+    /**
+     * Format thời gian theo định dạng mong muốn
+     *
+     * @param string 
+     * @param string 
+     * @return string|null
+     */
+    function formatTime($timeString, $format = 'h:i A')
+    {
+        if (empty($timeString)) {
+            return null;
+        }
+
+        // Loại bỏ phần "(GMT+7)" nếu có
+        $cleanTime = preg_replace('/\s*\(.*\)$/', '', $timeString);
+
+        try {
+            return Carbon::parse($cleanTime)->format($format);
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+}
+
 if (!function_exists('customRepository')) {
     function customRepository($model)
     {
@@ -153,6 +181,7 @@ if (!function_exists('execPostRequest')) {
         return $result;
     }
 }
+
 if (!function_exists('convert_array')) {
     function convert_array($system = null, $keyword = '', $value = '')
     {

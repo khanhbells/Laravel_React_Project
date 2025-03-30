@@ -66,11 +66,7 @@ const tableColumn: tableColumn[] = [
     {
         name: "Thời gian khám",
         render: (item: Schedule) => (
-            <span className="cursor-pointer cat-item-name mr-[10px] text-[#fff] inline-block rounded bg-cyan-600 px-[5px] py-[0px] ">{`${dayjs(
-                item.start_time
-            ).format("hh:mm A")} - ${dayjs(item.end_time).format(
-                "hh:mm A"
-            )}`}</span>
+            <span className="cursor-pointer cat-item-name mr-[10px] text-[#fff] inline-block rounded bg-cyan-600 px-[5px] py-[0px] ">{`${item.start_time} - ${item.end_time}`}</span>
         ),
     },
     {
@@ -109,14 +105,14 @@ const tableColumn: tableColumn[] = [
         render: (item: Schedule) => {
             const now = dayjs(); // Thời gian hiện tại
             const appointmentDate = dayjs(
-                `${item.date} ${dayjs(item.start_time).format("hh:mm A")}`
+                `${item.date} ${item.start_time}`
             ); // Ngày khám
 
             const startTime = dayjs(
-                `${item.date} ${dayjs(item.start_time).format("hh:mm A")}`
+                `${item.date} ${item.start_time}`
             ); // Ngày giờ bắt đầu
             const endTime = dayjs(
-                `${item.date} ${dayjs(item.end_time).format("hh:mm A")}`
+                `${item.date} ${item.end_time}`
             ); // Ngày giờ kết thúc
 
             const isExpired = endTime.isBefore(now); // Đã qua thời gian khám

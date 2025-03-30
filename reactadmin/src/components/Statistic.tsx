@@ -48,16 +48,34 @@ const Statistic = ({
             >
                 <LiaFileInvoiceDollarSolid className="text-[20px] text-violet-600" />
             </CardDataStats>
+            <CardDataStats
+                title="Tổng số đơn được xác nhận"
+                total={isLoading ? <LoadingSpinner /> : `${data?.statistic?.totalConfirmBooking || 0} đơn khám`}
+                levelUp
+                previousMonth="so với tháng trước"
+                classColorName="green-500"
+            >
+                <LiaFileInvoiceDollarSolid className="text-[20px] text-green-600" />
+            </CardDataStats>
+            <CardDataStats
+                title="Tổng số đơn bị hủy"
+                total={isLoading ? <LoadingSpinner /> : `${data?.statistic?.totalStopBooking || 0} đơn khám`}
+                levelUp
+                previousMonth="so với tháng trước"
+                classColorName="red-500"
+            >
+                <LiaFileInvoiceDollarSolid className="text-[20px] text-red-600" />
+            </CardDataStats>
             {
                 data?.statistic?.totalPendingBooking !== 0 &&
                 <CardDataStats
                     title="Đơn chờ xác nhận"
                     total={isLoading ? <LoadingSpinner /> : `${data?.statistic?.totalPendingBooking || 0} đơn khám`}
                     levelUp
-                    classColorName="red-500"
+                    classColorName="yellow-500"
                     route="/booking/index?status=pending"
                 >
-                    <MdOutlineBorderColor className="text-[20px] text-red-400" />
+                    <MdOutlineBorderColor className="text-[20px] text-yellow-400" />
                 </CardDataStats>
             }
         </>

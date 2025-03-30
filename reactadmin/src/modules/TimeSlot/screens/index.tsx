@@ -50,20 +50,7 @@ const TimeSlot = () => {
     const somethingChecked = isAnyChecked()
 
     const [customFilter, setCustomFilter] = useState<SelectConfig[]>([]);
-    const [customData, setCustomData] = useState<{ [key: string]: TTimeSlot[] } | undefined>(undefined)
 
-    useEffect(() => {
-        if (!isLoading) {
-            const formatData = {
-                [model]: data[model].map((value: TTimeSlot) => ({
-                    ...value,
-                    start_time: dayjs(value.start_time).format('hh:mm A'),
-                    end_time: dayjs(value.end_time).format('hh:mm A'),
-                }))
-            };
-            setCustomData(formatData)
-        }
-    }, [refetch, data, isLoading])
 
     return (
         <TableProvider model={model} pagination={pagination}>
@@ -88,7 +75,7 @@ const TimeSlot = () => {
                             />
                             <CustomTable
                                 isLoading={isLoading}
-                                data={customData || []}
+                                data={data || []}
                                 isError={isError}
                                 model={model}
                                 tableColumn={tableColumn}

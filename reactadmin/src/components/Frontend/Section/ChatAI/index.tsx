@@ -4,7 +4,7 @@ const ChatAI = () => {
     return (
         <>
             <ChatUI 
-                className="px-[200px]"
+                className="px-[200px] h-full pb-[20px]"
             />
         </>
     );

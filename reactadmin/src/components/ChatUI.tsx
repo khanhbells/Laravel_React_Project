@@ -45,15 +45,13 @@ const ChatUI = ({ className }: IChatUI) => {
         try {
             // 📡 Gửi API với CHỈ câu hỏi của user
             const response = await callGeminiAPI(input);
+            console.log(response);
+            
 
             clearInterval(typingInterval); // ⏹️ Dừng hiệu ứng typing
 
             // Kiểm tra nếu `response` là object -> lấy text từ `candidates`
-            const reply =
-                typeof response === "string"
-                    ? response
-                    : response?.candidates?.[0]?.content?.parts?.[0]?.text ||
-                      "Không có phản hồi";
+            const reply =typeof response === "string" ? response: response?.bot_response || "Không có phản hồi";
 
             // 📌 Hiệu ứng gõ chữ từ từ
             let currentText = "";
@@ -98,8 +96,8 @@ const ChatUI = ({ className }: IChatUI) => {
                     Hỏi đáp với Bells AI
                 </CardTitle>
             </CardHeader>
-            <CardContent className="p-4">
-                <div className="flex flex-col h-[500px] bg-gray-100 border border-teal-400 rounded-md">
+            <CardContent className="p-4 h-[900px]">
+                <div className="flex flex-col h-full bg-gray-100 border border-teal-400 rounded-md">
                     {/* Hiển thị tin nhắn */}
                     <div className="flex-grow p-4 overflow-auto">
                         {messages.map((msg, index) => (

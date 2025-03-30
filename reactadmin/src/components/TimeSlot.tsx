@@ -40,8 +40,6 @@ const TimeSlot = ({
         if (!isLoading) {
             const formatData = data[model].map((value: TTimeSlot) => ({
                 ...value,
-                start_time: dayjs(value.start_time).format('hh:mm A'),
-                end_time: dayjs(value.end_time).format('hh:mm A'),
                 publish: String(value.publish)
             }))
             setCustomData(formatData)

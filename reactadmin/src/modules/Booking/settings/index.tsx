@@ -59,7 +59,7 @@ const tableColumn: tableColumn[] = [
     },
     {
         name: 'Thời gian khám',
-        render: (item: Booking) => <span className="cursor-pointer cat-item-name mr-[10px] text-[#fff] inline-block rounded bg-cyan-600 px-[5px] py-[0px] ">{`${dayjs(item.start_time).format('hh:mm A')} - ${dayjs(item.end_time).format('hh:mm A')}`}</span>
+        render: (item: Booking) => <span className="cursor-pointer cat-item-name mr-[10px] text-[#fff] inline-block rounded bg-cyan-600 px-[5px] py-[0px] ">{`${item.start_time} - ${item.end_time}`}</span>
     },
     {
         name: 'Tên bệnh nhân',

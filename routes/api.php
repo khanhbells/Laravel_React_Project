@@ -353,4 +353,9 @@ Route::put('v1/patient/reset_password', [AuthPatientController::class, 'resetPas
 
 
 //CHAT AI
-Route::post('v1/gemini', [GeminiController::class, 'sendToApiGemeni'] );
+Route::group([
+    'prefix' => 'v1'
+], function ($router) {
+    Route::post('gemini', [GeminiController::class, 'sendToApiGemeni']);
+    Route::get('gemini', [GeminiController::class, 'index']);
+});

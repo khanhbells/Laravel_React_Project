@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 use App\Models\TimeSlot;
 
-class StoreTimeSlotRequest extends FormRequest
+class UpdateTimeSlotRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,8 +18,6 @@ class StoreTimeSlotRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -38,7 +36,7 @@ class StoreTimeSlotRequest extends FormRequest
     }
 
     /**
-     * Thêm kiểm tra khoảng thời gian đã tồn tại hay chưa
+     * Kiểm tra khoảng thời gian đã tồn tại khi cập nhật
      */
     public function withValidator(Validator $validator)
     {
@@ -48,8 +46,8 @@ class StoreTimeSlotRequest extends FormRequest
 
             $exists = TimeSlot::where('start_time', $startTime)
                 ->where('end_time', $endTime)
+                ->where('id', '!=', $this->id) // Loại trừ chính bản ghi đang cập nhật
                 ->exists();
-
 
             if ($exists) {
                 $validator->errors()->add('start_time', 'Khoảng thời gian này đã tồn tại!');

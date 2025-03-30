@@ -2,7 +2,8 @@ import axios from "@/configs/axios";
 import { handleAxiosError } from "@/helper/axiosHelper";
 
 interface GeminiResponse {
-    candidates?: { content: { parts: { text: string }[] } }[];
+    // candidates?: { content: { parts: { text: string }[] } }[];
+    bot_response: string
 }
 
 const callGeminiAPI = async (

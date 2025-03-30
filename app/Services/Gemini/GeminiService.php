@@ -1,28 +1,33 @@
 <?php
 
-namespace App\Services\Time;
+namespace App\Services\Gemini;
 
 use App\Services\BaseService;
-use App\Repositories\Time\TimeSlotRepository;
+use App\Repositories\Gemini\GeminiRepository;
 use Illuminate\Support\Facades\DB;
 use App\Enums\Status;
+use App\Classes\Nested;
 
 
-class TimeSlotService extends BaseService
+class GeminiService extends BaseService
 {
-    protected $timeSlotRepository;
+    protected $geminiRepository;
+    protected $fileUploader;
+    protected $files = ['image', 'icon'];
+    protected $except = [];
+
     public function __construct(
-        TimeSlotRepository $timeSlotRepository,
+        GeminiRepository $geminiRepository,
     ) {
-        $this->timeSlotRepository = $timeSlotRepository;
+        $this->geminiRepository = $geminiRepository;
+        parent::__construct('gemini');
     }
 
     public function paginate($request)
     {
         $agrument = $this->paginateAgrument($request);
-        $timeSlots = $this->timeSlotRepository->pagination([...$agrument]);
-        // dd($timeSlots);
-        return $timeSlots;
+        $geminis = $this->geminiRepository->pagination([...$agrument]);
+        return $geminis;
     }
 
     private function paginateAgrument($request)
@@ -31,35 +36,32 @@ class TimeSlotService extends BaseService
             'perpage' => $request->input('perpage') ?? 10,
             'keyword' => [
                 'search' => $request->input('keyword') ?? '',
-                'field' => ['name', 'description']
+                'field' => ['user_message', 'bot_response']
             ],
             'condition' => [
                 'publish' => $request->integer('publish'),
-                // 'user_catalogue_id' => $request->integer('user_catalogue_id'),
             ],
             'select' => ['*'],
             'orderBy' => $request->input('sort') ? explode(',', $request->input('sort')) : ['id', 'desc'],
         ];
     }
 
-    private function initializeRequest($request, $except)
+    private function initializeRequest($request, $auth, $except)
     {
-        return $this->initializePayload($request, $except)
-            ->processTimeSlot()
-            ->getPayload();
+        return $this->initializePayload($request, $except)->getPayload();
     }
 
-    public function create($request)
+
+    public function create($request, $auth)
     {
         DB::beginTransaction();
         try {
-            $except = ['id'];
-            $payload = $this->initializeRequest($request, $except);
-            $timeSlot = $this->timeSlotRepository->create($payload);
+            $except = [];
+            $payload = $this->initializeRequest($request, $auth, $except);
+            $gemini = $this->geminiRepository->create($payload);
             DB::commit();
-
             return [
-                'timeSlot' => $timeSlot,
+                'gemini' => $gemini,
                 'code' => Status::SUCCESS
             ];
         } catch (\Exception $e) {
@@ -71,17 +73,22 @@ class TimeSlotService extends BaseService
         }
     }
 
-    public function update($request, $id)
+    public function update($request, $id, $auth)
     {
         DB::beginTransaction();
         try {
-            $except = ['id'];
-            $payload = $this->initializeRequest($request, $except);
-            $timeSlot = $this->timeSlotRepository->update($id, $payload);
-            // dd($timeSlot);
+            $except = ['gemini_counts', 'catalogues', 'cats', 'tags'];
+            $payload = $this->initializeRequest($request, $auth, $except);
+            $gemini = $this->geminiRepository->update($id, $payload);
+            if ($gemini) {
+                $detachArray = ['gemini_catalogues', 'tags'];
+                $this->detachRelation($gemini, $detachArray);
+                $this->createCatRelation($request, $gemini, 'gemini');
+                $this->createTagRelation($request, $gemini);
+            }
             DB::commit();
             return [
-                'timeSlot' => $timeSlot,
+                'gemini' => $gemini,
                 'code' => Status::SUCCESS
             ];
         } catch (\Exception $e) {
@@ -93,11 +100,11 @@ class TimeSlotService extends BaseService
         }
     }
 
-    public function delete($id)
+    public function delete($id, $auth)
     {
         DB::beginTransaction();
         try {
-            $this->timeSlotRepository->delete($id);
+            $this->geminiRepository->delete($id);
             DB::commit();
             return [
                 'code' => Status::SUCCESS

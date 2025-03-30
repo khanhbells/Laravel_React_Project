@@ -82,7 +82,6 @@ class PostController extends Controller
 
     public function show(Request $request, $id)
     {
-
         try {
             if (!$id) {
                 return response()->json([

@@ -99,7 +99,7 @@ const TableHistoryPatient = ({
                     ) : (data?.[model] ?? []).length > 0 ? (data[model] && data[model].map((row: any, index: number) => (
                         <TableRow
                             key={index}
-                            className={`${checkedState[row.id] ? 'bg-[#ffc]' : ''} ${dayjs(`${row.date} ${dayjs(row.end_time).format('hh:mm A')}`).isBefore(now) ? 'opacity-50' : ''}`}
+                            className={`${checkedState[row.id] ? 'bg-[#ffc]' : ''} ${dayjs(`${row.date} ${row.end_time}`).isBefore(now) ? 'opacity-50' : ''}`}
                         >
                             {tableColumn && tableColumn.map((column, index) => (
                                 <TableCell key={index}>{column.render(row)}</TableCell>

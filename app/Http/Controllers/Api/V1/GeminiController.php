@@ -4,11 +4,16 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Gemini\StoreGeminiRequest;
 use App\Http\Resources\BookingResource;
 use App\Http\Resources\DetailDoctorResource;
+use App\Http\Resources\GeminiResource;
 use App\Http\Resources\HospitalResource;
 use App\Http\Resources\PostCatalogueResource;
 use App\Http\Resources\SpecialtyResource;
+use App\Models\DataGemini;
+use App\Models\Gemini;
+use App\Services\Gemini\GeminiService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -17,9 +22,12 @@ use Illuminate\Support\Str;
 
 class GeminiController extends Controller
 {
+    protected $geminiService;
 
-
-    public function __construct(){}
+    public function __construct(GeminiService $geminiService)
+    {
+        $this->geminiService = $geminiService;
+    }
 
     public function callRepository($model, $isFolder = true)
     {
@@ -32,16 +40,35 @@ class GeminiController extends Controller
         return $repository;
     }
 
-    public function sendToApiGemeni(Request $request) {
+    public function index(Request $request)
+    {
+        try {
+            $geminis = $this->geminiService->paginate($request);
+            return response()->json([
+                'geminis' =>  method_exists($geminis, 'items') ? GeminiResource::collection($geminis->items()) : $geminis,
+                'links' => method_exists($geminis, 'items') ? $geminis->linkCollection() : null,
+                'current_page' => method_exists($geminis, 'items') ? $geminis->currentPage() : null,
+                'last_page' => method_exists($geminis, 'items') ? $geminis->lastPage() : null,
+            ], Response::HTTP_OK);
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            return response()->json([
+                'message' => 'Không có quyền truy cập',
+                'tags' => [],
+                'code' => Status::ERROR
+            ], Response::HTTP_FORBIDDEN);
+        }
+    }
+    public function sendToApiGemeni(Request $request)
+    {
         $userMessage = strtolower($request->input('message'));
-        $keyword = $this->keyWordSearch();
-        
+        $keyword = config('keywordSearch');
+
         // 🔍 Tìm từ khóa trong câu hỏi
         $relatedData = [];
         foreach ($keyword as $mainKeyword => $data) {
             foreach ($data['aliases'] as $alias) {
                 if (strpos($userMessage, $alias) !== false) {
-                    $repoName = $mainKeyword; 
+                    $repoName = $mainKeyword;
                     $repository = $this->customRepository($repoName);
                     $data = $repository->pagination([...$this->paginateAgrument($request)]);
                     $relatedData[$repoName] = $this->formatData($repoName, $data->items());
@@ -49,23 +76,51 @@ class GeminiController extends Controller
                 }
             }
         }
-    
+
         // 📦 Chỉ gửi dữ liệu liên quan
-        $context = !empty($relatedData) ? json_encode($relatedData, JSON_UNESCAPED_UNICODE) : '';
-        dd($context);
-    
-        // 📡 Gửi API Gemini
+        $context = !empty($relatedData) ? json_encode($relatedData, JSON_UNESCAPED_UNICODE, JSON_PRETTY_PRINT) : '';
+        // 📦 Lấy lịch sử chat trước đó của user (chỉ lấy 5 tin gần nhất)
+        $chatHistory = Gemini::latest()->get();
+        $historyText = "";
+        foreach ($chatHistory as $chat) {
+            $historyText .= "User: " . $chat->user_message . "\nBot: " . $chat->bot_response;
+        }
+        // 📡 Gửi API Gemini kèm lịch sử chat và context
         $apiKey = env('GEMINI_API_KEY');
-        $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$apiKey", [
-            'contents' => [['parts' => [['text' => $userMessage . "\n\n" . $context]]]]
+        $sendMessageToAI =  "\n\Database: " . $context . "\n$historyText\nUser: " . $userMessage;
+        // dd($sendMessageToAI);
+        $response = Http::timeout(60)->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$apiKey", [
+            'contents' => [['parts' => [['text' => $sendMessageToAI]]]]
         ]);
-    
-        return $response->json();
+
+        $botResponse = $response->json()['candidates'][0]['content']['parts'][0]['text'] ?? '';
+        $botResponse = preg_replace('/^Bot:\s*/', '', $botResponse);
+        $storeRequest = new StoreGeminiRequest([
+            'user_message' => $userMessage,
+            'bot_response' => $botResponse
+        ]);
+
+        $data = $this->create($storeRequest);
+        if ($data['code'] == Status::SUCCESS) {
+            return response()->json(['bot_response' => $botResponse]);
+        }
+
+        return response()->json([
+            'message' => $data['message']
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
+    private function create(StoreGeminiRequest $request)
+    {
+        $auth = auth('api')->user();
+        $data = $this->geminiService->create($request, $auth);
 
-     // 📌 Hàm format dữ liệu
-    private function formatData($type, $data) {
+        return $data;
+    }
+
+    // 📌 Hàm format dữ liệu
+    private function formatData($type, $data)
+    {
         switch ($type) {
             case 'doctors':
                 return DetailDoctorResource::collection($data);
@@ -84,19 +139,18 @@ class GeminiController extends Controller
         $customRepository = app($this->callRepository($model));
         return $customRepository;
     }
-    
+
     private function paginateAgrument(
-        $request, 
-        $flag = false, 
-        $model = null, 
-        $relations = [], 
+        $request,
+        $flag = false,
+        $model = null,
+        $relations = [],
         $condition = [],
         $join = [],
         $select = ['*'],
         $field  = ['name'],
         $orderBy = ['id', 'desc']
-    )
-    {
+    ) {
         return [
             'select' => $select,
             'orderBy' => $orderBy,
@@ -118,26 +172,6 @@ class GeminiController extends Controller
             $model . '_catalogues' => function ($query) use ($request) {
                 $query->where('publish', 2);
             }
-        ];
-    }
-
-    private function keyWordSearch(){
-        return [
-            'hospitals' => [
-                'aliases' => ['bv', 'bệnh viện', 'bviện', 'benhvien', 'hospitals', 'bviện lớn', 'viện', 'bvien', 'benh vien'],
-            ],
-            'doctors' => [
-                'aliases' => ['bs', 'bsi', 'bác sĩ', 'bacsi', 'doctors', 'bsi giỏi', 'bác sỹ', 'bsỹ', 'bac sy', 'bacs', 'bsy', 'doctor'],
-            ],
-            'bookings' => [
-                'aliases' => ['dat lich', 'dl', 'đặt lịch', 'book', 'bookings', 'hẹn khám', 'lịch hẹn', 'dat kham', 'hẹn bác sĩ', 'hẹn giờ', 'dat hen','đơn khám', 'don kham', 'đơn hẹn', 'bác sĩ', 'bac si', 'nổi bật', 'noi bat', 'thanh toan', 'thanh toán', 'đã duyệt', 'đã hủy', 'chưa duyệt', 'tổng tiền','tong tien'],
-            ],
-            'specialties' => [
-                'aliases' => ['ck', 'chuyenkhoa', 'dịch vụ khám', 'dv kham', 'specialties', 'khoa', 'khoa khám', 'chuyên nghành', 'chuyenk', 'chuyên khoa nào', 'khoa nào'],
-            ],
-            'schedules' => [
-                'aliases' => ['lich kham', 'lịch khám', 'lk', 'thời gian', 'tgian', 'time', 'khám', 'kham', 'gio', 'giờ'],
-            ],
         ];
     }
 }

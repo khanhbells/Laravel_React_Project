@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UpdateByFieldRequest;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Requests\Time\StoreTimeSlotRequest;
+use App\Http\Requests\Time\UpdateTimeSlotRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 
@@ -67,7 +68,7 @@ class TimeSlotController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function update(StoreTimeSlotRequest $request, $id)
+    public function update(UpdateTimeSlotRequest $request, $id)
     {
         $data = $this->timeSlotService->update($request, $id);
         if ($data['code'] == Status::SUCCESS) {
@@ -126,7 +127,7 @@ class TimeSlotController extends Controller
 
     public function updateStatusByField(UpdateByFieldRequest $request, $id)
     {
-        $respository = 'App\Repositories\TimeSlot\TimeSlotRepository';
+        $respository = 'App\Repositories\Time\TimeSlotRepository';
         if ($this->timeSlotService->updateByField($request, $id, $respository)) {
 
             return response()->json([

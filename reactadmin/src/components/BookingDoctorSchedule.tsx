@@ -28,7 +28,7 @@ const BookingDoctorSchedule = ({
                         </div>
                         <div className="flex justify-between mb-[5px]">
                             <span>Thời gian khám:</span>
-                            <span className="font-semibold">{`${dayjs(data?.start_time).format('hh:mm A')} - ${dayjs(data?.end_time).format('hh:mm A')}`}</span>
+                            <span className="font-semibold">{`${data?.start_time} - ${data?.end_time}`}</span>
                         </div>
                         <div className="flex justify-between mb-[5px]">
                             <span>Giá khám:</span>

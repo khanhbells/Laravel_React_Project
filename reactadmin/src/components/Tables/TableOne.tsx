@@ -26,7 +26,7 @@ const TableOne = ({
   }, [data])
 
   return (
-    <div className="col-span-12 rounded-sm border border-stroke bg-white p-7.5 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-5 mb-[20px]">
+    <div className="col-span-12 rounded-sm border border-stroke bg-white p-7.5 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-5 mb-[20px] h-[984px]">
       {
         !data ? (
           <>
@@ -42,7 +42,7 @@ const TableOne = ({
                 Top 5 bác sĩ nổi bật nhất
               </h4>
 
-              <div className="flex flex-col">
+              <div className="flex flex-col h-[900px] gap-[50px]">
                 <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-4">
                   <div className="p-2.5 text-center xl:p-5" >
                     <h5 className="text-sm font-medium uppercase xsm:text-base">
@@ -66,11 +66,11 @@ const TableOne = ({
                     key={key}
                   >
                     <div className="flex items-center justify-center p-2.5 xl:p-5">
-                      <p className="text-meta-8 font-semibold text-[25px]">{key + 1}</p>
+                      <p className="text-meta-8 font-semibold text-[40px]">{key + 1}</p>
                     </div>
                     {
                       tableColumn && tableColumn.map((column, index) => (
-                        <div key={index}>
+                        <div key={index} className='text-[20px]'>
                           {column.render(row)}
                         </div>
                       ))

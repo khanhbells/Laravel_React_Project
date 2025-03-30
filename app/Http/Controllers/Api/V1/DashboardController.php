@@ -166,6 +166,7 @@ class DashboardController extends Controller
             $totalPatient = $this->statisticTotal('patients');
 
             $totalBooking = $this->statisticTotal('bookings');
+            $totalConfirmBooking = $repositoryBooking->getConfirmBooking();
             $totalStopBooking = $repositoryBooking->getStopBooking();
             $totalPendingBooking = $repositoryBooking->getPendingBooking();
             $totalBookingCurrentMonth = $repositoryBooking->getBookingByTime($month, $year);
@@ -176,6 +177,7 @@ class DashboardController extends Controller
                 'totalDoctor' => $totalDoctor,
                 'totalPatient' => $totalPatient,
                 'totalBooking' => $totalBooking,
+                'totalConfirmBooking' => $totalConfirmBooking,
                 'totalStopBooking' => $totalStopBooking,
                 'totalPendingBooking' => $totalPendingBooking,
                 'totalPendingBooking' => $totalPendingBooking,

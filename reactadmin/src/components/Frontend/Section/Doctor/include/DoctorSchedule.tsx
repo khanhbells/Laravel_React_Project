@@ -91,7 +91,7 @@ const DoctorSchedule = ({
                                         }`}
                                     onClick={() => handleSetDataSchedule(value)}
                                 >
-                                    {`${dayjs(value.start_time).format('hh:mm A')} - ${dayjs(value.end_time).format('hh:mm A')}`}
+                                    {`${value.start_time} - ${value.end_time}`}
                                 </Button>
                             )
                             ) : options.length === 0 ? (
