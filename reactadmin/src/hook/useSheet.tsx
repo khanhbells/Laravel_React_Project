@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useDispatch } from "react-redux";
 
 export interface Sheet {
     open: boolean,
@@ -8,10 +9,15 @@ export interface Sheet {
 
 const useSheet = () => {
     const [isSheetOpen, setIsSheetOpen] = useState<Sheet>({ open: false, action: '', id: undefined })
+    const dispatch = useDispatch();
     const openSheet = ({ action, id }: Sheet) => {
         setIsSheetOpen({ open: true, action, id })
     }
-    const closeSheet = () => setIsSheetOpen({ ...isSheetOpen, open: false })
+    const closeSheet = () => {
+        dispatch({ type: 'CLOSE_SHEET' });
+        document.body.style.pointerEvents = 'auto'; // Gỡ khi đóng
+        setIsSheetOpen({ ...isSheetOpen, open: false })
+    }
 
     return { isSheetOpen, openSheet, closeSheet }
 }

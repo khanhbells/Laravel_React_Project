@@ -104,12 +104,7 @@ class PatientController extends Controller
         if (empty($id) || $id < 0) {
             return $this->returnIfIdValidateFail();
         }
-
-
-
         $patient = $this->patientRepository->findById($id);
-
-
         if (!$patient) {
             return response()->json([
                 'code' => Status::ERROR,
@@ -171,7 +166,7 @@ class PatientController extends Controller
 
     private function baseUpdate($request, $id)
     {
-        $auth = auth()->guard('patient')->user();
+        $auth = $request->input('email');
         $data = $this->patientService->update($request, $id, $auth);
 
         if ($data['code'] == Status::SUCCESS) {

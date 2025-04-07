@@ -24,9 +24,9 @@ class DoctorService extends BaseService
         $this->userRepository = $userRepository;
     }
 
-    public function paginate($request)
+    public function paginate($request, $auth)
     {
-        $agrument = $this->paginateAgrument($request);
+        $agrument = $this->paginateAgrument($request, $auth);
 
         // Danh sách các điều kiện whereHas có thể áp dụng
         $whereHasConditions = [
@@ -45,9 +45,25 @@ class DoctorService extends BaseService
             }
         }
 
+        if ($auth->user_catalogue_id == 2) {
+            $agrument['whereHas'] = array_merge(
+                $agrument['whereHas'] ?? [],
+                $this->whereHasDoctorDetail($auth)
+            );
+        }
+
         $doctors = $this->doctorRepository->pagination([...$agrument]);
 
         return $doctors;
+    }
+
+    private function whereHasDoctorDetail($auth)
+    {
+        return [
+            'users' => function ($query) use ($auth) {
+                $query->where('id', $auth->id);
+            }
+        ];
     }
 
     private function whereHasSpecialty($request)
@@ -80,13 +96,13 @@ class DoctorService extends BaseService
         ];
     }
 
-    private function paginateAgrument($request)
+    private function paginateAgrument($request, $auth)
     {
         $condition = [
             'publish' => $request->integer('publish'),
         ];
 
-        if($request->integer('hospital_id')){
+        if ($request->integer('hospital_id')) {
             $condition['hospital_id'] = $request->integer('hospital_id');
         }
 

@@ -110,7 +110,7 @@ const Doctor = () => {
                         />
                         <CustomTable
                             isLoading={isLoading}
-                            data={data}
+                            data={data || []}
                             isError={isError}
                             model={model}
                             tableColumn={tableColumn}

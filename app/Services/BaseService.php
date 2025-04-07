@@ -65,10 +65,8 @@ class BaseService
         $customFolder = ['avatar'],
         $imageType = 'image'
     ) {
-
-        if ($auth && count($files) && is_array($files)) {
+        if ($auth && count($files) && is_array($files)) {            
             if (isset($auth->email)) {
-
                 $this->fileUploader = new FileUploader($auth->email);
             } else {
                 $this->fileUploader = new FileUploader($auth);
@@ -76,7 +74,6 @@ class BaseService
 
             foreach ($files as $keyFile => $file) {
                 if ($request->file($file)) {
-
                     $this->payload[$file] = $this->fileUploader->uploadFile($request->file($file), $imageType, $customFolder);
                 } else {
 

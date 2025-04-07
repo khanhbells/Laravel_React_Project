@@ -163,7 +163,6 @@ Route::group([
     Route::get('patients', [PatientController::class, 'index']);
 
     Route::post('patients', [PatientController::class, 'create']);
-    Route::put('patients/{id}', [PatientController::class, 'update']);
     Route::delete('patients/{id}', [PatientController::class, 'destroy']);
 
     Route::put('patients/{id}/reset-password', [PatientController::class, 'resetPassword']);
@@ -256,6 +255,7 @@ Route::group([
     Route::get('location', [DashboardController::class, 'location']);
     // Patient
     Route::get('patients/{id}', [PatientController::class, 'show']);
+    Route::put('patients/{id}', [PatientController::class, 'update']);
     //Bookings
     Route::post('bookings', [BookingController::class, 'create']);
     //VNPAY

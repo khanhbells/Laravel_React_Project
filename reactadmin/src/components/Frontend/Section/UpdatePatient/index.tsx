@@ -13,31 +13,52 @@ import useUpload from "@/hook/useUpload";
 import useFormSubmit from "@/hook/useFormSubmit";
 import useSelectBox from "@/hook/useSelectbox";
 //SETTING
-import { formField } from "../../settings/userSettings";
-import { PayloadInput, User } from "@/types/User";
+import { formField } from "./settings";
+import { PayloadInput, Patient } from "@/types/Patient";
 import { Option } from "@/components/CustomSelectBox";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup';
-import { UserCatalogue } from "@/interfaces/types/UserCatalogueType";
+import { PatientCatalogue } from "@/interfaces/types/PatientCatalogueType";
 //SERVICE
-import { save, getUserById } from "@/service/UserService";
-import { pagination } from "@/service/UserCatalogueService";
+import { save, getPatientById } from "@/service/PatientService";
+import { pagination } from "@/service/PatientCatalogueService";
 //INTERFACES
 import { SelectBoxItem } from "@/interfaces/BaseServiceInterface";
-import { schema } from "../../validations/user";
 import { StoreProps } from "@/interfaces/BaseServiceInterface";
 
-interface UserStoreProps extends StoreProps {
-    userCatalogueData: { value: string, label: string }[]
+interface IUpdatePatientProps {
+    id: string  | undefined
+    action: string
+    closeSheet: () => void
 }
 
-const UserStore = ({
+const schema = yup.object().shape({
+    name: yup.string().required('Bạn chưa nhập vào Họ tên').min(3, 'Tên người dùng tối thiểu phải có 3 ký tự'),
+    email: yup.string().required('Bạn chưa nhập vào Email').email('Email không hợp lệ'),
+    phone: yup.string().required('Bạn chưa nhập vào số điện thoại'),
+    password: yup.string().when('$action', {
+        is: 'update',
+        then: (schema) => schema.notRequired(),
+        otherwise: (schema) => schema.required('Bạn chưa nhập vào ô mật khẩu').min(6, 'Mật khẩu phải có ít nhất 6 ký tự')
+    }),
+    confirmPassword: yup.string().when('$action', {
+        is: 'update',
+        then: (schema) => schema.notRequired(),
+        otherwise: (schema) => schema.required('Bạn chưa nhập vào ô xác nhận mật khẩu').oneOf([yup.ref('password')], 'Mật khẩu nhập lại không chính xác')
+    }),
+    province_id: yup.string().required('Bạn chưa chọn thành phố'),
+    district_id: yup.string().required('Bạn chưa chọn quận/huyện'),
+    ward_id: yup.string().required('Bạn chưa chọn phường/xã'),
+    address: yup.string().optional(),
+    birtday: yup.string().optional(),
+    image: yup.mixed().optional()
+})
+
+const UpdatePatient = ({
     id,
     action,
-    refetch,
-    closeSheet,
-    userCatalogueData
-}: UserStoreProps) => {
+    closeSheet
+}: IUpdatePatientProps) => {
     //Location
     const { provinces, districts, wards, setProvinceId, setDistrictId, isProvinceLoading, isDistrictLoading, isWardLoading } = useLocationState()
     const { images, handleImageChange } = useUpload(false)
@@ -51,13 +72,13 @@ const UserStore = ({
 
     //useForm
     const { register, handleSubmit, reset, formState: { errors }, setValue, control } = methods
-    const { onSubmitHanler, loading } = useFormSubmit(save, { action: action, id: id }, null, refetch, closeSheet)
+    const { onSubmitHanler, loading } = useFormSubmit(save, { action: action, id: id }, null, undefined, closeSheet)
 
 
 
     //QUERY
-    const { data, isLoading, isError } = useQuery<User>(['user', id],
-        () => getUserById(id),
+    const { data, isLoading, isError } = useQuery<Patient>(['user', id],
+        () => getPatientById(id),
         {
             enabled: action === 'update' && !!id,
         }
@@ -75,7 +96,7 @@ const UserStore = ({
         if (!isLoading && data && action === 'update') {
             setValidationRules(formField(action, data))
             Object.keys(data).forEach((key) => {
-                const value = data[key as keyof User]
+                const value = data[key as keyof Patient]
 
                 if (typeof value === 'string' || value === undefined) {
                     setValue(key as keyof PayloadInput, value)
@@ -93,14 +114,6 @@ const UserStore = ({
     const [defaultSelectValue, _] = useState<Option | null>(null)
 
     const initialSelectBoxs = useMemo<SelectBoxItem[]>(() => [
-        {
-            title: 'Loại thành viên',
-            placeholder: 'Chọn loại thành viên',
-            options: userCatalogueData,
-            value: defaultSelectValue,
-            name: 'user_catalogue_id',
-            control: control,
-        },
         {
             title: 'Thành phố',
             placeholder: 'Chọn thành phố',
@@ -137,20 +150,6 @@ const UserStore = ({
     const { selectBox, updateSelectBoxValue, updateSelectBoxOptions } = useSelectBox(initialSelectBoxs)
 
 
-
-    //follow update value and option
-    useEffect(() => {
-        if (userCatalogueData) {
-            updateSelectBoxOptions('user_catalogue_id', userCatalogueData)
-            if (data) {
-                updateSelectBoxValue('user_catalogue_id', userCatalogueData, String(data?.user_catalogue_id))
-            }
-        }
-    }, [userCatalogueData, data, updateSelectBoxValue, updateSelectBoxOptions])
-
-
-
-
     useEffect(() => {
 
         if (provinces.data && provinces.data.length) {
@@ -181,14 +180,6 @@ const UserStore = ({
             }
         }
     }, [wards.data, data, updateSelectBoxValue, updateSelectBoxOptions])
-
-
-
-    // const { data: dataUserCatalogues, isLoading: isUserCatalogueLoading, isError: isUserCatalogueError } = useQuery(['user_catalogues'],
-    //     () => pagination('sort=name,asc'),
-    // )
-
-    // const [userCatalogues, setUserCatalogues] = useState([])
 
     return (
         <FormProvider {...methods}>
@@ -249,4 +240,4 @@ const UserStore = ({
     )
 }
 
-export default UserStore
+export default UpdatePatient

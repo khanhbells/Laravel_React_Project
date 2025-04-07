@@ -22,6 +22,7 @@ import useDebounce from "@/hook/useDebounce";
 import { User } from "@/types/User";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitialName } from "@/helper/myHelper";
+import { LoadingSpinner } from "@/components/ui/loading";
 
 const model = "doctors";
 export const redirectIfSucces = "/user/doctor/index";
@@ -85,14 +86,19 @@ const tableColumn: tableColumn[] = [
         name: "Chuyên khoa",
         render: (item: User) => (
             <span className="text-center">
-                {item.doctors.specialties.length > 0
+                {item.doctors && item.doctors.specialties && item.doctors.specialties.length > 0
                     ? item.doctors.specialties
                           .map((value: any) => value.name)
                           .join(", ")
-                    : "-"}
+                    : item.doctors && item.doctors.specialties && item.doctors.specialties.length === 0
+                    ? "-"
+                    : (
+                        <LoadingSpinner className="w-[20px] h-[20px] text-center" />
+                    )
+                }
             </span>
         ),
-    },
+    }
 ];
 
 const buttonActions: ButtonAction<ActionParam[]>[] = [

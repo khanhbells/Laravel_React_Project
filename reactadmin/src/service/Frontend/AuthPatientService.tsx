@@ -62,7 +62,6 @@ const changePassword = async (payload: { password: string, confirmPassword: stri
 }
 
 const fetchPatient = async (): Promise<Patient | null> => {
-
     try {
         const response = await axiosInstance.get('/patient/me', {
             guard: 'patient'

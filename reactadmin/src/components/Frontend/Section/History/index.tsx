@@ -30,18 +30,28 @@ import TableHistoryPatient from "@/components/TableHistoryPatient";
 import { useCustomFilter } from "@/hook/useCustomFilter";
 import { RootState } from "@/redux/store";
 import { useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { status } from "@/constant/general";
 import CustomSheet from "@/components/CustomSheet";
 import Store from "./include/Store";
 import CustomHelmet from "@/components/CustomHelmet";
+import { fetchPatient } from "@/service/Frontend/AuthPatientService";
+import { setAuthPatientLogout } from "@/redux/slide/authPatientSlice";
 const History = () => {
     const breadcrumbData: Breadcrumb = breadcrumb.index;
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const { isAuthenticated, patient: patientRedux } = useSelector(
         (state: RootState) => state.patient
     );
+
+    useMemo( async () => { 
+        const response = await fetchPatient();
+        if (response && response.publish === 1 || !response) {
+            dispatch(setAuthPatientLogout());
+        }
+    }, []);
 
     //REACT QUERY
     const {

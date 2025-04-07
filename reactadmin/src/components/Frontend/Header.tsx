@@ -8,32 +8,36 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { canonical } from "@/constant/canonical";
-import { endpoint } from "@/constant/endpoint";
+import { useMenuContext } from "@/contexts/MenuContext";
 import { usePatientContext } from "@/contexts/PatientContext";
 import { useSystemContext } from "@/contexts/SystemContext";
 import { writeUrl } from "@/helper/myHelper";
 import { setAuthPatientLogout } from "@/redux/slide/authPatientSlice";
+import { openSheet } from "@/redux/slide/sheetSlice";
 import { RootState } from "@/redux/store";
-import { logout } from "@/service/Frontend/AuthPatientService";
-import { menus } from "@/service/Frontend/FrontEndService";
+import { fetchPatient, logout } from "@/service/Frontend/AuthPatientService";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { FaHistory } from "react-icons/fa";
 import { IoExitOutline } from "react-icons/io5";
-import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { LoadingSpinner } from "../ui/loading";
-import { useMenuContext } from "@/contexts/MenuContext";
+import CustomSheet from "../CustomSheet";
+import useSheet from "@/hook/useSheet";
+import UpdatePatient from "./Section/UpdatePatient";
 const Header = () => {
     //-------------REDUX-CONTEXT-----------------------
+    const dispatch = useDispatch();
     const { isAuthenticated, patient: patientRedux } = useSelector(
         (state: RootState) => state.patient
     );
     const { patient: patientContext, setPatient } = usePatientContext();
     const { isDataSystems } = useSystemContext();
     const { isDataMenus } = useMenuContext();
+    const { isSheetOpen, openSheet ,closeSheet } = useSheet();
+
 
     const handleLogout = async () => {
         try {
@@ -75,7 +79,6 @@ const Header = () => {
         }
         return [];
     }, [isDataMenus]);
-    const dispatch = useDispatch();
 
     const [openIndex, setOpenIndex] = useState(null); // Lưu ID của menu đang mở
 
@@ -86,6 +89,22 @@ const Header = () => {
     const handleMouseLeave = () => {
         setOpenIndex(null);
     };
+    
+    const handleOpenSheet = async () => {
+        const response  = await fetchPatient();
+        if (response && response.publish !== 1) {
+            openSheet({ open: true, action: 'update', id: patientRedux?.id })
+        } else if (response && response.publish === 1 || !response) {
+            setPatient(undefined);
+            dispatch(setAuthPatientLogout());
+        }
+    }
+
+    useEffect(() => {
+        console.log(patientRedux, patientContext);
+        
+    }, [patientContext, patientRedux]);
+
 
     return (
         <>
@@ -214,18 +233,7 @@ const Header = () => {
                     </div>
                     {patientRedux && patientRedux !== null ? (
                         <div className="col-span-2 items-center grid place-items-center">
-                            {/* <Link className='w-[50%] flex items-center cursor-pointer justify-end font-semibold' to={`/homepage/history/${patientRedux.id}`}>
-                                    <FaHistory
-                                        className='mr-[10px]'
-                                    />
-                                    Lịch hẹn
-                                </Link>
-                                <div className='flex w-[50%] justify-end items-center'>
-                                    <Button onClick={() => handleLogout()} className='hover:text-[white] text-white px-[10px] py-[5px] bg-sky-300 rounded-lg font-semibold hover:bg-sky-400'>
-                                        Đăng xuất
-                                    </Button>
-                                </div> */}
-                            <DropdownMenu>
+                            <DropdownMenu modal={false}>
                                 <DropdownMenuTrigger className="flex">
                                     <Avatar className="mr-3">
                                         <AvatarImage src={patientRedux.image} />
@@ -247,11 +255,9 @@ const Header = () => {
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem className="flex items-center text-[#333335] cursor-pointer">
                                         <CgProfile className="mr-2 text-[18px]" />
-                                        <Link
-                                            to={`/user/doctor/update/${patientRedux.id}`}
-                                        >
+                                        <div onClick={() => handleOpenSheet()}>
                                             Thay đổi thông tin
-                                        </Link>
+                                        </div>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem className="flex items-center text-[#333335] cursor-pointer">
                                         <FaHistory className="mr-2 text-[18px]" />
@@ -298,6 +304,21 @@ const Header = () => {
                     {/* </div> */}
                 </div>
             </header>
+            {isSheetOpen && (
+                <CustomSheet
+                    title={`Sửa thông tin cá nhân`}
+                    description={`Đây là form sửa thông tin cá nhân`}
+                    isSheetOpen={isSheetOpen.open}
+                    closeSheet={closeSheet}
+                    className="w-[400px] sm:w-[500px]"
+                >
+                    <UpdatePatient
+                        closeSheet={closeSheet}
+                        id={isSheetOpen.id}
+                        action={isSheetOpen.action}
+                    />
+                </CustomSheet>
+            )}
         </>
     );
 };

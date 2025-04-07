@@ -90,7 +90,6 @@ const buttonActions: ButtonAction<ActionParam[]>[] = [
         params: ['id', 'handleAlertDialog:f', 'destroy:f'],
         onClick: (id: string, handleAlertDialog: any, destroy: any) => {
             handleAlertDialog(id, destroy)
-            // confirmAction(destroy)
         }
     },
     {

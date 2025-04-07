@@ -25,9 +25,6 @@ const ContentSlider = ({
     isLoading,
     nameCatalogueParams,
 }: IContentSlider) => {
-    useEffect(() => {
-        console.log(data?.canonical);
-    }, [data]);
     return (
         <>
             <div

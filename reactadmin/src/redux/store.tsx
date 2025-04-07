@@ -4,6 +4,7 @@ import authReducer from "./slide/authSlice";
 import authPatientReducer from "./slide/authPatientSlice";
 import idMedicineCatalogueReducer from "./slide/idMedicineCatalogueSlice";
 import idDoctorReducer from "./slide/idDoctorSlice";
+import sheetReducer from "./slide/sheetSlice";
 
 export const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
         patient: authPatientReducer,
         idMedicineCatalogue: idMedicineCatalogueReducer,
         idDoctor: idDoctorReducer,
+        sheet: sheetReducer,
     },
 });
 

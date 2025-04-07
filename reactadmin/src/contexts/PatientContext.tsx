@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext, ReactNode, useEffect } from
 
 // CẤU HÌNH CONTEXT
 interface Patient {
-    id: number;
+    id: string;
     name: string;
     email: string;
     [key: string]: any; // Nếu cần thêm các thuộc tính khác

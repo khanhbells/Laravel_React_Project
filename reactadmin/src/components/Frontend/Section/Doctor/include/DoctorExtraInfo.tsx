@@ -4,6 +4,9 @@ import { addCommas } from "@/helper/myHelper"
 import { Button } from "@/components/ui/button"
 import { memo } from "react"
 import { Sheet } from "@/hook/useSheet"
+import { fetchPatient } from "@/service/Frontend/AuthPatientService"
+import { useDispatch } from "react-redux"
+import { setAuthPatientLogout } from "@/redux/slide/authPatientSlice"
 interface IDoctorExtraInfo {
     dataDoctor: any,
     openSheet: (sheet: Sheet) => void,
@@ -19,7 +22,7 @@ const DoctoExtraInfo = ({
 }: IDoctorExtraInfo) => {
 
     const { selectedDataSchedule } = useDataSchedule()
-
+    const dispatch = useDispatch();
 
     const [isShowDetailInfo, setIsoDetailInfo] = useState<boolean>(false)
     const handleShowDetailInfo = (status: boolean) => {
@@ -31,7 +34,11 @@ const DoctoExtraInfo = ({
     // }, [options])
 
     //openSheet
-    const handleButtonAction = () => {
+    const handleButtonAction = async () => {
+        const response = await fetchPatient();
+        if (response && response.publish === 1 || !response) {
+            dispatch(setAuthPatientLogout())
+        }
         if (handleOpenSheet) {
             handleOpenSheet(dataDoctor, options || [])
         }

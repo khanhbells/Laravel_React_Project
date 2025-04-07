@@ -32,11 +32,12 @@ class DoctorController extends Controller
     {
         try {
             $permission =  $request->input('permission') ?? null;
+            $auth = auth('api')->user();
             if ($permission == null) {
                 $this->authorize('modules', '/doctor/index');
             }
-            
-            $doctors = $this->doctorService->paginate($request);
+
+            $doctors = $this->doctorService->paginate($request, $auth);
             return response()->json([
                 'doctors' =>  DetailDoctorResource::collection($doctors),
                 'links' => method_exists($doctors, 'items') ? $doctors->linkCollection() : null,

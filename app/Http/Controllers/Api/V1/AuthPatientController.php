@@ -32,6 +32,12 @@ class AuthPatientController extends Controller
             'password' => $request->input('password')
         ];
 
+        $patient = Patient::where('email', $credentials['email'])->first();
+
+        if ($patient->publish === 1) {
+            return response()->json(['message' => 'Tài khoản của bạn đã bị khóa!'], Response::HTTP_UNAUTHORIZED);
+        }
+
         if (!$token = auth('patient')->attempt($credentials)) {
             return response()->json(['message' => 'Email hoặc mật khẩu không đúng'], Response::HTTP_UNAUTHORIZED);
         }

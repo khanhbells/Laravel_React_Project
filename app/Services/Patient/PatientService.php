@@ -22,7 +22,6 @@ class PatientService extends BaseService
     public function paginate($request)
     {
         $agrument = $this->paginateAgrument($request);
-
         $patients = $this->patientRepository->pagination([...$agrument]);
         return $patients;
     }

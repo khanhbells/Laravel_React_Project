@@ -41,7 +41,6 @@ class BaseRepository
         }
         
         if (isset($params['perpage']) && !empty($params['perpage'])) {
-            
             return $query->paginate($params['perpage']);
         }
         // dd($query->toSql());

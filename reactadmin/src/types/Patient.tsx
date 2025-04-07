@@ -1,5 +1,5 @@
 export type Patient = {
-    id: number,
+    id: string ,
     name: string,
     full_name?: string
     email: string,
@@ -12,6 +12,7 @@ export type Patient = {
     district_id: string | null,
     ward_id: string | null,
     birthday: string | null,
+    publish?: number,
     patient_catalogues?: string | null,
 }
 export type PatientBooking = {
@@ -32,7 +33,7 @@ export type PayloadInput = {
     password?: string | undefined,
     confirmPassword?: string | undefined,
     birthday?: string,
-    patient_catalogue_id: string,
+    patient_catalogue_id?: string,
     province_id: string,
     district_id: string,
     ward_id: string,
