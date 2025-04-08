@@ -63,6 +63,8 @@ const TimeSlot = ({
         }
     };
 
+    
+
     useEffect(() => {
         // Lọc bỏ các phần tử không còn hợp lệ trong activeIndices khi customData thay đổi
         setActiveIndices((prev) => prev.filter((item) => {

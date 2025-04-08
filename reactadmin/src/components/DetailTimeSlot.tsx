@@ -24,7 +24,21 @@ const DetailTimeSlot = ({
     label,
 }: DetailTimeSlotProps) => {
     const { activeIndices } = useTimeSlotContext();
-    const { register, formState: { errors } } = useFormContext<SchedulePayloadInput>();
+    const { register, formState: { errors }, setValue, getValues } = useFormContext<SchedulePayloadInput>();
+
+    // Đồng bộ activeIndices với time_slots trong form
+    useEffect(() => {
+        const currentTimeSlots = getValues('time_slots') || []; // Lấy dữ liệu time_slots hiện tại từ form
+        const updatedTimeSlots = activeIndices.map((timeSlot) => {
+            // Tìm time_slot hiện tại trong form để giữ giá trị price nếu đã nhập
+            const existingSlot = currentTimeSlots.find((slot) => slot.time_slot_id === timeSlot.id);
+            return {
+                time_slot_id: timeSlot.id,
+                price: existingSlot?.price || '', // Giữ giá trị price cũ nếu có, nếu không để rỗng
+            };
+        });
+        setValue('time_slots', updatedTimeSlots); // Cập nhật lại time_slots trong form
+    }, [activeIndices, setValue, getValues]);
 
     return (
         <Card className="rounded-[5px] mb-[20px]">
