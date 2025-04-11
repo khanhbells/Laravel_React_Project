@@ -27,7 +27,6 @@ class DoctorService extends BaseService
     public function paginate($request, $auth)
     {
         $agrument = $this->paginateAgrument($request, $auth);
-
         // Danh sách các điều kiện whereHas có thể áp dụng
         $whereHasConditions = [
             'specialty_id' => 'whereHasSpecialty',
@@ -45,7 +44,7 @@ class DoctorService extends BaseService
             }
         }
 
-        if ($auth->user_catalogue_id == 2) {
+        if (!empty($auth->user_catalogue_id) && $auth->user_catalogue_id == 2) {
             $agrument['whereHas'] = array_merge(
                 $agrument['whereHas'] ?? [],
                 $this->whereHasDoctorDetail($auth)

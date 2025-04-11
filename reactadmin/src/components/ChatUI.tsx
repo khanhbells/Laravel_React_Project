@@ -99,11 +99,11 @@ const ChatUI = ({ className }: IChatUI) => {
             <CardContent className="p-4 h-[900px]">
                 <div className="flex flex-col h-full bg-gray-100 border border-teal-400 rounded-md">
                     {/* Hiển thị tin nhắn */}
-                    <div className="flex-grow p-4 overflow-auto">
+                    <div className="flex-grow p-4 overflow-auto text-[18px]">
                         {messages.map((msg, index) => (
                             <div
                                 key={index}
-                                className={`flex ${
+                                className={`flex  ${
                                     msg.type === "user"
                                         ? "justify-end"
                                         : "justify-start"

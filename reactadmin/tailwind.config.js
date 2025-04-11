@@ -85,8 +85,8 @@ export default {
 				bodydark: '#AEB7C0',
 				bodydark1: '#DEE4EE',
 				bodydark2: '#8A99AF',
-				primary: '#3C50E0',
-				secondary: '#80CAEE',
+				primary: '#80CAEE',
+				secondary: '#3C50E0',
 				stroke: '#E2E8F0',
 				gray: {
 					...colors.gray,
@@ -159,8 +159,8 @@ export default {
 				},
 				'menu-border': 'rgba(255,255,255,0.1)',
 				'menu-active': 'rgba(255,255,255,.05)',
-				'primary': 'rgb(17 28 67)',
-				'second': 'rgba(35,183,229,1)'
+				'primary': 'rgba(35,183,229,1)',
+				'second': 'rgb(17 28 67)'
 			},
 			borderRadius: {
 				lg: "var(--radius)",

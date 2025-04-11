@@ -164,8 +164,8 @@ class DashboardController extends Controller
 
             $totalDoctor = $this->statisticTotal('doctors');
             $totalPatient = $this->statisticTotal('patients');
-
             $totalBooking = $this->statisticTotal('bookings');
+
             $totalConfirmBooking = $repositoryBooking->getConfirmBooking();
             $totalStopBooking = $repositoryBooking->getStopBooking();
             $totalPendingBooking = $repositoryBooking->getPendingBooking();
@@ -219,11 +219,12 @@ class DashboardController extends Controller
                     $currentYear = now()->year;
                     $dayInMonth = Carbon::createFromDate($currentYear, $currentMonth, 1)->daysInMonth;
                     $allDays = range(1, $dayInMonth);
+                    //range create array from 1 to 30
                     $temp = $repositoryBooking->revenueCurrentMonth($currentMonth, $currentYear);
 
                     $label = [];
                     $data = [];
-                    $temp2 = array_map(function ($day) use ($temp, &$label, &$data) {
+                    array_map(function ($day) use ($temp, &$label, &$data) {
                         $found = collect($temp)->first(function ($record) use ($day) {
                             return $record['day'] == $day;
                         });
@@ -316,8 +317,9 @@ class DashboardController extends Controller
         return $total;
     }
 
-    public function detailAnalytics(Request $request){
-        
+    public function detailAnalytics(Request $request)
+    {
+
         try {
             $repository = $this->customRepository('doctors');
             $doctor_id = $request->input('doctor_id');
@@ -335,5 +337,4 @@ class DashboardController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    
 }

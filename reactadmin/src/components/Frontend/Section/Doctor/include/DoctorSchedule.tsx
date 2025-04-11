@@ -87,7 +87,7 @@ const DoctorSchedule = ({
                                     key={index}
                                     type="button"
                                     variant="outline"
-                                    className={`px-1 py-2 m-2 bg-[#fff04b] font-normal ${selectedTimeSlot === value ? 'bg-sky-400 text-white' : 'bg-[#fff04b]'
+                                    className={`px-1 py-2 m-2 bg-teal-400 text-[16px] font-normal text-white ${selectedTimeSlot === value ? 'bg-sky-400 text-white' : 'bg-teal-400'
                                         }`}
                                     onClick={() => handleSetDataSchedule(value)}
                                 >

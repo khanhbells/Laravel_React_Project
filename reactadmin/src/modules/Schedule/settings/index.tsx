@@ -66,19 +66,19 @@ const tableColumn: tableColumn[] = [
     {
         name: "Thời gian khám",
         render: (item: Schedule) => (
-            <span className="cursor-pointer cat-item-name mr-[10px] text-[#fff] inline-block rounded bg-cyan-600 px-[5px] py-[0px] ">{`${item.start_time} - ${item.end_time}`}</span>
+            <span className="cursor-pointer text-[18px] cat-item-name mr-[10px] text-[#fff] inline-block rounded bg-cyan-600 px-[5px] py-[4px] ">{`${item.start_time} - ${item.end_time}`}</span>
         ),
     },
     {
         name: "Ngày khám bệnh",
         render: (item: Schedule) => (
-            <span>{dayjs(item.date).format("DD/MM/YYYY")}</span>
+            <span className="text-[18px]">{dayjs(item.date).format("DD/MM/YYYY")}</span>
         ),
     },
     {
         name: "Giá tiền",
         render: (item: Schedule) => (
-            <span className="cursor-pointer cat-item-name mr-[10px] text-[#fff] inline-block rounded bg-cyan-600 px-[5px] py-[0px] text-[10px]">
+            <span className="cursor-pointer cat-item-name mr-[10px] text-[#fff] inline-block rounded text-[18px] bg-yellow-500 px-[5px] py-[4px]">
                 {addCommas(item.price)}đ
             </span>
         ),

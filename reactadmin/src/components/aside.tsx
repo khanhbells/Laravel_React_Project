@@ -27,7 +27,7 @@ const Aside = () => {
     }
     const defaultValue = getOpenAccordionValue()
     return (
-        <aside className="app-aside w-60 bg-[#111c43] h-full fixed top-0 z-20">
+        <aside className="app-aside w-60 bg-sky-500 h-full fixed top-0 z-20">
             <div className="main-sidebar-header w-60 p-3.5 fixed z-10 h-14 text-center border-solid border-b border-menu-border">
                 <a href="" className="inline-block">
                     <Logo />
@@ -37,7 +37,7 @@ const Aside = () => {
                 {
                     sidebarItem.map((group, index) => (
                         <div key={index}>
-                            <div className="menu-category px-6 py-3 text-[#a3aed1] text-10px tracking-wider opacity-50">
+                            <div className="menu-category px-6 py-3 text-[#FFF] text-10px tracking-wider opacity-50">
                                 {group.label}
                             </div>
                             <Accordion type="single" collapsible className="px-3 sidebar-accordion" defaultValue={defaultValue ?? ''}>
@@ -46,11 +46,11 @@ const Aside = () => {
                                         {item.links ? (
                                             <AccordionItem value={`item-${index}-${itemIndex}`}>
                                                 <AccordionTrigger
-                                                    className={`rounded-lg ${item.active.includes(segment) ? 'text-[#a3aed1] bg-[rgba(255,255,255,.05)]' : ''
+                                                    className={`rounded-lg ${item.active.includes(segment) ? 'text-[#FFF] bg-[rgba(255,255,255,.05)]' : ''
                                                         }`}
                                                 >
                                                     <div
-                                                        className={`menu-label flex flex-1 items-center text-[#a3aed1] ${item.active.includes(segment) ? 'text-white' : ''
+                                                        className={`menu-label flex flex-1 items-center text-[#FFF] ${item.active.includes(segment) ? 'text-white' : ''
                                                             }`}
                                                     >
                                                         {item.icon}
@@ -62,7 +62,7 @@ const Aside = () => {
                                                         {item.links.map((link, linkIndex) => (
                                                             <li className="pl-6" key={linkIndex}>
                                                                 <Link
-                                                                    className="side-menu__item block text-[#a3aed1] text-13px relative hover:bg-[rgba(255,255,255,.05)] rounded-lg"
+                                                                    className="side-menu__item block text-[#FFF] text-13px relative hover:bg-[rgba(255,255,255,.05)] rounded-lg"
                                                                     to={link.to}
                                                                 >
                                                                     {link.title}
@@ -76,11 +76,11 @@ const Aside = () => {
                                                 </AccordionContent>
                                             </AccordionItem>
                                         ) : (
-                                            <div className={`menu-label flex items-center text-[#a3aed1] rounded-lg pl-3 pr-3 py-2 ${item.active.includes(segment) ? 'text-[#a3aed1] bg-[rgba(255,255,255,.05)]' : ''}`} >
+                                            <div className={`menu-label flex items-center text-[#FFF] rounded-lg pl-3 pr-3 py-2 ${item.active.includes(segment) ? 'text-[#FFF] bg-[rgba(255,255,255,.05)]' : ''}`} >
                                                 {item.icon}
                                                 <Link
                                                     to={item.path}
-                                                    className={`flex-1 ${item.active.includes(segment) ? 'text-white' : 'text-[#a3aed1]'}`}
+                                                    className={`flex-1 ${item.active.includes(segment) ? 'text-white' : 'text-[#FFF]'}`}
                                                 >
                                                     {item.label}
                                                 </Link>

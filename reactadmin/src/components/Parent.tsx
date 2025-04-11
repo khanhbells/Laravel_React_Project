@@ -61,7 +61,7 @@ const Parent = ({
         } else {
             return [...options.filter(option => option.value !== '0')]
         }
-    }, [name]);
+    }, [name, options]);
 
     const defaultParentValue = options?.find(option => option.value === '0')
     return (

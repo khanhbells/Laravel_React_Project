@@ -12,20 +12,19 @@ import { useMenuContext } from "@/contexts/MenuContext";
 import { usePatientContext } from "@/contexts/PatientContext";
 import { useSystemContext } from "@/contexts/SystemContext";
 import { writeUrl } from "@/helper/myHelper";
+import useSheet from "@/hook/useSheet";
 import { setAuthPatientLogout } from "@/redux/slide/authPatientSlice";
-import { openSheet } from "@/redux/slide/sheetSlice";
 import { RootState } from "@/redux/store";
 import { fetchPatient, logout } from "@/service/Frontend/AuthPatientService";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { FaHistory } from "react-icons/fa";
 import { IoExitOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { LoadingSpinner } from "../ui/loading";
 import CustomSheet from "../CustomSheet";
-import useSheet from "@/hook/useSheet";
+import { LoadingSpinner } from "../ui/loading";
 import UpdatePatient from "./Section/UpdatePatient";
 const Header = () => {
     //-------------REDUX-CONTEXT-----------------------
@@ -100,15 +99,9 @@ const Header = () => {
         }
     }
 
-    useEffect(() => {
-        console.log(patientRedux, patientContext);
-        
-    }, [patientContext, patientRedux]);
-
-
     return (
         <>
-            <header className="bg-sky-50 z-999">
+            <header className="bg-sky-200 z-999">
                 <div className="grid grid-cols-12 h-[100%]">
                     <div className="col-span-3 flex items-center">
                         <Link to={`${import.meta.env.VITE_HOMEPAGE_URL}`}>
@@ -137,7 +130,7 @@ const Header = () => {
                                 >
                                     <a href="#">
                                         <span className="flex items-center gap-2 text-base font-medium hover:text-sky-400">
-                                            <p className="text-primary mb-0 font-montserrat font-semibold hover:text-sky-400">
+                                            <p className="text-second mb-0 font-montserrat font-semibold hover:text-sky-400">
                                                 {item.title}
                                             </p>
                                             {item.subItems && (

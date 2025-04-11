@@ -1,5 +1,5 @@
 import axios from "@/configs/axios";
-import { PayloadInput, Patient } from "@/types/Patient";
+import { PayloadInput, Patient, PatientBooking } from "@/types/Patient";
 import { baseSave } from "./BaseService";
 import { baseDestroy } from "./BaseService";
 import { handleAxiosError } from "@/helper/axiosHelper";
@@ -40,7 +40,7 @@ const destroy = async (id: string) => {
 
 }
 
-const getPatientById = async (patientId: string | undefined | null | number): Promise<Patient> => {
+const getPatientById = async (patientId: string | undefined | null | number): Promise<PatientBooking> => {
     const response = await axios.get(`patients/${patientId}`)
     return response.data
 }
